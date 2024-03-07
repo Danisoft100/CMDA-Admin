@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --toastify-color-success: #117E45;
+    --toastify-color-error: #FF4834;
+  }
+  
+  /* For Webkit-based browsers (Chrome, Safari and Opera) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* For IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+
+  
+  /* country with flags custom styling */
+  .ReactFlagsSelect-module_selectValue__152eS {
+    /* display: none */
+  }
+  .ReactFlagsSelect-module_selectBtn__19wW7[aria-expanded="true"]:after,
+  .ReactFlagsSelect-module_selectBtn__19wW7:after  {
+    display: none;
+  }
