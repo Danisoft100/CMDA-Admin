@@ -35,9 +35,8 @@ const Login = () => {
 
   return (
     <div>
-      <div className="mb-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Welcome Back</h2>
-        <p className="text-gray-dark mt-2">Login to your account</p>
+      <div className="mb-4 text-left">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">Welcome Back</h2>
       </div>
       <form onSubmit={handleSubmit(handleLogin)} className="grid grid-cols-1 gap-4">
         <div>
