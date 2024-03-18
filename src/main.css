@@ -28,3 +28,25 @@
   .ReactFlagsSelect-module_selectBtn__19wW7:after  {
     display: none;
   }
+
+  /* react calender */
+.react-calendar {
+  border: none;
+}
+.event-calender .react-calendar__tile--now {
+  color: #994279;
+  font-weight: 600;
+  font-size: large;
+}
+.event-calender .react-calendar__tile {
+  border-radius: 100%;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-calender .react-calendar__tile--active {
+  background: #994279;
+  color: white;
+}

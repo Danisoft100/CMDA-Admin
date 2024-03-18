@@ -8,6 +8,9 @@ import Login from "~/pages/Auth/Login/Login";
 import ForgotPassword from "~/pages/Auth/ForgotPassword/ForgotPassword";
 import NewPassword from "~/pages/Auth/NewPassword/NewPassword";
 import DashboardHomePage from "~/pages/Dashboard/Home/Home";
+import AdminDashboardEventsPage from "~/pages/Dashboard/Events/Events";
+import AdminDashboardStoreSingleEventPage from "~/pages/Dashboard/Events/SingleEvent/SingleEvent";
+import AdminDashboardCreateEvent from "~/pages/Dashboard/Events/CreateEvent/CreateEvent";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -35,7 +38,12 @@ export default function AppRouter() {
         {
           path: "",
           element: <DashboardLayout />,
-          children: [{ index: true, element: <DashboardHomePage /> }],
+          children: [
+            { index: true, element: <DashboardHomePage /> },
+            { path: "events", element: <AdminDashboardEventsPage /> },
+            { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
+            { path: "create-event", element: <AdminDashboardCreateEvent /> },
+          ],
         },
       ],
       errorElement: <ErrorDisplay />,
