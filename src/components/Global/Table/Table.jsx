@@ -12,8 +12,6 @@ import icons from "~/assets/js/icons";
 import { classNames } from "~/utilities/classNames";
 import Button from "../Button/Button";
 
-const PER_PAGE_OPTIONS = [5, 10, 25, 50, 100];
-
 function IndeterminateCheckbox({ indeterminate, className = "", ...rest }) {
   const ref = useRef(null);
 
@@ -38,7 +36,7 @@ const Table = ({
   showPagination = true, // set false to hide pagination row
   currentPage = 1, // current page in pagination
   perPage = 10, // number of items per page
-  perPageOptions = PER_PAGE_OPTIONS, // Array of numbers to use as select options to control perPage
+  perPageOptions = [10, 25, 50, 100], // Array of numbers to use as select options to control perPage
   totalPageCount = -1, // total number of pages
   totalItemsCount, // total number of items in the data
   onPaginationChange = console.log, // function to handle pagination change - contains the object {perPage: number, currentPage: number } as parameters

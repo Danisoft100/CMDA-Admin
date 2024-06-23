@@ -1,17 +1,18 @@
 import { useMemo } from "react";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
-import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
+import { classNames } from "~/utilities/classNames";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
 const Chapters = () => {
-  const transactionStats = useMemo(
-    () => ({
-      totalChapters: 100292938,
-      totalSubscriptions: 50292938,
-      totalDonations: 88292938,
-    }),
+  const chapterStats = useMemo(
+    () => [
+      { label: "Total Chapters/Regions", bgClass: "bg-white", value: 50292938 },
+      { label: "Student Chapters", bgClass: "bg-primary", value: 50292938 },
+      { label: "Doctor Chapters", bgClass: "bg-secondary", value: 50292938 },
+      { label: "Global Network Regions", bgClass: "bg-tertiary", value: 50292938 },
+    ],
     []
   );
 
@@ -127,11 +128,11 @@ const Chapters = () => {
     <div>
       <h1 className="text-xl font-bold mb-6">Chapters</h1>
 
-      <div className="grid grid-cols-3 gap-8">
-        {Object.entries(transactionStats).map(([key, value]) => (
-          <div key={key} className="p-4 bg-white border rounded-xl">
-            <h4 className="uppercase text-xs font-medium text-gray mb-2">{convertToCapitalizedWords(key)}</h4>
-            <p className="font-bold text-lg">{formatCurrency(value)}</p>
+      <div className="grid grid-cols-4 gap-8">
+        {chapterStats.map((stat, s) => (
+          <div key={stat.label} className={classNames("p-4 border rounded-xl", stat.bgClass, s && "text-white")}>
+            <h4 className="uppercase text-xs font-medium opacity-70 mb-3">{stat.label}</h4>
+            <p className="font-bold text-lg">{Number(stat.value).toLocaleString()}</p>
           </div>
         ))}
       </div>

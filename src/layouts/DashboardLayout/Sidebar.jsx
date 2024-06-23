@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                 </NavLink>
               </li>
             ))}
-            <li className="py-8" />
+            <li className="py-2" />
             <li
               className={classNames(
                 "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg",
