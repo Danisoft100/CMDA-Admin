@@ -38,8 +38,8 @@ const AdminDashboardEventsPage = () => {
           {/* header text */}
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-[#181818] font-bold leading-6">Events</h3>
-              <p className="text-[#71717A] text-sm leading-5">here is what’s happening today</p>
+              <h3 className="text-black font-bold leading-6 text-lg">Events</h3>
+              <p className="text-gray text-sm leading-5">here is what’s happening today</p>
             </div>
             <Button label="Create event" onClick={() => navigate("/create-event")} />
           </div>
