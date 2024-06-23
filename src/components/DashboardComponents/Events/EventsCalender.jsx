@@ -3,7 +3,7 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-const EventsCalender = () => {
+const EventsCalender = ({ showNotifications = true }) => {
   const [value, onChange] = useState(new Date());
   return (
     <div className="sticky top-0">
@@ -27,26 +27,28 @@ const EventsCalender = () => {
         </ul>
       </div>
 
-      <div className="mt-4">
-        <div className="flex justify-between items-center text-sm mb-2 py-2">
-          <p className="font-semibold text-[#1C1C1C] ">Notifications</p>
-          <span className="text-primary font-medium underline underline-offset-2 cursor-pointer">See all</span>
-        </div>
+      {showNotifications && (
+        <div className="mt-4">
+          <div className="flex justify-between items-center text-sm mb-2 py-2">
+            <p className="font-semibold text-[#1C1C1C] ">Notifications</p>
+            <span className="text-primary font-medium underline underline-offset-2 cursor-pointer">See all</span>
+          </div>
 
-        <ul className="space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <li key={i} className=" p-1 gap-x-4 flex items-start">
-              <span className="p-1 rounded-lg bg-onSecondary flex justify-center items-center text-2xl">
-                {icons.file}
-              </span>
-              <div>
-                <p className="text-[#1c1c1c] text-sm leading-5 ">New User Registered</p>
-                <p className="text-xs leading-4 text-[rgba(28,28,28,0.40)] mt-[2px]">59 minutes ago</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+          <ul className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <li key={i} className=" p-1 gap-x-4 flex items-start">
+                <span className="p-1 rounded-lg bg-onSecondary flex justify-center items-center text-2xl">
+                  {icons.file}
+                </span>
+                <div>
+                  <p className="text-[#1c1c1c] text-sm leading-5 ">New User Registered</p>
+                  <p className="text-xs leading-4 text-[rgba(28,28,28,0.40)] mt-[2px]">59 minutes ago</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

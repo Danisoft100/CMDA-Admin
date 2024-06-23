@@ -1,13 +1,12 @@
 import { classNames } from "~/utilities/classNames";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import icons from "~/assets/js/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "~/redux/features/auth/authSlice";
 import { clearTokens } from "~/redux/features/auth/tokenSlice";
 
 const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
 
   const handleLogout = () => {
     window.location.href = "/login";
@@ -28,22 +27,8 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
           "transition-all duration-200 fixed inset-y-0 left-0 w-60 bg-white overflow-y-auto ease-in-out transform z-10 lg:z-[1]"
         )}
       >
-        <div className="flex items-center gap-4 my-6">
-          {/* <img src="" className="bg-onPrimary rounded-full h-14 w-14" /> */}
-          <span className="h-14 w-14 flex-shrink-0 bg-onPrimary rounded-full inline-flex items-center justify-center text-4xl text-primary">
-            {icons.person}
-          </span>
-          <div className="truncate">
-            <h5 className="font-bold text-base truncate">
-              {user ? user.firstName + " " + user?.middleName + " " + user?.lastName : "No Name"}
-            </h5>
-            <Link to="/profile" className="text-primary text-sm hover:underline">
-              View Profile
-            </Link>
-          </div>
-        </div>
         {/* Navigation Links */}
-        <nav>
+        <nav className="mt-6">
           <ul className="flex-1 space-y-4">
             {navLinks.map((navItem) => (
               <li key={navItem.title}>
@@ -60,6 +45,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                 </NavLink>
               </li>
             ))}
+            <li className="py-8" />
             <li
               className={classNames(
                 "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg",

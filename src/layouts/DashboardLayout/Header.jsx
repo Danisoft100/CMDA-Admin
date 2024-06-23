@@ -9,7 +9,7 @@ import { classNames } from "~/utilities/classNames";
 
 const Header = ({ onToggleSidebar }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     window.location.href = "/login";
@@ -31,32 +31,24 @@ const Header = ({ onToggleSidebar }) => {
         <Logo className="w-auto h-14" />
 
         <div className="flex-1" />
-        {/* Notification Icon */}
-        <button className="text-primary text-xl focus:outline-none hover:bg-onPrimary rounded-md transition-all p-1.5">
-          {icons.bell}
-        </button>
         {/* Avatar Dropdown */}
         <Dropdown
           toggleElement={
             <button className="inline-flex items-center gap-2 hover:bg-onPrimary transition rounded-lg">
-              {/* <img src="" className="h-10 w-10 bg-onPrimary rounded-full" /> */}
-              <span className="h-10 w-10 bg-onPrimary rounded-full inline-flex items-center justify-center text-2xl text-primary">
+              <span className="size-12 bg-onPrimary rounded-full inline-flex items-center justify-center text-3xl text-primary">
                 {icons.person}
               </span>
-              <span className="text-">{icons.caretDown}</span>
             </button>
           }
         >
           <ul className="w-56 rounded-2xl text-sm pt-2 pb-2 bg-white shadow-lg border border-gray/20">
             <li className="py-2 px-4 truncate">
-              <p className="font-semibold truncate">
-                {user ? user.firstName + " " + user?.middleName + " " + user?.lastName : "No Name"}
-              </p>
-              <p className="text-xs text-gray truncate">{user?.email || "----"}</p>
+              <p className="font-semibold truncate">{user?.fullName || "No Name"}</p>
+              <p className="text-xs text-gray truncate">{user?.role || "Admin"}</p>
             </li>
             <li>
               <NavLink
-                to="/profile"
+                to="/settings"
                 className={({ isActive }) =>
                   classNames(
                     "flex items-center gap-3 px-5 py-2 cursor-pointer border-t  font-medium transition-all",
@@ -64,7 +56,7 @@ const Header = ({ onToggleSidebar }) => {
                   )
                 }
               >
-                <span className="text-lg">{icons.person}</span> View profile
+                <span className="text-lg">{icons.settings}</span> Settings
               </NavLink>
             </li>
             <li

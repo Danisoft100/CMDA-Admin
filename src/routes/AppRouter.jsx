@@ -7,10 +7,15 @@ import WelcomePage from "~/pages/Welcome";
 import Login from "~/pages/Auth/Login/Login";
 import ForgotPassword from "~/pages/Auth/ForgotPassword/ForgotPassword";
 import NewPassword from "~/pages/Auth/NewPassword/NewPassword";
-import DashboardHomePage from "~/pages/Dashboard/Home/Home";
+import DashboardHomePage from "~/pages/Dashboard/Overview/Overview";
 import AdminDashboardEventsPage from "~/pages/Dashboard/Events/Events";
 import AdminDashboardStoreSingleEventPage from "~/pages/Dashboard/Events/SingleEvent/SingleEvent";
 import AdminDashboardCreateEvent from "~/pages/Dashboard/Events/CreateEvent/CreateEvent";
+import ProtectedRoutes from "./ProtectedRoutes";
+import Transactions from "~/pages/Dashboard/Transactions/Transactions";
+import Members from "~/pages/Dashboard/Members/Members";
+import Products from "~/pages/Dashboard/Products/Products";
+import Chapters from "~/pages/Dashboard/Chapters/Chapters";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -33,7 +38,7 @@ export default function AppRouter() {
     // Dashboard Pages
     {
       path: "/",
-      // element: <ProtectedRoutes />,
+      element: <ProtectedRoutes />,
       children: [
         {
           path: "",
@@ -43,6 +48,10 @@ export default function AppRouter() {
             { path: "events", element: <AdminDashboardEventsPage /> },
             { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
             { path: "create-event", element: <AdminDashboardCreateEvent /> },
+            { path: "transactions", element: <Transactions /> },
+            { path: "members", element: <Members /> },
+            { path: "chapters", element: <Chapters /> },
+            { path: "store", element: <Products /> },
           ],
         },
       ],

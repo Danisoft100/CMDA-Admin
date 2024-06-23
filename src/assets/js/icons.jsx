@@ -15,7 +15,7 @@ import {
   MdViewModule,
 } from "react-icons/md";
 import { FiBell, FiDownloadCloud } from "react-icons/fi";
-import { HiBadgeCheck, HiDotsVertical, HiOutlineHome } from "react-icons/hi";
+import { HiBadgeCheck, HiDotsVertical, HiOfficeBuilding, HiOutlineHome } from "react-icons/hi";
 import {
   FaPlus,
   FaMinus,
@@ -28,6 +28,7 @@ import {
   FaChevronRight,
   FaArrowLeft,
   FaRegNewspaper,
+  FaChevronLeft,
 } from "react-icons/fa";
 import { AiOutlineDelete, AiOutlineFileText } from "react-icons/ai";
 import {
@@ -44,6 +45,7 @@ import {
 import { BiSortAlt2, BiWorld } from "react-icons/bi";
 import { IoList } from "react-icons/io5";
 import { RxCounterClockwiseClock } from "react-icons/rx";
+import { GoDotFill } from "react-icons/go";
 
 const icons = {
   bell: <FiBell />,
@@ -78,6 +80,7 @@ const icons = {
   caretDown: <FaCaretDown />,
   person: <MdPerson />,
   chevronRight: <FaChevronRight />,
+  chevronLeft: <FaChevronLeft />,
   verified: <HiBadgeCheck />,
   arrowLeft: <FaArrowLeft />,
   audio: <MdAudiotrack />,
@@ -91,6 +94,8 @@ const icons = {
   list: <IoList />,
   grid: <MdViewModule />,
   world: <BiWorld />,
+  office: <HiOfficeBuilding />,
+  dot: <GoDotFill />,
 };
 
 export default icons;

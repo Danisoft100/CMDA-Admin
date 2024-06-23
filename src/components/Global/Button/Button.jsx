@@ -12,6 +12,8 @@ const Button = ({
   disabled,
   color = "primary", // primary, tertiary, secondary, error
   className,
+  icon,
+  iconClassName,
   onClick = () => {},
 }) => {
   const getColorStyles = () => {
@@ -19,35 +21,35 @@ const Button = ({
       case "primary":
         return {
           filled: "bg-primary text-white hover:bg-primaryContainer",
-          outlined: "bg-transparent text-primary border-2 border-primary hover:bg-onPrimary",
+          outlined: "bg-transparent text-primary border-[1.5px] border-primary hover:bg-onPrimary",
           text: "bg-tranparent text-primary hover:bg-onPrimary",
         };
       case "tertiary":
         // Define styles for tertiary color
         return {
           filled: "bg-tertiary text-white hover:bg-tertiaryContainer",
-          outlined: "bg-transparent text-tertiary border-2 border-tertiary hover:bg-onTertiary",
+          outlined: "bg-transparent text-tertiary border-[1.5px] border-tertiary hover:bg-onTertiary",
           text: "bg-tranparent text-tertiary hover:bg-onTertiary",
         };
       case "secondary":
         // Define styles for secondary color
         return {
           filled: "bg-secondary text-white hover:bg-secondaryContainer",
-          outlined: "bg-transparent text-secondary border-2 border-secondary hover:bg-onSecondary",
+          outlined: "bg-transparent text-secondary border-[1.5px] border-secondary hover:bg-onSecondary",
           text: "bg-tranparent text-secondary hover:bg-onSecondary",
         };
       case "error":
         // Define styles for error color
         return {
           filled: "bg-error text-white hover:bg-error",
-          outlined: "bg-transparent text-error border-2 border-error hover:bg-error/20",
+          outlined: "bg-transparent text-error border-[1.5px] border-error hover:bg-error/20",
           text: "bg-tranparent text-error hover:bg-error/20",
         };
       default:
         // Default to black color styles if an invalid color is provided
         return {
           filled: "bg-black text-white hover:bg-black",
-          outlined: "bg-transparent text-black border-2 border-black hover:bg-black/10",
+          outlined: "bg-transparent text-black border-[1.5px] border-black hover:bg-black/10",
           text: "bg-tranparent text-black hover:bg-black/10",
         };
     }
@@ -60,8 +62,8 @@ const Button = ({
       type={type}
       disabled={disabled || loading}
       className={classNames(
-        "inline-flex justify-center items-center gap-2.5 rounded-md font-medium py-4 px-8 text-sm",
-        large ? "h-12" : "h-10",
+        "inline-flex justify-center items-center gap-2.5 rounded-md font-medium  text-sm",
+        large ? "h-12 py-4 px-8" : icon ? "h-8 w-10" : "h-10 py-4 px-8",
         variant === "filled" && colorStyles.filled,
         variant === "outlined" && colorStyles.outlined,
         variant === "text" && colorStyles.text,
@@ -79,7 +81,14 @@ const Button = ({
       )}
       onClick={onClick}
     >
-      {loading ? <Loading height={20} width={20} /> : children || label}
+      {loading ? (
+        <Loading height={20} width={20} />
+      ) : (
+        <>
+          {icon && <span className={classNames("text-base", iconClassName)}>{icon}</span>}
+          {children || label}
+        </>
+      )}
       {loading && loadingText ? loadingText : null}
     </button>
   );
