@@ -46,7 +46,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                   <button
                     className={classNames(
                       "flex w-full items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
-                      openDropdown === index ? "bg-primary text-white" : "bg-transparent text-black hover:bg-onPrimary"
+                      "bg-transparent text-black hover:bg-onPrimary"
                     )}
                     onClick={() => toggleDropdown(index)}
                   >
@@ -65,7 +65,9 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                             className={({ isActive }) =>
                               classNames(
                                 "flex items-center gap-2.5 px-4 py-3 pl-11 cursor-pointer text-sm font-medium rounded-lg",
-                                isActive ? "bg-onPrimary text-primary" : "bg-transparent text-black hover:text-primary"
+                                isActive
+                                  ? "bg-onPrimaryContainer text-primary"
+                                  : "bg-transparent text-black hover:text-primary"
                               )
                             }
                           >
@@ -83,7 +85,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                     className={({ isActive }) =>
                       classNames(
                         "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
-                        isActive ? "bg-primary text-white" : "bg-transparent text-black hover:bg-onPrimary"
+                        isActive ? "bg-onPrimaryContainer text-primary" : "bg-transparent text-black hover:bg-onPrimary"
                       )
                     }
                   >

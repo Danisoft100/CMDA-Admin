@@ -17,6 +17,7 @@ function formatDate(dateString) {
 
   return {
     date: `${monthShort} ${day}, ${year}`,
+    dateTime: `${monthShort} ${day}, ${year} | ${time}`,
     monthDate: `${monthShort} ${parseInt(day)}`,
     year,
     monthShort,

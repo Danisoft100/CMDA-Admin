@@ -17,6 +17,7 @@ import Members from "~/pages/Dashboard/Members/Members";
 import Products from "~/pages/Dashboard/Products/Products";
 import Chapters from "~/pages/Dashboard/Chapters/Chapters";
 import Resources from "~/pages/Dashboard/Resources/Resources";
+import SingleResource from "~/pages/Dashboard/Resources/SingleResource";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -47,13 +48,14 @@ export default function AppRouter() {
           children: [
             { index: true, element: <DashboardHomePage /> },
             { path: "events", element: <AdminDashboardEventsPage /> },
-            { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
             { path: "create-event", element: <AdminDashboardCreateEvent /> },
+            { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
             { path: "transactions", element: <Transactions /> },
             { path: "members", element: <Members /> },
             { path: "chapters", element: <Chapters /> },
             { path: "store", element: <Products /> },
             { path: "resources", element: <Resources /> },
+            { path: "resources/:slug", element: <SingleResource /> },
           ],
         },
       ],

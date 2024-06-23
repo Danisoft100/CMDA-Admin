@@ -8,13 +8,13 @@ const BackButton = ({ label, to, className }) => {
   return (
     <button
       className={classNames(
-        "inline-flex items-center gap-0.5 text-primary hover:underline text-base font-semibold",
+        "inline-flex items-center gap-2 text-primary hover:underline text-base font-semibold",
         className
       )}
       type="button"
       onClick={() => navigate(to || -1)}
     >
-      <span className="text-xl">{icons.arrowLeft}</span>
+      <span className="text-base">{icons.chevronLeft}</span>
       {label || "Back"}
     </button>
   );
