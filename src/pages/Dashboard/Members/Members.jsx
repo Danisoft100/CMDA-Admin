@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import { classNames } from "~/utilities/classNames";
@@ -126,9 +127,9 @@ const Members = () => {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-6">Members</h1>
+      <PageHeader title="Members" subtitle="Manage all students, doctors & global network members" />
 
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-4 gap-6 mt-6">
         {memberStats.map((stat, s) => (
           <div key={stat.label} className={classNames("p-4 border rounded-xl", stat.bgClass, s && "text-white")}>
             <h4 className="uppercase text-xs font-medium opacity-70 mb-3">{stat.label}</h4>

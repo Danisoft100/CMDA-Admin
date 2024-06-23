@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
@@ -125,12 +126,12 @@ const Transactions = () => {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-6">Transactions</h1>
+      <PageHeader title="Transactions" subtitle="Manage all subscriptions and donations" />
 
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-4 gap-6 mt-6">
         {Object.entries(transactionStats).map(([key, value]) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
-            <h4 className="uppercase text-xs font-medium text-gray mb-2">{convertToCapitalizedWords(key)}</h4>
+            <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>
             <p className="font-bold text-lg">{formatCurrency(value)}</p>
           </div>
         ))}

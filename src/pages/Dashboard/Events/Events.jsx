@@ -1,63 +1,68 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import EventCard from "~/components/DashboardComponents/Events/EventCard";
-import EventsCalender from "~/components/DashboardComponents/Events/EventsCalender";
+import ItemCard from "~/components/Dashboard/ItemCard/ItemCard";
 import Button from "~/components/Global/Button/Button";
-import Drawer from "~/components/Global/Drawer/Drawer";
-import Tabs from "~/components/Global/Tabs/Tabs";
-import { useMediaQuery2 } from "~/hooks/useMediaQuery2";
+import PageHeader from "~/components/Global/PageHeader/PageHeader";
+import { classNames } from "~/utilities/classNames";
+import formatDate from "~/utilities/fomartDate";
 
-const AdminDashboardEventsPage = () => {
+const Events = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState("list");
-  const [openMobileCalender, setOpenMobileCalender] = useState(false);
-
-  const isSmallScreen = useMediaQuery2("750px");
-
-  const isRowView = activeView === "list";
-
-  const AvailableEvents = ({ row }) => {
-    return (
-      <div className={`flex gap-x-2 gap-y-6  ${row || isSmallScreen ? "flex-col" : "flex-row flex-wrap"}`}>
-        {[...Array(10)].map((_, i) => (
-          <EventCard key={i} row={row && !isSmallScreen} width={row ? "auto" : isSmallScreen ? "100%" : 300} />
-        ))}
-      </div>
-    );
-  };
-
-  const eventTabs = [
-    { label: "Upcoming events", content: <AvailableEvents row={isRowView} /> },
-    { label: "Past events", content: <AvailableEvents row={isRowView} /> },
-  ];
+  const eventStats = useMemo(
+    () => [
+      { label: "Total Events", bgClass: "bg-white", value: 50292938 },
+      { label: "Today's Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      { label: "Future Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      { label: "Past Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      { label: "Students Only", bgClass: "bg-primary", value: 50292938 },
+      { label: "Doctors Only", bgClass: "bg-secondary", value: 50292938 },
+      { label: "Global Network Only", bgClass: "bg-tertiary", value: 50292938 },
+    ],
+    []
+  );
 
   return (
     <div>
-      <section className="flex gap-10">
-        <div className="w-full lg:w-2/3 ">
-          {/* header text */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-black font-bold leading-6 text-lg">Events</h3>
-              <p className="text-gray text-sm leading-5">here is what’s happening today</p>
-            </div>
-            <Button label="Create event" onClick={() => navigate("/create-event")} />
+      <PageHeader
+        title="Events"
+        subtitle="Manage all events"
+        action={() => navigate("/events/create-event")}
+        actionLabel="New Event"
+      />
+
+      <div className="grid grid-cols-4 gap-6 gap-y-4 mt-8">
+        {eventStats.map((stat) => (
+          <div
+            key={stat.label}
+            className={classNames("p-4 border rounded-xl", stat.bgClass, stat.label.includes("Only") && "text-white")}
+          >
+            <h4 className="uppercase text-xs font-medium opacity-70 mb-3">{stat.label}</h4>
+            <p className="font-bold text-lg">{Number(stat.value).toLocaleString()}</p>
           </div>
-          <Tabs tabs={eventTabs} equalTab={false} activeView={activeView} setActiveView={setActiveView} page="events" />
+        ))}
+      </div>
+
+      <section className="my-8">
+        <div className="grid grid-cols-3 gap-6">
+          {[...Array(9)].map((_, x) => (
+            <ItemCard
+              key={x}
+              title="Lorem ipsum ssome other text i no know nothing about "
+              category={"Webinar " + (x + 1)}
+              dateTime={formatDate(new Date()).date}
+            />
+          ))}
         </div>
-        <div className="hidden lg:block lg:w-1/3">
-          <EventsCalender />
+        <div className="flex justify-end items-center text-primary p-4 mt-1">
+          <Button onClick={() => {}} disabled={false} label="Prev" variant="outlined" small />
+          <span className="mx-2 text-sm">
+            Showing <b>1</b> - <b>10</b> of <b>12</b>
+          </span>
+          <Button onClick={() => {}} disabled={false} label="Next" variant="outlined" small />
         </div>
       </section>
-
-      {/* mobile calender */}
-      <Drawer active={openMobileCalender} setActive={setOpenMobileCalender}>
-        <div className="px-4 mt-16 mb-10 max-w-md ml-auto">
-          <EventsCalender />
-        </div>
-      </Drawer>
     </div>
   );
 };
 
-export default AdminDashboardEventsPage;
+export default Events;

@@ -221,6 +221,7 @@ const Table = ({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               variant="outlined"
+              small
             />
             <span className="mx-2 text-sm">
               <b>
@@ -244,6 +245,7 @@ const Table = ({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               variant="outlined"
+              small
             />
           </div>
         </div>

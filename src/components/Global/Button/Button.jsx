@@ -9,6 +9,7 @@ const Button = ({
   type = "button",
   variant = "filled", // outlined, text
   large, // for larger size
+  small,
   disabled,
   color = "primary", // primary, tertiary, secondary, error
   className,
@@ -63,7 +64,7 @@ const Button = ({
       disabled={disabled || loading}
       className={classNames(
         "inline-flex justify-center items-center gap-2.5 rounded-md font-medium  text-sm",
-        large ? "h-12 py-4 px-8" : icon ? "h-8 w-10" : "h-10 py-4 px-8",
+        large ? "h-12 py-4 px-8" : small ? "h-8 py-3 px-3" : "h-10 py-4 px-8",
         variant === "filled" && colorStyles.filled,
         variant === "outlined" && colorStyles.outlined,
         variant === "text" && colorStyles.text,

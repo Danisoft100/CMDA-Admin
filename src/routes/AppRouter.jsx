@@ -16,6 +16,7 @@ import Transactions from "~/pages/Dashboard/Transactions/Transactions";
 import Members from "~/pages/Dashboard/Members/Members";
 import Products from "~/pages/Dashboard/Products/Products";
 import Chapters from "~/pages/Dashboard/Chapters/Chapters";
+import Resources from "~/pages/Dashboard/Resources/Resources";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -52,6 +53,7 @@ export default function AppRouter() {
             { path: "members", element: <Members /> },
             { path: "chapters", element: <Chapters /> },
             { path: "store", element: <Products /> },
+            { path: "resources", element: <Resources /> },
           ],
         },
       ],

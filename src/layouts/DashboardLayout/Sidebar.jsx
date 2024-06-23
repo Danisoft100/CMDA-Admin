@@ -4,6 +4,8 @@ import icons from "~/assets/js/icons";
 import { useDispatch } from "react-redux";
 import { setUser } from "~/redux/features/auth/authSlice";
 import { clearTokens } from "~/redux/features/auth/tokenSlice";
+import Logo from "~/components/Global/Logo/Logo";
+import { useState } from "react";
 
 const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
   const dispatch = useDispatch();
@@ -12,6 +14,12 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
     window.location.href = "/login";
     dispatch(clearTokens());
     dispatch(setUser(null));
+  };
+
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const toggleDropdown = (index) => {
+    setOpenDropdown(openDropdown === index ? null : index);
   };
 
   return (
@@ -23,28 +31,67 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
       <aside
         className={classNames(
           isOpen ? "translate-x-0 animate-slidein" : "-translate-x-full",
-          "shadow-md lg:shadow-none p-5 pt-20",
+          "shadow-md lg:shadow-none p-5",
           "transition-all duration-200 fixed inset-y-0 left-0 w-60 bg-white overflow-y-auto ease-in-out transform z-10 lg:z-[1]"
         )}
       >
+        <Logo className="w-auto h-10 sm:h-12 hidden md:block" />
+
         {/* Navigation Links */}
         <nav className="mt-6">
-          <ul className="flex-1 space-y-4">
-            {navLinks.map((navItem) => (
-              <li key={navItem.title}>
-                <NavLink
-                  to={navItem.link}
-                  className={({ isActive }) =>
-                    classNames(
-                      "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
-                      isActive ? "bg-primary text-white" : "bg-transparent text-black hover:bg-onPrimary"
-                    )
-                  }
-                >
-                  <span className="text-xl">{navItem.icon}</span> {navItem.title}
-                </NavLink>
-              </li>
-            ))}
+          <ul className="flex-1 space-y-2.5">
+            {navLinks.map((navItem, index) =>
+              navItem.children ? (
+                <li key={index} className="">
+                  <button
+                    className={classNames(
+                      "flex w-full items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
+                      openDropdown === index ? "bg-primary text-white" : "bg-transparent text-black hover:bg-onPrimary"
+                    )}
+                    onClick={() => toggleDropdown(index)}
+                  >
+                    <span className="text-xl">{navItem.icon}</span>
+                    {navItem.title}
+                    <span className="text-xl ml-auto">
+                      {openDropdown === index ? icons.chevronUp : icons.chevronDown}
+                    </span>
+                  </button>
+                  {openDropdown === index && (
+                    <ul className="w-full">
+                      {navItem.children.map((child, childIndex) => (
+                        <li key={index + "-" + childIndex}>
+                          <NavLink
+                            to={child.link}
+                            className={({ isActive }) =>
+                              classNames(
+                                "flex items-center gap-2.5 px-4 py-3 pl-11 cursor-pointer text-sm font-medium rounded-lg",
+                                isActive ? "bg-onPrimary text-primary" : "bg-transparent text-black hover:text-primary"
+                              )
+                            }
+                          >
+                            <span className="text-xl">{icons[child.icon]}</span> {child.title}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ) : (
+                <li key={navItem.title} onClick={() => setOpenDropdown(null)}>
+                  <NavLink
+                    to={navItem.link}
+                    className={({ isActive }) =>
+                      classNames(
+                        "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
+                        isActive ? "bg-primary text-white" : "bg-transparent text-black hover:bg-onPrimary"
+                      )
+                    }
+                  >
+                    <span className="text-xl">{navItem.icon}</span> {navItem.title}
+                  </NavLink>
+                </li>
+              )
+            )}
             <li className="py-2" />
             <li
               className={classNames(

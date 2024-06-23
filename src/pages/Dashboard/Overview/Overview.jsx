@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import EventsCalender from "~/components/DashboardComponents/Events/EventsCalender";
+import icons from "~/assets/js/icons";
 import Button from "~/components/Global/Button/Button";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
@@ -146,7 +146,7 @@ const OverviewPage = () => {
         <span className="text-sm font-normal text-gray-dark">What is happening today?</span>
       </h2>
       <section className="flex gap-6">
-        <div className="w-3/4">
+        <div className="w-2/3">
           <div className="grid grid-cols-2 gap-4">
             {Object.keys(STATS).map((key) => (
               <div key={key} className="border p-5 rounded-lg bg-white space-y-5">
@@ -178,8 +178,32 @@ const OverviewPage = () => {
           </section>
         </div>
 
-        <div className="w-1/4">
-          <EventsCalender />
+        <div className="w-1/3 space-y-8">
+          <div className="border p-5 rounded-lg bg-white space-y-5">
+            <h4 className="font-semibold text-base">{"Today's Devotional"}</h4>
+            <p className="text-sm">
+              Those that be planted in the house of the LORD shall flourish in the courts of our God
+            </p>
+            <p className="text-sm text-gray">- Psalm 92:13 (KJV)</p>
+            <Button variant="outlined" className="w-full" label={`Go to devotionals list`} onClick={() => {}} />
+          </div>
+
+          <div className="border p-5 rounded-lg bg-white space-y-5">
+            <h4 className="font-semibold text-base">{"Today's Events"}</h4>
+            <ul className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <li key={i} className="bg-white border rounded-xl p-4 space-y-4">
+                  <div>
+                    <p className="text-gray-dark text-xs mb-2 truncate flex items-center gap-2">
+                      <span>{icons.clockCounter}</span> 10:00 AM - 10:30AM
+                    </p>
+                    <h4 className="text-sm font-bold truncate">Medical Problems in West Africa</h4>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <Button variant="outlined" className="w-full" label={`Go to Events list`} onClick={() => {}} />
+          </div>
         </div>
       </section>
     </div>
