@@ -22,7 +22,8 @@ const Resources = () => {
   const productStats = useMemo(
     () => ({
       totalResources: allResources?.meta?.totalItems,
-      articlesAndNewsletters: 0,
+      Newsletters: 0,
+      articles: 0,
       webinarsAndOthers: 0,
     }),
     [allResources]
