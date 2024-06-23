@@ -14,7 +14,6 @@ const errorMiddleware = () => (next) => (action) => {
         : data?.message || data?.error
     : message || error || "Oops, something went wrong!";
 
-  console.log("err", errorMessage);
   if ((isFulfilled && error) || isRejected) {
     toast.error(errorMessage);
   }
