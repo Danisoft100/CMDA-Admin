@@ -31,7 +31,11 @@ const SingleResource = () => {
           <img src={singleRes?.featuredImage} className="w-full max-h-[400px] mb-4" />
         )}
         <h2 className="font-bold mb-3 text-lg">{singleRes?.title}</h2>
-        <p className="text-gray-dark mb-6" dangerouslySetInnerHTML={{ __html: singleRes?.description }} />
+        <p
+          id="resource-body"
+          className="text-gray-dark mb-6"
+          dangerouslySetInnerHTML={{ __html: singleRes?.description }}
+        />
 
         {["Webinar", "Others"].includes(singleRes?.category) && (
           <div className="relative pb-[56.25%] h-0 overflow-hidden mb-8">

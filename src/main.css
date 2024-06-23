@@ -3,33 +3,31 @@
 @tailwind utilities;
 
 :root {
-    --toastify-color-success: #117E45;
-    --toastify-color-error: #FF4834;
-  }
-  
-  /* For Webkit-based browsers (Chrome, Safari and Opera) */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* For IE, Edge and Firefox */
-  .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
+  --toastify-color-success: #117e45;
+  --toastify-color-error: #ff4834;
+}
 
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
-  
-  /* country with flags custom styling */
-  .ReactFlagsSelect-module_selectValue__152eS {
-    /* display: none */
-  }
-  .ReactFlagsSelect-module_selectBtn__19wW7[aria-expanded="true"]:after,
-  .ReactFlagsSelect-module_selectBtn__19wW7:after  {
-    display: none;
-  }
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
-  /* react calender */
+/* country with flags custom styling */
+.ReactFlagsSelect-module_selectValue__152eS {
+  /* display: none */
+}
+.ReactFlagsSelect-module_selectBtn__19wW7[aria-expanded="true"]:after,
+.ReactFlagsSelect-module_selectBtn__19wW7:after {
+  display: none;
+}
+
+/* react calender */
 .react-calendar {
   border: none;
 }
@@ -49,4 +47,23 @@
 .event-calender .react-calendar__tile--active {
   background: #994279;
   color: white;
+}
+
+#resource-body a {
+  display: inline-block;
+  color: #994279;
+  margin: 4px 0;
+  font-weight: 600;
+}
+#resource-body a:hover {
+  text-decoration: underline;
+}
+
+#resource-body p,
+#resource-body ul,
+#resource-body h2,
+#resource-body h3,
+#resource-body h4,
+#resource-body img {
+  margin: 8px 0;
 }
