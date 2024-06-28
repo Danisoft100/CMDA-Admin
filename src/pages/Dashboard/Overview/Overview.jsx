@@ -5,6 +5,10 @@ import icons from "~/assets/js/icons";
 import Button from "~/components/Global/Button/Button";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
+import { doctorsRegionLists, globalRegionsData, studentChapterOptions } from "~/layouts/DashboardLayout/regions";
+import { useGetAllDevotionalsQuery } from "~/redux/api/devotionalsApi";
+import { useGetMembersStatsQuery } from "~/redux/api/membersApi";
+import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
@@ -12,107 +16,27 @@ import { formatCurrency } from "~/utilities/formatCurrency";
 const OverviewPage = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const { data: devotionals } = useGetAllDevotionalsQuery();
+  const { data: memberStats } = useGetMembersStatsQuery();
 
   const STATS = useMemo(
     () => ({
       members: {
-        totalMembers: "7.2k",
-        totalStudents: "7.2k",
-        totalDoctors: "7.2k",
-        totalGlobalMembers: "7.2k",
+        totalMembers: memberStats?.totalMembers || 0,
+        totalStudents: memberStats?.totalStudents || 0,
+        totalDoctors: memberStats?.totalDoctors || 0,
+        totalGlobalNetworks: memberStats?.totalGlobalNetworks || 0,
       },
       chapters: {
-        totalChapters: "7.2k",
-        studentChapters: "7.2k",
-        doctorChapters: "7.2k",
-        globalChapters: "7.2k",
+        chaptersAndRegions: "",
+        total: studentChapterOptions.length + doctorsRegionLists.length + globalRegionsData.length,
+        studentChapters: studentChapterOptions.length,
+        doctorChapters: doctorsRegionLists.length,
+        globalNetworkRegions: globalRegionsData.length,
       },
     }),
-    []
+    [memberStats]
   );
-
-  const DATA = [
-    {
-      id: "WYD2313",
-      createdAt: "2021-09-01T09:19:00Z",
-      paidBy: "Jane Doe",
-      type: "Donation",
-      status: "success",
-      amount: "20000",
-    },
-    {
-      id: "WYD2314",
-      createdAt: "2021-10-05T11:25:00Z",
-      paidBy: "John Smith",
-      type: "Subscription",
-      status: "success",
-      amount: "15000",
-    },
-    {
-      id: "WYD2315",
-      createdAt: "2021-11-12T14:30:00Z",
-      paidBy: "Alice Johnson",
-      type: "Donation",
-      status: "failed",
-      amount: "5000",
-    },
-    {
-      id: "WYD2316",
-      createdAt: "2022-01-20T08:45:00Z",
-      paidBy: "Michael Brown",
-      type: "Subscription",
-      status: "success",
-      amount: "30000",
-    },
-    {
-      id: "WYD2317",
-      createdAt: "2022-03-15T16:00:00Z",
-      paidBy: "Emily Davis",
-      type: "Donation",
-      status: "pending",
-      amount: "25000",
-    },
-    {
-      id: "WYD2318",
-      createdAt: "2022-05-10T10:10:00Z",
-      paidBy: "David Wilson",
-      type: "Subscription",
-      status: "success",
-      amount: "10000",
-    },
-    {
-      id: "WYD2319",
-      createdAt: "2022-07-22T13:55:00Z",
-      paidBy: "Sophia Martinez",
-      type: "Donation",
-      status: "success",
-      amount: "7000",
-    },
-    {
-      id: "WYD2320",
-      createdAt: "2022-09-09T09:30:00Z",
-      paidBy: "James Anderson",
-      type: "Subscription",
-      status: "failed",
-      amount: "12000",
-    },
-    {
-      id: "WYD2321",
-      createdAt: "2022-11-28T12:20:00Z",
-      paidBy: "Isabella Thompson",
-      type: "Donation",
-      status: "success",
-      amount: "4000",
-    },
-    {
-      id: "WYD2322",
-      createdAt: "2023-02-14T15:15:00Z",
-      paidBy: "Mia Harris",
-      type: "Subscription",
-      status: "success",
-      amount: "8000",
-    },
-  ];
 
   const COLUMNS = [
     { header: "Trans. ID", accessor: "id" },
@@ -152,16 +76,20 @@ const OverviewPage = () => {
               <div key={key} className="border p-5 rounded-lg bg-white space-y-5">
                 {Object.entries(STATS[key]).map(([label, value]) => (
                   <div key={label} className="flex items-center justify-between gap-3">
-                    <p className="text-sm">{convertToCapitalizedWords(label)}</p>
+                    <p className={label === "chaptersAndRegions" ? "font-semibold" : "text-sm"}>
+                      {convertToCapitalizedWords(label)}
+                    </p>
                     <p className="font-semibold text-base">{value}</p>
                   </div>
                 ))}
-                <Button
-                  variant="outlined"
-                  className="w-full"
-                  label={`Go to ${key} list`}
-                  onClick={() => navigate(`/${key}`)}
-                />
+                {key === "members" && (
+                  <Button
+                    variant="outlined"
+                    className="w-full"
+                    label={`Go to ${key} list`}
+                    onClick={() => navigate(`/${key}`)}
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -174,23 +102,21 @@ const OverviewPage = () => {
               </Link>
             </div>
 
-            <Table tableData={DATA} tableColumns={formattedColumns} showPagination={false} />
+            <Table tableData={[]} tableColumns={formattedColumns} showPagination={false} />
           </section>
         </div>
 
         <div className="w-1/3 space-y-8">
           <div className="border p-5 rounded-lg bg-white space-y-5">
-            <h4 className="font-semibold text-base">{"Today's Devotional"}</h4>
-            <p className="text-sm">
-              Those that be planted in the house of the LORD shall flourish in the courts of our God
-            </p>
-            <p className="text-sm text-gray">- Psalm 92:13 (KJV)</p>
+            <h4 className="font-semibold text-base">{"Most Recent Devotional"}</h4>
+            <p className="text-sm">{devotionals?.[0].keyVerseContent}</p>
+            <p className="text-sm text-gray">- {devotionals?.[0].keyVerse}</p>
             <Button variant="outlined" className="w-full" label={`Go to devotionals list`} onClick={() => {}} />
           </div>
 
           <div className="border p-5 rounded-lg bg-white space-y-5">
             <h4 className="font-semibold text-base">{"Today's Events"}</h4>
-            <ul className="space-y-3">
+            {/* <ul className="space-y-3">
               {[...Array(3)].map((_, i) => (
                 <li key={i} className="bg-white border rounded-xl p-4 space-y-4">
                   <div>
@@ -202,7 +128,22 @@ const OverviewPage = () => {
                 </li>
               ))}
             </ul>
-            <Button variant="outlined" className="w-full" label={`Go to Events list`} onClick={() => {}} />
+            <Button variant="outlined" className="w-full" label={`Go to Events list`} onClick={() => {}} /> */}
+            <div className="px-6 py-10 flex justify-center">
+              <div className="w-full max-w-[360px] text-center">
+                <span
+                  className={classNames(
+                    "flex items-center justify-center text-primary text-2xl",
+                    "size-14 mx-auto rounded-full bg-onPrimaryContainer"
+                  )}
+                >
+                  {icons.file}
+                </span>
+
+                <h3 className="font-bold text-primary mb-1 text-lg mt-2">No Data Available</h3>
+                <p className=" text-sm text-gray-600 mb-6">There are currently no data to display for this table</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -12,7 +12,7 @@ const ConfirmationModal = ({
   mainActionText = "Yes",
   mainActionLoading = false,
   subAction, // function for subAction - outlined button // set as null to hide
-  subActionText = "No",
+  subActionText = "No, Cancel",
   subActionLoading = false,
   maxWidth = 480,
   actionsFlex = "flex-row", // flex-row-reverse, flex-col, flex-col-reverse ==> change the flex direction of the action buttons

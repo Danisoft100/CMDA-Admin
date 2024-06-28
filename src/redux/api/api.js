@@ -15,6 +15,7 @@ export const api = createApi({
     },
   }),
   refetchOnMountOrArgChange: true,
+  keepUnusedDataFor: 0.0001,
   endpoints: () => ({}),
 });
 

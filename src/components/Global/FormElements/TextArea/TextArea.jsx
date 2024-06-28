@@ -3,7 +3,6 @@ import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import FormError from "../FormError";
 
 const TextArea = ({
-  type,
   register,
   rules,
   label,
@@ -25,7 +24,6 @@ const TextArea = ({
         </label>
       )}
       <textarea
-        type={type}
         id={label}
         name={name || label}
         rows={rows}
@@ -35,7 +33,10 @@ const TextArea = ({
           errors?.[label]?.message && "border-error",
           className
         )}
-        {...register(label, { required, ...rules })}
+        {...register(label, {
+          required: required && typeof required === "boolean" ? "This field is required" : required,
+          ...rules,
+        })}
         placeholder={placeholder}
       />
       <FormError error={errors?.[label]?.message} />

@@ -1,6 +1,6 @@
 import api from "./api";
 
-const authApi = api.injectEndpoints({
+const resourcesApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllResources: build.query({
       query: ({ limit, page }) => ({ url: "/resources", params: { limit, page } }),
@@ -32,6 +32,6 @@ export const {
   useUpdateResourceBySlugMutation,
   useCreateResourceMutation,
   useDeleteResourceBySlugMutation,
-} = authApi;
+} = resourcesApi;
 
-export default authApi;
+export default resourcesApi;

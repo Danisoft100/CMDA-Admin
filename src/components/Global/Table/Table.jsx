@@ -123,58 +123,60 @@ const Table = ({
   return (
     <div>
       {table.getRowModel().rows.length ? (
-        <table className="min-w-full sm:w-full" border={0}>
-          <thead className="border-t border-b-2">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <span
-                        {...{
-                          className: classNames(
-                            header.column.getCanSort() && "cursor-pointer",
-                            "flex gap-2 items-center select-none py-3 px-3",
-                            "text-sm font-semibold text-capitalize"
-                          ),
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort()
-                          ? {
-                              asc: icons.ascending,
-                              desc: icons.descending,
-                              false: icons.sort,
-                            }[header.column.getIsSorted()]
-                          : null}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="relative">
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className={classNames(
-                  "border-b border-b-gray-200 last:border-b-0",
-                  (enableRowSelection || onRowClick) && "hover:bg-primary/5 cursor-pointer",
-                  row.getIsSelected() && "bg-primary/5"
-                )}
-                onClick={onRowClick ? () => onRowClick(row) : () => {}}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="py-4 px-3 text-sm min-w-fit">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full" border={0}>
+            <thead className="border-t border-b-2 bg-gray-50">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <span
+                          {...{
+                            className: classNames(
+                              header.column.getCanSort() && "cursor-pointer",
+                              "flex gap-2 items-center select-none py-3 px-3",
+                              "text-sm font-semibold text-capitalize"
+                            ),
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort()
+                            ? {
+                                asc: icons.ascending,
+                                desc: icons.descending,
+                                false: icons.sort,
+                              }[header.column.getIsSorted()]
+                            : null}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="relative">
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={classNames(
+                    "border-b border-b-gray-200 last:border-b-0",
+                    (enableRowSelection || onRowClick) && "hover:bg-primary/5 cursor-pointer",
+                    row.getIsSelected() && "bg-primary/5"
+                  )}
+                  onClick={onRowClick ? () => onRowClick(row) : () => {}}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="py-4 px-3 text-sm min-w-fit">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <div className="px-6 py-10 flex justify-center">
           <div className="w-full max-w-[360px] text-center">
@@ -215,7 +217,7 @@ const Table = ({
             </select>
           </label>
           {/* pagination buttons */}
-          <div className="ml-auto md:ml-0 flex items-center gap-1 text-primary">
+          <div className="ml-auto md:ml-0 flex items-center gap-1 text-black">
             <Button
               icon={icons.chevronLeft}
               onClick={() => table.previousPage()}

@@ -18,7 +18,7 @@ const Resources = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: allResources } = useGetAllResourcesQuery({ limit: perPage, page: currentPage });
   const [createResource, { isLoading }] = useCreateResourceMutation();
-  console.log("ALL", allResources);
+
   const productStats = useMemo(
     () => ({
       totalResources: allResources?.meta?.totalItems,

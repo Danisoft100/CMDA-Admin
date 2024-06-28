@@ -48,7 +48,7 @@ const Header = ({ onToggleSidebar }) => {
             </li>
             <li>
               <NavLink
-                to="/settings"
+                to="/others/profile"
                 className={({ isActive }) =>
                   classNames(
                     "flex items-center gap-3 px-5 py-2 cursor-pointer border-t  font-medium transition-all",
@@ -56,7 +56,7 @@ const Header = ({ onToggleSidebar }) => {
                   )
                 }
               >
-                <span className="text-lg">{icons.settings}</span> Settings
+                <span className="text-lg">{icons.settings}</span> My Profile
               </NavLink>
             </li>
             <li

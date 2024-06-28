@@ -18,6 +18,7 @@ import Products from "~/pages/Dashboard/Products/Products";
 import Chapters from "~/pages/Dashboard/Chapters/Chapters";
 import Resources from "~/pages/Dashboard/Resources/Resources";
 import SingleResource from "~/pages/Dashboard/Resources/SingleResource";
+import Devotionals from "~/pages/Dashboard/Others/Devotionals";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -56,6 +57,14 @@ export default function AppRouter() {
             { path: "store", element: <Products /> },
             { path: "resources", element: <Resources /> },
             { path: "resources/:slug", element: <SingleResource /> },
+            {
+              path: "others",
+              children: [
+                { path: "devotionals", element: <Devotionals /> },
+                { path: "admins", element: () => <h1>Manage Admins</h1> },
+                { path: "profile", element: () => <h1>Profile</h1> },
+              ],
+            },
           ],
         },
       ],
