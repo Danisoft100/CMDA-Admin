@@ -111,7 +111,12 @@ const OverviewPage = () => {
             <h4 className="font-semibold text-base">{"Most Recent Devotional"}</h4>
             <p className="text-sm">{devotionals?.[0].keyVerseContent}</p>
             <p className="text-sm text-gray">- {devotionals?.[0].keyVerse}</p>
-            <Button variant="outlined" className="w-full" label={`Go to devotionals list`} onClick={() => {}} />
+            <Button
+              variant="outlined"
+              className="w-full"
+              label={`Go to devotionals list`}
+              onClick={() => navigate(`/others/devotionals`)}
+            />
           </div>
 
           <div className="border p-5 rounded-lg bg-white space-y-5">

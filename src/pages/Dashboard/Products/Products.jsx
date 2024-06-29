@@ -1,135 +1,79 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
+import CreateProductModal from "~/components/Dashboard/Products/CreateProductModal";
+import ViewProductModal from "~/components/Dashboard/Products/ViewProductModal";
+import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
-import StatusChip from "~/components/Global/StatusChip/StatusChip";
+import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import Table from "~/components/Global/Table/Table";
+import {
+  useCreateProductMutation,
+  useDeleteProductBySlugMutation,
+  useGetAllProductsQuery,
+  useGetProductStatsQuery,
+  useUpdateProductBySlugMutation,
+} from "~/redux/api/productsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
 const Products = () => {
+  const [selectedProd, setSelectedProd] = useState(null);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openView, setOpenView] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchBy, setSearchBy] = useState("");
+  const { data: products, isLoading } = useGetAllProductsQuery({ page: currentPage, limit: perPage, searchBy });
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductBySlugMutation();
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [editProduct, { isLoading: isUpdating }] = useUpdateProductBySlugMutation();
+  const { data: stats } = useGetProductStatsQuery();
+
   const productStats = useMemo(
     () => ({
-      totalProducts: 100292938,
-      digitalProducts: 50292938,
-      phyicalProducts: 88292938,
-      otherProducts: 88292938,
+      total: stats?.totalProducts,
+      "CDs & Audios": stats?.totalCDs,
+      books: stats?.totalBooks,
+      fashions: stats?.totalFashions,
+      others: stats?.totalOthers,
     }),
-    []
+    [stats]
   );
-
-  const DATA = [
-    {
-      id: "WYD2313",
-      createdAt: "2021-09-01T09:19:00Z",
-      paidBy: "Jane Doe",
-      type: "Digital",
-      status: "success",
-      amount: "20000",
-    },
-    {
-      id: "WYD2314",
-      createdAt: "2021-10-05T11:25:00Z",
-      paidBy: "John Smith",
-      type: "Physical",
-      status: "success",
-      amount: "15000",
-    },
-    {
-      id: "WYD2315",
-      createdAt: "2021-11-12T14:30:00Z",
-      paidBy: "Alice Johnson",
-      type: "Digital",
-      status: "failed",
-      amount: "5000",
-    },
-    {
-      id: "WYD2316",
-      createdAt: "2022-01-20T08:45:00Z",
-      paidBy: "Michael Brown",
-      type: "Physical",
-      status: "success",
-      amount: "30000",
-    },
-    {
-      id: "WYD2317",
-      createdAt: "2022-03-15T16:00:00Z",
-      paidBy: "Emily Davis",
-      type: "Digital",
-      status: "pending",
-      amount: "25000",
-    },
-    {
-      id: "WYD2318",
-      createdAt: "2022-05-10T10:10:00Z",
-      paidBy: "David Wilson",
-      type: "Physical",
-      status: "success",
-      amount: "10000",
-    },
-    {
-      id: "WYD2319",
-      createdAt: "2022-07-22T13:55:00Z",
-      paidBy: "Sophia Martinez",
-      type: "Digital",
-      status: "success",
-      amount: "7000",
-    },
-    {
-      id: "WYD2320",
-      createdAt: "2022-09-09T09:30:00Z",
-      paidBy: "James Anderson",
-      type: "Physical",
-      status: "failed",
-      amount: "12000",
-    },
-    {
-      id: "WYD2321",
-      createdAt: "2022-11-28T12:20:00Z",
-      paidBy: "Isabella Thompson",
-      type: "Digital",
-      status: "success",
-      amount: "4000",
-    },
-    {
-      id: "WYD2322",
-      createdAt: "2023-02-14T15:15:00Z",
-      paidBy: "Mia Harris",
-      type: "Physical",
-      status: "success",
-      amount: "8000",
-    },
-  ];
 
   const COLUMNS = [
     { header: "Product Name", accessor: "name" },
-    { header: "Category", accessor: "type" },
-    { header: "Price", accessor: "amount" },
-    { header: "Date", accessor: "createdAt" },
-    { header: "Status", accessor: "status" },
+    { header: "Category", accessor: "category" },
+    { header: "Price", accessor: "price" },
+    { header: "Brand", accessor: "brand" },
+    { header: "Qty", accessor: "stock" },
+    { header: "Date Added", accessor: "createdAt" },
     { header: "", accessor: "action" },
   ];
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
       const [value, item] = [info.getValue(), info.row.original];
-      return col.accessor === "status" ? (
-        <StatusChip status={value} />
-      ) : col.accessor === "name" ? (
-        <div className="inline-flex gap-2 items-center">
-          <span className="size-14 rounded-lg bg-onPrimaryContainer" />
-          {item.id}
+      return col.accessor === "name" ? (
+        <div className="inline-flex gap-2 items-center font-medium">
+          <img src={item.featuredImageUrl} className="size-14 rounded-lg bg-onPrimaryContainer" />
+          {item.name}
         </div>
       ) : col.accessor === "createdAt" ? (
         formatDate(value).date
-      ) : col.accessor === "amount" ? (
+      ) : col.accessor === "price" ? (
         formatCurrency(value)
       ) : col.accessor === "action" ? (
         <div className="inline-flex items-center gap-3 text-gray-dark">
-          <button type="button" onClick={(e) => handleAction(e, item, "edit")} className="text-sm">
+          <button type="button" onClick={() => handleAction(item, "view")} className="text-sm">
+            {icons.eye}
+          </button>
+          <button type="button" onClick={() => handleAction(item, "edit")} className="text-sm">
             {icons.pencil}
           </button>
-          <button type="button" onClick={(e) => handleAction(e, item, "delete")} className="text-lg">
+          <button type="button" onClick={() => handleAction(item, "delete")} className="text-lg">
             {icons.delete}
           </button>
         </div>
@@ -140,9 +84,47 @@ const Products = () => {
     enableSorting: false,
   }));
 
-  const handleAction = (evt, item, action) => {
-    evt.stopPropagation();
-    alert(action + " => " + item.id);
+  const handleAction = (item, action) => {
+    setSelectedProd(item);
+    if (action === "view") setOpenView(true);
+    if (action === "delete") setOpenDelete(true);
+    if (action === "edit") setOpenCreate(true);
+  };
+
+  const handleCreate = (payload) => {
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    createProduct(formData)
+      .unwrap()
+      .then(() => {
+        toast.success("Product ADDED successfully");
+        setOpenCreate(false);
+      });
+  };
+
+  const handleUpdate = (payload) => {
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    editProduct({ body: formData, slug: selectedProd?.slug })
+      .unwrap()
+      .then(() => {
+        toast.success("Product UPDATED successfully");
+        setOpenCreate(false);
+        setSelectedProd(null);
+      });
+  };
+
+  const handleDelete = () => {
+    deleteProduct(selectedProd?.slug)
+      .unwrap()
+      .then(() => {
+        toast.success("Product DELETED successfully");
+        setOpenDelete(false);
+      });
   };
 
   return (
@@ -150,15 +132,18 @@ const Products = () => {
       <PageHeader
         title="Products"
         subtitle="Manage all products in store"
-        action={() => {}}
+        action={() => {
+          setOpenCreate(true);
+          setSelectedProd(null);
+        }}
         actionLabel="Add Product"
       />
 
-      <div className="grid grid-cols-4 gap-8 mt-6">
+      <div className="grid  sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
         {Object.entries(productStats).map(([key, value]) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
             <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>
-            <p className="font-bold text-lg">{formatCurrency(value)}</p>
+            <p className="font-bold text-lg">{value || 0}</p>
           </div>
         ))}
       </div>
@@ -166,10 +151,54 @@ const Products = () => {
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Products</h3>
+          <SearchBar onSearch={setSearchBy} />
         </div>
 
-        <Table tableData={DATA} tableColumns={formattedColumns} onRowClick={console.log} />
+        <Table
+          tableData={products?.items || []}
+          tableColumns={formattedColumns}
+          serverSidePagination
+          onPaginationChange={({ perPage, currentPage }) => {
+            setPerPage(perPage);
+            setCurrentPage(currentPage);
+          }}
+          totalItemsCount={products?.meta?.totalItems}
+          totalPageCount={products?.meta?.totalPages}
+          loading={isLoading}
+        />
       </section>
+
+      <CreateProductModal
+        isOpen={openCreate}
+        onClose={() => {
+          setOpenCreate(false);
+          setSelectedProd(null);
+        }}
+        product={selectedProd}
+        loading={isCreating || isUpdating}
+        onSubmit={selectedProd ? handleUpdate : handleCreate}
+      />
+
+      <ViewProductModal
+        isOpen={openView}
+        onClose={() => {
+          setOpenView(false);
+          setSelectedProd(null);
+        }}
+        product={selectedProd}
+      />
+
+      {/*  */}
+      <ConfirmationModal
+        isOpen={openDelete}
+        onClose={() => setOpenDelete(false)}
+        subAction={() => setOpenDelete(false)}
+        mainAction={handleDelete}
+        mainActionLoading={isDeleting}
+        icon={icons.image}
+        title="Delete Product"
+        subtitle={`Are you sure you want to delete this product - ${selectedProd?.name} `}
+      />
     </div>
   );
 };

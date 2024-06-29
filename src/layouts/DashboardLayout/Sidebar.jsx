@@ -31,7 +31,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
       <aside
         className={classNames(
           isOpen ? "translate-x-0 animate-slidein" : "-translate-x-full",
-          "shadow-md lg:shadow-none p-5",
+          "shadow-md lg:shadow-none p-5 border-r",
           "transition-all duration-200 fixed inset-y-0 left-0 w-60 bg-white overflow-y-auto ease-in-out transform z-10 lg:z-[1]"
         )}
       >
@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                 <li key={index} className="">
                   <button
                     className={classNames(
-                      "flex w-full items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
+                      "flex w-full items-center gap-4 px-4 py-2.5 cursor-pointer text-sm font-semibold rounded-lg transition-all",
                       "bg-transparent text-black hover:bg-onPrimary"
                     )}
                     onClick={() => toggleDropdown(index)}
@@ -57,14 +57,14 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                     </span>
                   </button>
                   {openDropdown === index && (
-                    <ul className="w-full">
+                    <ul className="w-full mt-1">
                       {navItem.children.map((child, childIndex) => (
-                        <li key={index + "-" + childIndex}>
+                        <li key={index + "-" + childIndex} className="ml-4">
                           <NavLink
                             to={child.link}
                             className={({ isActive }) =>
                               classNames(
-                                "flex items-center gap-2.5 px-4 py-3 pl-11 cursor-pointer text-sm font-medium rounded-lg",
+                                "flex items-center gap-2.5 px-4 py-2.5 cursor-pointer text-sm font-medium rounded-lg",
                                 isActive
                                   ? "bg-onPrimaryContainer text-primary"
                                   : "bg-transparent text-black hover:text-primary"
@@ -84,7 +84,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                     to={navItem.link}
                     className={({ isActive }) =>
                       classNames(
-                        "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg transition-all",
+                        "flex items-center gap-4 px-4 py-2.5 cursor-pointer text-sm font-semibold rounded-lg transition-all",
                         isActive ? "bg-onPrimaryContainer text-primary" : "bg-transparent text-black hover:bg-onPrimary"
                       )
                     }
@@ -97,7 +97,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
             <li className="py-2" />
             <li
               className={classNames(
-                "flex items-center gap-4 px-4 py-3 cursor-pointer text-sm font-semibold rounded-lg",
+                "flex items-center gap-4 px-4 py-2.5 cursor-pointer text-sm font-semibold rounded-lg",
                 "bg-transparent text-black hover:bg-onPrimary transition-all"
               )}
               onClick={handleLogout}

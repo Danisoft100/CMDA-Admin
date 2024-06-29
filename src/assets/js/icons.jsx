@@ -42,7 +42,7 @@ import {
   BsSortAlphaDownAlt,
   BsSortAlphaUp,
 } from "react-icons/bs";
-import { BiChevronDown, BiChevronUp, BiSortAlt2, BiWorld } from "react-icons/bi";
+import { BiBriefcase, BiChevronDown, BiChevronUp, BiSortAlt2, BiWorld } from "react-icons/bi";
 import { IoList } from "react-icons/io5";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 import { GoDotFill } from "react-icons/go";
@@ -98,6 +98,7 @@ const icons = {
   dot: <GoDotFill />,
   chevronDown: <BiChevronDown />,
   chevronUp: <BiChevronUp />,
+  briefcase: <BiBriefcase />,
 };
 
 export default icons;

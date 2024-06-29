@@ -18,7 +18,7 @@ const Header = ({ onToggleSidebar }) => {
   };
 
   return (
-    <header className="bg-white fixed top-0 inset-x-0 z-[2] gap-4">
+    <header className="bg-white fixed top-0 inset-x-0 z-[2] gap-4 border-b">
       <nav className="h-full w-full flex items-center gap-4 p-6 py-3">
         {/* Sidebar Toggle Button */}
         <button

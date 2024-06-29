@@ -12,7 +12,7 @@ const Members = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [searchBy, setsearchBy] = useState("");
+  const [searchBy, setSearchBy] = useState("");
   const { data: members, isLoading } = useGetAllMembersQuery({ limit: perPage, page: currentPage, searchBy });
   const { data: stats } = useGetMembersStatsQuery();
 
@@ -72,7 +72,7 @@ const Members = () => {
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Members</h3>
-          <SearchBar onSearch={setsearchBy} />
+          <SearchBar onSearch={setSearchBy} />
         </div>
 
         <Table

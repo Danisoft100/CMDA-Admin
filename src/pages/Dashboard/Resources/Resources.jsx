@@ -20,7 +20,7 @@ const Resources = () => {
   const [createResource, { isLoading }] = useCreateResourceMutation();
   const { data: stats } = useGetResourceStatsQuery();
 
-  const productStats = useMemo(
+  const resourceStats = useMemo(
     () => ({
       total: stats?.totalResources,
       newsletters: stats?.totalNewsletters,
@@ -58,7 +58,7 @@ const Resources = () => {
       />
 
       <div className="grid  sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
-        {Object.entries(productStats).map(([key, value]) => (
+        {Object.entries(resourceStats).map(([key, value]) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
             <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>
             <p className="font-bold text-lg">{value || 0}</p>

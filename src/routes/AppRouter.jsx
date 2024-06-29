@@ -21,6 +21,9 @@ import SingleResource from "~/pages/Dashboard/Resources/SingleResource";
 import Devotionals from "~/pages/Dashboard/Others/Devotionals";
 import SingleMember from "~/pages/Dashboard/Members/SingleMember";
 import ManageAdmins from "~/pages/Dashboard/Others/ManageAdmins";
+import VolunteerJobs from "~/pages/Dashboard/Others/Volunteers/VolunteerJobs";
+import SingleVolunteerJob from "~/pages/Dashboard/Others/Volunteers/SingleJob";
+import CreateVolunteerJob from "~/pages/Dashboard/Others/Volunteers/CreateJob";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -57,12 +60,15 @@ export default function AppRouter() {
             { path: "members", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
-            { path: "store", element: <Products /> },
+            { path: "products", element: <Products /> },
             { path: "resources", element: <Resources /> },
             { path: "resources/:slug", element: <SingleResource /> },
             {
               path: "others",
               children: [
+                { path: "volunteer-jobs", element: <VolunteerJobs /> },
+                { path: "volunteer-jobs/create", element: <CreateVolunteerJob /> },
+                { path: "volunteer-jobs/:id", element: <SingleVolunteerJob /> },
                 { path: "devotionals", element: <Devotionals /> },
                 { path: "admins", element: <ManageAdmins /> },
                 { path: "profile", element: () => <h1>Profile</h1> },
