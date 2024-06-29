@@ -1,20 +1,38 @@
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
-import { useGetResourceBySlugQuery, useUpdateResourceBySlugMutation } from "~/redux/api/resourcesApi";
+import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
+import {
+  useDeleteResourceBySlugMutation,
+  useGetResourceBySlugQuery,
+  useUpdateResourceBySlugMutation,
+} from "~/redux/api/resourcesApi";
 import formatDate from "~/utilities/fomartDate";
 
 const SingleResource = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const { data: singleRes } = useGetResourceBySlugQuery(slug, { skip: !slug });
   const [updateResource, { isLoading }] = useUpdateResourceBySlugMutation();
+  const [deleteResource, { isLoading: isDeleting }] = useDeleteResourceBySlugMutation();
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleUpdate = () => {
     updateResource(slug)
       .unwrap()
       .then(() => {
         toast.success("Resource has been updated from " + singleRes?.sourceUrl);
+      });
+  };
+
+  const handleDelete = () => {
+    deleteResource(slug)
+      .unwrap()
+      .then(() => {
+        navigate("/resources");
+        toast.success("Resource has been DELETED successfully");
       });
   };
 
@@ -68,10 +86,21 @@ const SingleResource = () => {
         </div>
 
         <div className="flex justify-end gap-6">
-          <Button variant="outlined" label="Delete Resource" />
+          <Button variant="outlined" label="Delete Resource" onClick={() => setOpenDelete(true)} />
           <Button label="Update Resource" onClick={handleUpdate} loading={isLoading} />
         </div>
       </section>
+
+      {/*  */}
+      <ConfirmationModal
+        isOpen={openDelete}
+        onClose={() => setOpenDelete(false)}
+        subAction={() => setOpenDelete(false)}
+        mainAction={handleDelete}
+        mainActionLoading={isDeleting}
+        title="Delete Resource"
+        subtitle="Are you sure you want to delete this resource?"
+      />
     </div>
   );
 };

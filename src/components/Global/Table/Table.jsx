@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import icons from "~/assets/js/icons";
 import { classNames } from "~/utilities/classNames";
 import Button from "../Button/Button";
+import Loading from "../Loading/Loading";
 
 function IndeterminateCheckbox({ indeterminate, className = "", ...rest }) {
   const ref = useRef(null);
@@ -30,6 +31,7 @@ const Table = ({
   enableRowSelection, // set as true if you need to select rows, use onRowSelectionChange to handle selectedRows
   onRowSelectionChange = console.log, // function to handle selectedRows - contains selectedRows as a parameter
   onRowClick,
+  loading,
   searchFilter, // state for your search query,
   setSearchFilter, // function that sets the state of your search query
   serverSidePagination, // set true to control pagination with server
@@ -122,7 +124,11 @@ const Table = ({
 
   return (
     <div>
-      {table.getRowModel().rows.length ? (
+      {loading ? (
+        <div className="flex justify-center px-6 py-20">
+          <Loading height={64} width={64} className="text-primary" />
+        </div>
+      ) : table.getRowModel().rows.length ? (
         <div className="overflow-x-auto">
           <table className="w-full" border={0}>
             <thead className="border-t border-b-2 bg-gray-50">

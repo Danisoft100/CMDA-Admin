@@ -18,6 +18,7 @@ const TextInput = ({
   min,
   max,
   showTitleLabel = true, // whether to show label or title of input above the component
+  readOnly,
 }) => {
   const [showPwd, setShowPwd] = useState(false);
 
@@ -36,7 +37,8 @@ const TextInput = ({
           name={name || label}
           className={classNames(
             "bg-white border border-gray placeholder:text-gray placeholder:text-xs rounded-md block w-full text-sm p-3 h-12",
-            "focus:ring focus:ring-primary/20 focus:outline-none focus:bg-white focus:border-transparent transition-all",
+            "focus:ring focus:ring-primary/20 focus:outline-none focus:border-transparent transition-all",
+            "read-only:bg-gray-200",
             errors?.[label]?.message && "border-error",
             type === "password" ? "pr-8" : "pr-3",
             className
@@ -48,6 +50,7 @@ const TextInput = ({
           placeholder={placeholder}
           min={min}
           max={max}
+          readOnly={readOnly}
         />
         {type === "password" && (
           <button

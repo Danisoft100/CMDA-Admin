@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
 import Button from "~/components/Global/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { usePasswordForgotMutation } from "~/redux/api/auth/authApi";
+import { usePasswordForgotMutation } from "~/redux/api/authApi";
 import { EMAIL_PATTERN } from "~/utilities/regExpValidations";
 import { toast } from "react-toastify";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
   const [message, setMessage] = useState("");
 
   const [passwordForgot, { isLoading }] = usePasswordForgotMutation();
-  const [resendOtp, { isLoading: isResending }] = usePasswordForgotMutation();
+  // const [resendOtp, { isLoading: isResending }] = usePasswordForgotMutation();
 
   const handleForgotPassword = (payload) => {
     passwordForgot(payload)

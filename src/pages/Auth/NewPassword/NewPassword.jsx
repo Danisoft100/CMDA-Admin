@@ -5,7 +5,7 @@ import Button from "~/components/Global/Button/Button";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import icons from "~/assets/js/icons";
-import { usePasswordResetMutation } from "~/redux/api/auth/authApi";
+import { usePasswordResetMutation } from "~/redux/api/authApi";
 import { toast } from "react-toastify";
 
 const NewPassword = () => {

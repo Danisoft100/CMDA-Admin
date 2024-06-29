@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
@@ -8,10 +9,11 @@ import { classNames } from "~/utilities/classNames";
 import formatDate from "~/utilities/fomartDate";
 
 const Members = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchBy, setsearchBy] = useState("");
-  const { data: members } = useGetAllMembersQuery({ limit: perPage, page: currentPage, searchBy });
+  const { data: members, isLoading } = useGetAllMembersQuery({ limit: perPage, page: currentPage, searchBy });
   const { data: stats } = useGetMembersStatsQuery();
 
   const memberStats = useMemo(
@@ -76,7 +78,7 @@ const Members = () => {
         <Table
           tableData={members?.items || []}
           tableColumns={formattedColumns}
-          onRowClick={console.log}
+          onRowClick={({ original }) => navigate(`/members/${original.membershipId}`)}
           serverSidePagination
           onPaginationChange={({ perPage, currentPage }) => {
             setPerPage(perPage);
@@ -84,6 +86,7 @@ const Members = () => {
           }}
           totalItemsCount={members?.meta?.totalItems}
           totalPageCount={members?.meta?.totalPages}
+          loading={isLoading}
         />
       </section>
     </div>

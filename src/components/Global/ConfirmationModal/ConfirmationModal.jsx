@@ -9,7 +9,7 @@ const ConfirmationModal = ({
   title = "Title",
   subtitle = "Are you sure you want to do this?",
   mainAction, // function for the mainAction - button with filled variant // set as null to hide
-  mainActionText = "Yes",
+  mainActionText = "Yes, Proceed",
   mainActionLoading = false,
   subAction, // function for subAction - outlined button // set as null to hide
   subActionText = "No, Cancel",

@@ -13,15 +13,20 @@ const resourcesApi = api.injectEndpoints({
     }),
     updateResourceBySlug: build.mutation({
       query: (slug) => ({ url: `/resources/${slug}`, method: "PATCH" }),
-      invalidatesTags: ["RESOURCES"],
+      invalidatesTags: ["RESOURCES", "RSC_STATS"],
     }),
     deleteResourceBySlug: build.mutation({
       query: (slug) => ({ url: `/resources/${slug}`, method: "DELETE" }),
-      invalidatesTags: ["RESOURCES"],
+      invalidatesTags: ["RESOURCES", "RSC_STATS"],
     }),
     createResource: build.mutation({
       query: (body) => ({ url: `/resources`, method: "POST", body }),
-      invalidatesTags: ["RESOURCES"],
+      invalidatesTags: ["RESOURCES", "RSC_STATS"],
+    }),
+    getResourceStats: build.query({
+      query: () => ({ url: "/resources/stats" }),
+      transformResponse: (response) => response.data,
+      providesTags: ["RSC_STATS"],
     }),
   }),
 });
@@ -32,6 +37,7 @@ export const {
   useUpdateResourceBySlugMutation,
   useCreateResourceMutation,
   useDeleteResourceBySlugMutation,
+  useGetResourceStatsQuery,
 } = resourcesApi;
 
 export default resourcesApi;

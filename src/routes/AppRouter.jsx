@@ -19,6 +19,8 @@ import Chapters from "~/pages/Dashboard/Chapters/Chapters";
 import Resources from "~/pages/Dashboard/Resources/Resources";
 import SingleResource from "~/pages/Dashboard/Resources/SingleResource";
 import Devotionals from "~/pages/Dashboard/Others/Devotionals";
+import SingleMember from "~/pages/Dashboard/Members/SingleMember";
+import ManageAdmins from "~/pages/Dashboard/Others/ManageAdmins";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -53,6 +55,7 @@ export default function AppRouter() {
             { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
             { path: "transactions", element: <Transactions /> },
             { path: "members", element: <Members /> },
+            { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
             { path: "store", element: <Products /> },
             { path: "resources", element: <Resources /> },
@@ -61,7 +64,7 @@ export default function AppRouter() {
               path: "others",
               children: [
                 { path: "devotionals", element: <Devotionals /> },
-                { path: "admins", element: () => <h1>Manage Admins</h1> },
+                { path: "admins", element: <ManageAdmins /> },
                 { path: "profile", element: () => <h1>Profile</h1> },
               ],
             },

@@ -9,7 +9,7 @@ import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
 import MiniPagination from "~/components/Global/MiniPagination/MiniPagination";
 import Modal from "~/components/Global/Modal/Modal";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
-import { useCreateResourceMutation, useGetAllResourcesQuery } from "~/redux/api/resourcesApi";
+import { useCreateResourceMutation, useGetAllResourcesQuery, useGetResourceStatsQuery } from "~/redux/api/resourcesApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 
@@ -18,15 +18,17 @@ const Resources = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data: allResources } = useGetAllResourcesQuery({ limit: perPage, page: currentPage });
   const [createResource, { isLoading }] = useCreateResourceMutation();
+  const { data: stats } = useGetResourceStatsQuery();
 
   const productStats = useMemo(
     () => ({
-      totalResources: allResources?.meta?.totalItems,
-      Newsletters: 0,
-      articles: 0,
-      webinarsAndOthers: 0,
+      total: stats?.totalResources,
+      newsletters: stats?.totalNewsletters,
+      articles: stats?.totalArticles,
+      webinars: stats?.totalWebinars,
+      others: stats?.totalOthers,
     }),
-    [allResources]
+    [stats]
   );
 
   const [openCreate, setOpenCreate] = useState(false);
@@ -55,7 +57,7 @@ const Resources = () => {
         actionLabel="Create Resource"
       />
 
-      <div className="grid grid-cols-4 gap-4 mt-6">
+      <div className="grid  sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
         {Object.entries(productStats).map(([key, value]) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
             <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>

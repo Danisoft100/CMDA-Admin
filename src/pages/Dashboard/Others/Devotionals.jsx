@@ -61,7 +61,7 @@ const Devotionals = () => {
     deleteDevotional(selected?._id)
       .unwrap()
       .then(() => {
-        toast.success("Devotional created successfully");
+        toast.success("Devotional DELETED successfully");
         setOpenDelete(false);
         setSelected(null);
       });

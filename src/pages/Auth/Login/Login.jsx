@@ -3,7 +3,7 @@ import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
 import Button from "~/components/Global/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useLoginMutation } from "~/redux/api/auth/authApi";
+import { useLoginMutation } from "~/redux/api/authApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUser } from "~/redux/features/auth/authSlice";
