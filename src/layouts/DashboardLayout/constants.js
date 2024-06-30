@@ -13,7 +13,7 @@ export const NAV_LINKS = [
   },
   { title: "Events", link: "/events", icon: icons.calendar },
   { title: "Resources", link: "/resources", icon: icons.play },
-  { title: "Transactions", link: "/transactions", icon: icons.file },
+  { title: "Payments", link: "/payments", icon: icons.file },
   { title: "Products", link: "/products", icon: icons.store },
   // { title: "Messages", link: "/messages", icon: icons.message },
   {

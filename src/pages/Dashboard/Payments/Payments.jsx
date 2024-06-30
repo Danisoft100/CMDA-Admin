@@ -1,17 +1,22 @@
 import { useMemo } from "react";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
+import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
-const Transactions = () => {
-  const transactionStats = useMemo(
+const Payments = () => {
+  const paymentStats = useMemo(
     () => ({
-      totalTransactions: 100292938,
-      totalSubscriptions: 50292938,
-      totalDonations: 88292938,
+      totalPayments: 100292938,
+      subscriptions: 50292938,
+      donations: 88292938,
+      purchases: 88292938,
+      activeSubscribers: 344,
+      noOfDonations: 65,
+      noOfOrders: 87,
     }),
     []
   );
@@ -126,20 +131,21 @@ const Transactions = () => {
 
   return (
     <div>
-      <PageHeader title="Transactions" subtitle="Manage all subscriptions and donations" />
+      <PageHeader title="Payments" subtitle="Manage all subscriptions and donations" />
 
       <div className="grid grid-cols-4 gap-6 mt-6">
-        {Object.entries(transactionStats).map(([key, value]) => (
+        {Object.entries(paymentStats).map(([key, value], i) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
             <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>
-            <p className="font-bold text-lg">{formatCurrency(value)}</p>
+            <p className="font-bold text-lg">{i < 4 ? formatCurrency(value) : value}</p>
           </div>
         ))}
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
-          <h3 className="font-bold text-base">All Transactions</h3>
+          <h3 className="font-bold text-base">All Payments</h3>
+          <SearchBar />
         </div>
 
         <Table tableData={DATA} tableColumns={formattedColumns} onRowClick={console.log} />
@@ -148,4 +154,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default Payments;

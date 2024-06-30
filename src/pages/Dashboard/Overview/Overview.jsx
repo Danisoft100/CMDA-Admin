@@ -96,9 +96,9 @@ const OverviewPage = () => {
 
           <section className="bg-white shadow rounded-xl pt-6 mt-8">
             <div className="flex items-center justify-between gap-6 px-6 pb-6">
-              <h3 className="font-bold text-base">Transactions</h3>
-              <Link to="/transactions" className="font-semibold text-sm text-primary">
-                Go to transactions
+              <h3 className="font-bold text-base">Payments</h3>
+              <Link to="/payments" className="font-semibold text-sm text-primary">
+                Go to payments
               </Link>
             </div>
 

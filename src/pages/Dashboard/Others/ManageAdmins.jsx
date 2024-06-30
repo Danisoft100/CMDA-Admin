@@ -117,6 +117,7 @@ const ManageAdmins = () => {
       <ConfirmationModal
         isOpen={openDelete}
         onClose={() => setOpenDelete(false)}
+        icon={icons.delete}
         title="Delete Admin"
         subtitle={`Are you sure you want to delete this admin - ${selected?.fullName}?`}
         subAction={() => setOpenDelete(false)}

@@ -12,7 +12,7 @@ import AdminDashboardEventsPage from "~/pages/Dashboard/Events/Events";
 import AdminDashboardStoreSingleEventPage from "~/pages/Dashboard/Events/SingleEvent/SingleEvent";
 import AdminDashboardCreateEvent from "~/pages/Dashboard/Events/CreateEvent/CreateEvent";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Transactions from "~/pages/Dashboard/Transactions/Transactions";
+import Payments from "~/pages/Dashboard/Payments/Payments";
 import Members from "~/pages/Dashboard/Members/Members";
 import Products from "~/pages/Dashboard/Products/Products";
 import Chapters from "~/pages/Dashboard/Chapters/Chapters";
@@ -24,6 +24,7 @@ import ManageAdmins from "~/pages/Dashboard/Others/ManageAdmins";
 import VolunteerJobs from "~/pages/Dashboard/Others/Volunteers/VolunteerJobs";
 import SingleVolunteerJob from "~/pages/Dashboard/Others/Volunteers/SingleJob";
 import CreateVolunteerJob from "~/pages/Dashboard/Others/Volunteers/CreateJob";
+import MyProfile from "~/pages/Dashboard/Others/MyProfile";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -56,7 +57,7 @@ export default function AppRouter() {
             { path: "events", element: <AdminDashboardEventsPage /> },
             { path: "create-event", element: <AdminDashboardCreateEvent /> },
             { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
-            { path: "transactions", element: <Transactions /> },
+            { path: "payments", element: <Payments /> },
             { path: "members", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
@@ -71,7 +72,7 @@ export default function AppRouter() {
                 { path: "volunteer-jobs/:id", element: <SingleVolunteerJob /> },
                 { path: "devotionals", element: <Devotionals /> },
                 { path: "admins", element: <ManageAdmins /> },
-                { path: "profile", element: () => <h1>Profile</h1> },
+                { path: "profile", element: <MyProfile /> },
               ],
             },
           ],
