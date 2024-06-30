@@ -21,7 +21,7 @@ const Select = ({
   return (
     <div>
       {showTitleLabel && (
-        <label htmlFor={label} className="block mb-2 text-sm font-semibold text-black">
+        <label htmlFor={label} className="block mb-1 text-sm font-semibold text-black">
           {title || convertToCapitalizedWords(label)}
           {required ? <span className="text-error ml-px">*</span> : null}
         </label>
@@ -33,21 +33,24 @@ const Select = ({
           <ReactSelect
             unstyled
             id={label}
-            value={options.find((option) => option.value === value)}
+            value={
+              multiple
+                ? options.filter((x) => value?.includes(x.value))
+                : options.find((option) => option.value === value)
+            }
             onChange={(selectedOption) => {
-              onChange(multiple ? selectedOption : selectedOption.value);
+              onChange(multiple ? selectedOption.map((x) => x.value) : selectedOption.value);
             }}
             onBlur={onBlur}
             placeholder={placeholder}
             options={options}
             className="cursor-pointer"
             isMulti={multiple}
-            // adding disbaled property
             disabled={disabled}
             classNames={{
               control: (state) =>
                 classNames(
-                  "bg-white border-gray placeholder:text-gray placeholder:text-xs border rounded-lg block w-full text-sm p-3 h-12 cursor-pointer",
+                  "bg-white border-gray placeholder:text-gray placeholder:text-xs border rounded-lg block w-full text-sm p-3 min-h-[48px] cursor-pointer",
                   state.isFocused
                     ? "ring ring-primary/25 outline-none border-transparent bg-white"
                     : errors?.[label]?.message

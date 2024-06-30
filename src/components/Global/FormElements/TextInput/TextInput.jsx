@@ -14,6 +14,7 @@ const TextInput = ({
   name,
   placeholder,
   className,
+  divClassName, // container's ClassName
   required, // set to true or pass custom error message as string if field is required
   min,
   max,
@@ -23,7 +24,7 @@ const TextInput = ({
   const [showPwd, setShowPwd] = useState(false);
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${divClassName}`}>
       {showTitleLabel && (
         <label htmlFor={label} className="block mb-1 text-sm font-semibold text-black">
           {title || convertToCapitalizedWords(label)}

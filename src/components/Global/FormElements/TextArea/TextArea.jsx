@@ -11,12 +11,13 @@ const TextArea = ({
   name,
   placeholder,
   className,
+  divClassName, // container's className,
   rows = 4,
   required = "This field is required", // set to false if not required or pass custom error message as string
   showTitleLabel = true, // whether to show label or title of input above the component
 }) => {
   return (
-    <div>
+    <div className={divClassName}>
       {showTitleLabel && (
         <label htmlFor={label} className="block mb-1 text-sm font-semibold text-black">
           {title || convertToCapitalizedWords(label)}
