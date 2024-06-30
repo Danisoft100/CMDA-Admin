@@ -1,144 +1,146 @@
-import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
+import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
+import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
+import { useDeleteEventBySlugMutation, useGetEventBySlugQuery } from "~/redux/api/eventsApi";
 import { classNames } from "~/utilities/classNames";
+import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 
-const AdminDashboardStoreSingleEventPage = () => {
+const SingleEvent = () => {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const { data: evt } = useGetEventBySlugQuery(slug, { skip: !slug });
+  const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventBySlugMutation();
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const eventAnalytics = useMemo(
+    () => ({
+      totalRegistered: 0,
+      studentsRegistered: 0,
+      doctorsRegistered: 0,
+      globalNetworkRegistered: 0,
+    }),
+    []
+  );
+
+  const handleDelete = () => {
+    deleteEvent(slug)
+      .unwrap()
+      .then(() => {
+        navigate("/events");
+        toast.success("Event has been DELETED successfully");
+      });
+  };
+
   return (
-    <div className="grid grid-cols-12 place-items-start gap-x-6">
-      <div className="bg-white py-6 px-2 lg:px-6 rounded-3xl col-span-9">
-        <div className="flex justify-between items-center">
-          <div className="flex justify-start items-center gap-6">
-            <Link
-              to="/events"
-              className="inline-flex justify-center p-2 text-base items-center rounded-full bg-[rgba(175,175,175,0.20)] font-medium text-[#0C0900]"
-            >
-              {icons.arrowLeft}
-            </Link>
+    <div>
+      <BackButton label="Back to Events List" to="/events" />
 
-            <p className="text-[#181818] text-lg font-bold leading-6">Event Details</p>
+      <div className="flex gap-6 mt-6">
+        <section className="bg-white rounded-2xl p-6 shadow w-full md:w-3/4">
+          <span className="capitalize bg-onTertiary text-tertiary px-4 py-2 rounded-lg text-xs font-semibold mb-4 inline-block">
+            {evt?.eventType}
+          </span>
+
+          <h2 className="font-bold mb-4 text-lg">{evt?.name}</h2>
+
+          <img src={evt?.featuredImageUrl} className="w-full max-h-[500px] mb-6" />
+
+          <p className="text-base">{evt?.description}</p>
+
+          <div className="mt-6">
+            <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">
+              Event {evt?.eventType === "Physical" ? "Location" : "Link"}
+            </h4>
+            <p className="text-base mb-1">{evt?.linkOrLocation}</p>
           </div>
 
-          <Button className="bg-[#E0C6D7] gap-2 !text-primaryContainer font-semibold hover:bg-[#E0C6D7] hover:opacity-80">
-            Update Event
-          </Button>
-        </div>
-
-        {/* content */}
-        <div className="mt-4">
-          <img
-            src="/atmosphere.png"
-            className={classNames("bg-onPrimary h-40 lg:h-64 w-full rounded-lg object-cover")}
-          />
-
-          {/* title */}
-          <div className="mt-4 space-y-2 text-sm text-black">
-            <p className="  font-bold leading-5">Event title</p>
-            <p className="leading-6">Medical Problems in West Africa And How to Solve them</p>
-          </div>
-
-          {/* description */}
-          <div className="mt-4 space-y-2 text-sm ">
-            <p className="  font-bold leading-5 text-primaryContainer">Event Description</p>
-            <p className="leading-6 text-black">
-              I’m a digital product designer specializing in UI/UX design for web and mobile apps. The products I design
-              create a competitive advantage that improves customer experience and helps businesses increase profits.
-            </p>
-          </div>
-
-          {/* divider */}
-          <div className="my-6 w-full h-[2px] bg-onSecondary" />
-
-          {/* date and time */}
-          <div className="mt-6 flex flex-col lg:flex-row lg:justify-start gap-x-10 gap-y-5 items-start ">
-            <div className="space-y-2">
-              <p className="text-[#6A6769 text-xs font-semibold leading-5">Date</p>
-
-              <p className="text-sm text-primaryContainer">{formatDate(new Date()).date}</p>
+          <div className="grid grid-cols-2 gap-6 mt-6">
+            <div>
+              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Access Code</h4>
+              <p className="text-base mb-1">{evt?.accessCode || "N/A"}</p>
             </div>
-            <div className="space-y-2">
-              <p className="text-[#6A6769 text-xs font-semibold leading-5">Time</p>
-
-              <p className="text-sm text-primaryContainer">{formatDate(new Date()).time}</p>
+            <div>
+              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Event Date &amp; Time</h4>
+              <p className="text-base mb-1">{formatDate(evt?.eventDateTime).dateTime}</p>
+            </div>
+            <div className="col-span-2">
+              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-2">Members Group</h4>
+              <p className="flex flex-wrap gap-4">
+                {evt?.membersGroup?.map((grp) => (
+                  <span
+                    key={grp}
+                    className={classNames(
+                      "capitalize px-4 py-2 rounded text-xs font-medium",
+                      grp === "Student"
+                        ? "bg-onPrimaryContainer text-primary"
+                        : grp === "Doctor"
+                          ? "bg-onSecondaryContainer text-secondary"
+                          : "bg-onTertiaryContainer text-tertiary"
+                    )}
+                  >
+                    {grp}
+                  </span>
+                ))}
+              </p>
             </div>
           </div>
 
-          {/* event details */}
-          <div className="flex items-start gap-x-14 my-6">
-            {/* event type */}
-            <div className="space-y-2">
-              <p className="text-[#6a6769] text-xs font-semibold leading-5">Event type</p>
-              <EventChips text="Virtual" />
-            </div>
-
-            {/* event tag */}
-            <div className="space-y-2">
-              <p className="text-[#6a6769] text-xs font-semibold leading-5">Event tag</p>
-              <EventChips text="Training" />
-            </div>
-
-            {/* event tag */}
-            <div className="space-y-2">
-              <p className="text-[#6a6769] text-xs font-semibold leading-5">Member group</p>
-              <div className="flex items-center justify-start gap-x-2">
-                <EventChips text="All Member" />
-                <EventChips text="Students" />
-                <EventChips text="Doctors" />
-                <EventChips text="GLobal Members" />
-              </div>
-            </div>
+          <div className="mt-6">
+            <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Additional Information</h4>
+            <p className="text-base mb-1">{evt?.additionalInformation}</p>
           </div>
 
-          {/* location/link and passcode */}
-          <div className="flex items-start gap-x-10">
-            <div className="mt-4 space-y-2">
-              <p className="  font-semibold leading-5 text-[#6A6769] text-xs">Event link/location</p>
-              <p className="leading-6 text-primaryContainer text-sm">https://meetinglink.com</p>
-            </div>
-
-            <div className="mt-4 space-y-2">
-              <p className="  font-semibold leading-5 text-[#6A6769] text-xs">Event passcode</p>
-              <p className="leading-6 text-primaryContainer text-sm">0POIR784</p>
-            </div>
+          <div className="flex flex-wrap gap-4 my-6">
+            {evt?.eventTags?.map((tag) => (
+              <span key={tag} className="capitalize bg-gray-light px-4 py-2 rounded text-xs font-medium">
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* divider */}
-          <div className="my-6 w-full h-[2px] bg-onSecondary" />
-        </div>
-      </div>
+          <p className="text-gray text-sm mb-4 mt-6">
+            Posted: <span className="text-black font-medium">{formatDate(evt?.createdAt).dateTime}</span>{" "}
+          </p>
 
-      {/* analysis */}
-      <div className="col-span-3 px-4 border-l border-[rgba(28,28,28,0.10)] h-full py-6 w-full">
-        <div>
-          <h4 className="text-primary font-bold leading-5 text-sm px-1">Events Analytics</h4>
-
-          {/* registered number */}
-          <div className="flex justify-between items-center px-2 mt-5">
-            <p className="text-primaryContainer text-xs font-semibold leading-5">Total registered member</p>
-            <p className="font-bold text-primaryContainer text-sm leading-5">24</p>
+          <div className="flex justify-end gap-6 mt-6">
+            <Button variant="outlined" color="error" label="Delete Event" onClick={() => setOpenDelete(true)} />
+            <Button label="Update Event" onClick={() => navigate(`/events/create-event?slug=${slug}`)} />
           </div>
+        </section>
 
-          <div className="space-y-4 px-4">
-            {["Students", "Doctors", "Global Members"].map((data, i) => (
-              <div className="flex justify-between items-center px-2 mt-5" key={i}>
-                <p className="text-[#4D494C] text-sm font-semibold leading-5 gap-2 flex items-center">
-                  <span>{icons.world}</span> {data}
-                </p>
-                <p className="font-bold text-primaryContainer text-sm leading-5">24</p>
+        <section>
+          <h3 className="text-base font-bold mb-2">Event Analytics</h3>
+          <div className="space-y-4">
+            {Object.entries(eventAnalytics).map(([key, val]) => (
+              <div key={key}>
+                <h4 className="text-xs text-gray-600 font-semibold uppercase mb-0.5">
+                  {convertToCapitalizedWords(key)}
+                </h4>
+                <p className="text-base mb-1 font-semibold">{val || 0}</p>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </div>
+
+      {/*  */}
+      <ConfirmationModal
+        isOpen={openDelete}
+        onClose={() => setOpenDelete(false)}
+        subAction={() => setOpenDelete(false)}
+        mainAction={handleDelete}
+        mainActionLoading={isDeleting}
+        icon={icons.calendar}
+        title="Delete Event"
+        subtitle="Are you sure you want to delete this event?"
+      />
     </div>
   );
 };
 
-export default AdminDashboardStoreSingleEventPage;
-
-const EventChips = ({ text }) => (
-  <div className="py-2 px-4 flex justify-center items-center rounded-3xl border border-gray-light text-xs font-semibold leading-5 text-primaryContainer">
-    {text}
-  </div>
-);
+export default SingleEvent;

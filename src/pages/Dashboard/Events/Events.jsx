@@ -1,24 +1,31 @@
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ItemCard from "~/components/Dashboard/ItemCard/ItemCard";
-import Button from "~/components/Global/Button/Button";
+import MiniPagination from "~/components/Global/MiniPagination/MiniPagination";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
+import SearchBar from "~/components/Global/SearchBar/SearchBar";
+import { useGetAllEventsQuery } from "~/redux/api/eventsApi";
 import { classNames } from "~/utilities/classNames";
 import formatDate from "~/utilities/fomartDate";
 
 const Events = () => {
   const navigate = useNavigate();
+  const [perPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchBy, setSearchBy] = useState("");
+  const { data: allEvents } = useGetAllEventsQuery({ page: currentPage, limit: perPage, searchBy });
+
   const eventStats = useMemo(
     () => [
-      { label: "Total Events", bgClass: "bg-white", value: 50292938 },
-      { label: "Today's Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
-      { label: "Future Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
-      { label: "Past Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
-      { label: "Students Only", bgClass: "bg-primary", value: 50292938 },
-      { label: "Doctors Only", bgClass: "bg-secondary", value: 50292938 },
-      { label: "Global Network Only", bgClass: "bg-tertiary", value: 50292938 },
+      { label: "Total Events", bgClass: "bg-white", value: allEvents?.meta?.totalItems },
+      // { label: "Today's Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      // { label: "Future Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      // { label: "Past Events", bgClass: "bg-onPrimaryContainer", value: 50292938 },
+      // { label: "Students Only", bgClass: "bg-primary", value: 50292938 },
+      // { label: "Doctors Only", bgClass: "bg-secondary", value: 50292938 },
+      // { label: "Global Network Only", bgClass: "bg-tertiary", value: 50292938 },
     ],
-    []
+    [allEvents]
   );
 
   return (
@@ -43,23 +50,32 @@ const Events = () => {
       </div>
 
       <section className="my-8">
+        <div className="flex justify-end mb-4">
+          <SearchBar onSearch={setSearchBy} />
+        </div>
         <div className="grid grid-cols-3 gap-6">
-          {[...Array(9)].map((_, x) => (
-            <ItemCard
-              key={x}
-              title="Lorem ipsum ssome other text i no know nothing about "
-              category={"Webinar " + (x + 1)}
-              dateTime={formatDate(new Date()).date}
-            />
+          {allEvents?.items?.map((evt) => (
+            <Link key={evt?._id} to={`/events/${evt.slug}`}>
+              <ItemCard
+                image={evt.featuredImageUrl}
+                title={evt.name}
+                category={evt.eventType}
+                dateTime={formatDate(evt.eventDateTime).dateTime}
+                extraText={"Posted - " + formatDate(evt.createdAt).date}
+              />
+            </Link>
           ))}
         </div>
-        <div className="flex justify-end items-center text-primary p-4 mt-1">
-          <Button onClick={() => {}} disabled={false} label="Prev" variant="outlined" small />
-          <span className="mx-2 text-sm">
-            Showing <b>1</b> - <b>10</b> of <b>12</b>
-          </span>
-          <Button onClick={() => {}} disabled={false} label="Next" variant="outlined" small />
-        </div>
+
+        {allEvents?.meta?.totalItems && (
+          <MiniPagination
+            itemsPerPage={perPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalItems={allEvents?.meta?.totalItems}
+            totalPages={allEvents?.meta?.totalPages}
+          />
+        )}
       </section>
     </div>
   );

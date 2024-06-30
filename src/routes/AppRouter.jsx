@@ -55,8 +55,8 @@ export default function AppRouter() {
           children: [
             { index: true, element: <DashboardHomePage /> },
             { path: "events", element: <AdminDashboardEventsPage /> },
-            { path: "create-event", element: <AdminDashboardCreateEvent /> },
-            { path: "events/:id", element: <AdminDashboardStoreSingleEventPage /> },
+            { path: "events/create-event", element: <AdminDashboardCreateEvent /> },
+            { path: "events/:slug", element: <AdminDashboardStoreSingleEventPage /> },
             { path: "payments", element: <Payments /> },
             { path: "members", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
