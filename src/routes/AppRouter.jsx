@@ -12,7 +12,6 @@ import AdminDashboardEventsPage from "~/pages/Dashboard/Events/Events";
 import AdminDashboardStoreSingleEventPage from "~/pages/Dashboard/Events/SingleEvent/SingleEvent";
 import AdminDashboardCreateEvent from "~/pages/Dashboard/Events/CreateEvent/CreateEvent";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Payments from "~/pages/Dashboard/Payments/Payments";
 import Members from "~/pages/Dashboard/Members/Members";
 import Products from "~/pages/Dashboard/Products/Products";
 import Chapters from "~/pages/Dashboard/Chapters/Chapters";
@@ -25,6 +24,9 @@ import VolunteerJobs from "~/pages/Dashboard/Others/Volunteers/VolunteerJobs";
 import SingleVolunteerJob from "~/pages/Dashboard/Others/Volunteers/SingleJob";
 import CreateVolunteerJob from "~/pages/Dashboard/Others/Volunteers/CreateJob";
 import MyProfile from "~/pages/Dashboard/Others/MyProfile";
+import Orders from "~/pages/Dashboard/Payments/Orders";
+import Donations from "~/pages/Dashboard/Payments/Donations";
+import Subscriptions from "~/pages/Dashboard/Payments/Subscriptions";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -57,7 +59,14 @@ export default function AppRouter() {
             { path: "events", element: <AdminDashboardEventsPage /> },
             { path: "events/create-event", element: <AdminDashboardCreateEvent /> },
             { path: "events/:slug", element: <AdminDashboardStoreSingleEventPage /> },
-            { path: "payments", element: <Payments /> },
+            {
+              path: "payments",
+              children: [
+                { path: "orders", element: <Orders /> },
+                { path: "subscriptions", element: <Subscriptions /> },
+                { path: "donations", element: <Donations /> },
+              ],
+            },
             { path: "members", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },

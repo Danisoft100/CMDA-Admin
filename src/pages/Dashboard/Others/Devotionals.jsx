@@ -84,8 +84,8 @@ const Devotionals = () => {
         <Table
           tableData={devotionals}
           tableColumns={formattedColumns}
-          onRowClick={({ original }) => {
-            setSelected(original);
+          onRowClick={(item) => {
+            setSelected(item);
             setViewModal(true);
           }}
         />

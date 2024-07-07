@@ -43,7 +43,9 @@ const Select = ({
             }}
             onBlur={onBlur}
             placeholder={placeholder}
-            options={options}
+            options={
+              options?.every((x) => typeof x === "string") ? options.map((v) => ({ label: v, value: v })) : options
+            }
             className="cursor-pointer"
             isMulti={multiple}
             disabled={disabled}

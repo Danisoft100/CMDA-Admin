@@ -29,6 +29,7 @@ import {
   FaArrowLeft,
   FaRegNewspaper,
   FaChevronLeft,
+  FaCreditCard,
 } from "react-icons/fa";
 import { AiOutlineDelete, AiOutlineFileText } from "react-icons/ai";
 import {
@@ -100,6 +101,7 @@ const icons = {
   chevronUp: <BiChevronUp />,
   briefcase: <BiBriefcase />,
   lock: <BiLock />,
+  card: <FaCreditCard />,
 };
 
 export default icons;

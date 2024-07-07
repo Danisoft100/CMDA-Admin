@@ -171,7 +171,7 @@ const Table = ({
                     (enableRowSelection || onRowClick) && "hover:bg-primary/5 cursor-pointer",
                     row.getIsSelected() && "bg-primary/5"
                   )}
-                  onClick={onRowClick ? () => onRowClick(row) : () => {}}
+                  onClick={onRowClick ? () => onRowClick(row.original) : () => {}}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="py-4 px-3 text-sm min-w-fit">

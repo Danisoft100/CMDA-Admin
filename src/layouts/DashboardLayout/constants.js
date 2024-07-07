@@ -13,7 +13,16 @@ export const NAV_LINKS = [
   },
   { title: "Events", link: "/events", icon: icons.calendar },
   { title: "Resources", link: "/resources", icon: icons.play },
-  { title: "Payments", link: "/payments", icon: icons.file },
+  {
+    title: "Payments",
+    link: "/payments",
+    icon: icons.card,
+    children: [
+      { title: "Orders", link: "/payments/orders" },
+      { title: "Subscriptions", link: "/payments/subscriptions" },
+      { title: "Donations", link: "/payments/donations" },
+    ],
+  },
   { title: "Products", link: "/products", icon: icons.store },
   // { title: "Messages", link: "/messages", icon: icons.message },
   {

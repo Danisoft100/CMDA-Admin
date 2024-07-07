@@ -78,7 +78,7 @@ const Members = () => {
         <Table
           tableData={members?.items || []}
           tableColumns={formattedColumns}
-          onRowClick={({ original }) => navigate(`/members/${original.membershipId}`)}
+          onRowClick={(item) => navigate(`/members/${item.membershipId}`)}
           serverSidePagination
           onPaginationChange={({ perPage, currentPage }) => {
             setPerPage(perPage);
