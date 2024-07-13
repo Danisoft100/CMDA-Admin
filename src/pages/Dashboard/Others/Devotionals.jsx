@@ -33,7 +33,11 @@ const Devotionals = () => {
     ...col,
     cell: (info) => {
       const value = info.getValue();
-      return col.accessor === "updatedAt" ? formatDate(value).date : value;
+      return col.accessor === "keyVerseContent"
+        ? value.slice(0, 50) + "..."
+        : col.accessor === "updatedAt"
+          ? formatDate(value).date
+          : value;
     },
     enableSorting: false,
   }));
@@ -72,7 +76,10 @@ const Devotionals = () => {
       <PageHeader
         title="Devotionals"
         subtitle="Manage all devotionals, sorted by last modified date"
-        action={() => setOpenCreate(true)}
+        action={() => {
+          setOpenCreate(true);
+          setSelected(null);
+        }}
         actionLabel="New Devotional"
       />
 

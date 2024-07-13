@@ -3,9 +3,16 @@ import api from "./api";
 const eventsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllEvents: build.query({
-      query: ({ limit, page, searchBy }) => ({
+      query: ({ limit, page, searchBy, eventDate, eventType, membersGroup }) => ({
         url: "/events",
-        params: { limit, page, ...(searchBy ? { searchBy } : {}) },
+        params: {
+          limit,
+          page,
+          ...(searchBy ? { searchBy } : {}),
+          ...(eventDate ? { eventDate } : {}),
+          ...(eventType ? { eventType } : {}),
+          ...(membersGroup ? { membersGroup } : {}),
+        },
       }),
       transformResponse: (response) => response.data,
       providesTags: ["EVENTS"],

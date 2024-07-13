@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import icons from "~/assets/js/icons";
+import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
+import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
@@ -13,7 +16,17 @@ const Members = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchBy, setSearchBy] = useState("");
-  const { data: members, isLoading } = useGetAllMembersQuery({ limit: perPage, page: currentPage, searchBy });
+  const [openFilter, setOpenFilter] = useState(false);
+  const [role, setRole] = useState(null);
+  const [region, setRegion] = useState(null);
+  const {
+    data: members,
+    isLoading,
+    isFetching,
+  } = useGetAllMembersQuery(
+    { limit: perPage, page: currentPage, searchBy, region, role },
+    { refetchOnMountOrArgChange: true }
+  );
   const { data: stats } = useGetMembersStatsQuery();
 
   const memberStats = useMemo(
@@ -72,7 +85,16 @@ const Members = () => {
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Members</h3>
-          <SearchBar onSearch={setSearchBy} />
+          <div className="flex justify-end items-end gap-4 mb-4">
+            <Button
+              label="Filter"
+              className="ml-auto"
+              onClick={() => setOpenFilter(true)}
+              icon={icons.filter}
+              variant="outlined"
+            />
+            <SearchBar onSearch={setSearchBy} />
+          </div>
         </div>
 
         <Table
@@ -86,9 +108,20 @@ const Members = () => {
           }}
           totalItemsCount={members?.meta?.totalItems}
           totalPageCount={members?.meta?.totalPages}
-          loading={isLoading}
+          loading={isLoading || isFetching}
         />
       </section>
+
+      {/*  */}
+      <MembersFilterModal
+        isOpen={openFilter}
+        onClose={() => setOpenFilter(false)}
+        onSubmit={({ role, region }) => {
+          setRole(role);
+          setRegion(region);
+          setOpenFilter(false);
+        }}
+      />
     </div>
   );
 };

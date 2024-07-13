@@ -13,6 +13,7 @@ import {
   MdAddShoppingCart,
   MdShoppingCart,
   MdViewModule,
+  MdFilterList,
 } from "react-icons/md";
 import { FiBell, FiDownloadCloud } from "react-icons/fi";
 import { HiBadgeCheck, HiDotsVertical, HiOfficeBuilding, HiOutlineHome } from "react-icons/hi";
@@ -102,6 +103,7 @@ const icons = {
   briefcase: <BiBriefcase />,
   lock: <BiLock />,
   card: <FaCreditCard />,
+  filter: <MdFilterList />,
 };
 
 export default icons;

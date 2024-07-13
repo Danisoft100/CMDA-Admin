@@ -19,14 +19,14 @@ const SingleVolunteerJob = () => {
     deleteJob(id)
       .unwrap()
       .then(() => {
-        navigate("/others/volunteer-jobs");
+        navigate("/others/jobs");
         toast.success("Job has been DELETED successfully");
       });
   };
 
   return (
     <div>
-      <BackButton label="Back to Volunteer Jobs" to="/others/volunteer-jobs" />
+      <BackButton label="Back to Available Jobs" to="/others/jobs" />
 
       <section className="bg-white rounded-2xl p-6 shadow mt-8">
         <span
@@ -83,7 +83,7 @@ const SingleVolunteerJob = () => {
 
         <div className="flex justify-end gap-6">
           <Button color="error" variant="outlined" label="Delete Job" onClick={() => setOpenDelete(true)} />
-          <Button label="Update Job" onClick={() => navigate(`/others/volunteer-jobs/create?id=${id}`)} />
+          <Button label="Update Job" onClick={() => navigate(`/others/jobs/create?id=${id}`)} />
         </div>
       </section>
 
@@ -95,7 +95,7 @@ const SingleVolunteerJob = () => {
         mainAction={handleDelete}
         mainActionLoading={isDeleting}
         icon={icons.briefcase}
-        title="Delete Volunteer Job"
+        title="Delete Job"
         subtitle="Are you sure you want to delete this job?"
       />
     </div>

@@ -45,14 +45,14 @@ const CreateVolunteerJob = () => {
         .unwrap()
         .then((res) => {
           toast.success("Volunteer job UPDATED ssuccessfully");
-          navigate(`/others/volunteer-jobs/${res.data._id}`);
+          navigate(`/others/jobs/${res.data._id}`);
         });
     } else {
       createJob(payload)
         .unwrap()
         .then((res) => {
           toast.success("Volunteer job CREATED ssuccessfully");
-          navigate(`/others/volunteer-jobs/${res.data._id}`);
+          navigate(`/others/jobs/${res.data._id}`);
         });
     }
   };
@@ -69,10 +69,10 @@ const CreateVolunteerJob = () => {
 
   return (
     <div>
-      <BackButton label="Back to Volunteer Jobs" to="/others/volunteer-jobs" />
+      <BackButton label="Back to Available Jobs" to="/others/jobs" />
 
       <section className="bg-white rounded-2xl p-6 shadow mt-8">
-        <h3 className="font-bold text-lg mb-6">{id ? "Edit" : "Create"} Volunteer Job</h3>
+        <h3 className="font-bold text-lg mb-6">{id ? "Edit" : "Add New"} Job</h3>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <TextInput label="title" register={register} errors={errors} required />
           <TextArea label="description" register={register} errors={errors} />

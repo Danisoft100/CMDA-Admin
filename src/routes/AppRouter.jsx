@@ -76,9 +76,9 @@ export default function AppRouter() {
             {
               path: "others",
               children: [
-                { path: "volunteer-jobs", element: <VolunteerJobs /> },
-                { path: "volunteer-jobs/create", element: <CreateVolunteerJob /> },
-                { path: "volunteer-jobs/:id", element: <SingleVolunteerJob /> },
+                { path: "jobs", element: <VolunteerJobs /> },
+                { path: "jobs/create", element: <CreateVolunteerJob /> },
+                { path: "jobs/:id", element: <SingleVolunteerJob /> },
                 { path: "devotionals", element: <Devotionals /> },
                 { path: "admins", element: <ManageAdmins /> },
                 { path: "profile", element: <MyProfile /> },

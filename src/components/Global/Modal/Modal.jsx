@@ -31,7 +31,7 @@ const Modal = ({ isOpen, onClose, className, title, subtitle, showCloseBtn = tru
           {title && (
             <div className="flex items-center gap-4 mb-4">
               <div className="flex-1">
-                <h3 className="text-base font-semibold">{title}</h3>
+                <h3 className="text-base font-bold">{title}</h3>
                 {subtitle && <p className="text-gray text-sm">{title}</p>}
               </div>
               {showCloseBtn && (

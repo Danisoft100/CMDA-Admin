@@ -26,6 +26,7 @@ const CreateProductModal = ({ isOpen, onClose, product, onSubmit, loading }) => 
       setImage(product.featuredImageUrl);
     } else {
       reset();
+      setImage(null);
     }
   }, [product, setValue, reset]);
 

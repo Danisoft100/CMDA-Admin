@@ -26,7 +26,7 @@ const CreateAdminModal = ({ isOpen, onClose, admin, onSubmit, loading }) => {
   }, [admin, setValue, reset]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={admin ? "Update Devotional" : "Create Devotional"} showCloseBtn>
+    <Modal isOpen={isOpen} onClose={onClose} title={admin ? "Update Admin Role" : "Add New Admin"} showCloseBtn>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         <TextInput label="fullName" register={register} required errors={errors} readOnly={admin} />
         <TextInput label="email" register={register} required errors={errors} readOnly={!!admin} />

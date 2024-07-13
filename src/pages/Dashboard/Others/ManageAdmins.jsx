@@ -90,7 +90,10 @@ const ManageAdmins = () => {
       <PageHeader
         title="ManageAdmins"
         subtitle="Manage all admin roles and users"
-        action={() => setOpenCreate(true)}
+        action={() => {
+          setOpenCreate(true);
+          setSelected(null);
+        }}
         actionLabel="New Admin"
       />
 

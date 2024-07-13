@@ -114,6 +114,7 @@ const SingleMember = () => {
       {/*  */}
       <ConfirmationModal
         isOpen={openDelete}
+        icon={icons.person}
         onClose={() => setOpenDelete(false)}
         subAction={() => setOpenDelete(false)}
         mainAction={handleDelete}

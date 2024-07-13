@@ -3,11 +3,14 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import icons from "~/assets/js/icons";
 import Button from "~/components/Global/Button/Button";
+import Loading from "~/components/Global/Loading/Loading";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
-import { doctorsRegionLists, globalRegionsData, studentChapterOptions } from "~/layouts/DashboardLayout/regions";
+import { doctorsRegionLists, globalRegionsData, studentChapterOptions } from "~/constants/regions";
 import { useGetAllDevotionalsQuery } from "~/redux/api/devotionalsApi";
+import { useGetAllEventsQuery } from "~/redux/api/eventsApi";
 import { useGetMembersStatsQuery } from "~/redux/api/membersApi";
+import { useGetAllOrdersQuery } from "~/redux/api/ordersApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
@@ -18,6 +21,11 @@ const OverviewPage = () => {
   const navigate = useNavigate();
   const { data: devotionals } = useGetAllDevotionalsQuery();
   const { data: memberStats } = useGetMembersStatsQuery();
+  const { data: todayEvents, isLoadingEvents } = useGetAllEventsQuery({
+    page: 1,
+    limit: 3,
+    eventDate: new Date().toISOString().split("T")[0],
+  });
 
   const STATS = useMemo(
     () => ({
@@ -38,26 +46,30 @@ const OverviewPage = () => {
     [memberStats]
   );
 
+  const { data: orders, isLoadingOrders } = useGetAllOrdersQuery({ page: 1, limit: 5 });
+
   const COLUMNS = [
-    { header: "Trans. ID", accessor: "id" },
-    { header: "Status", accessor: "status" },
-    { header: "Paid by", accessor: "paidBy" },
-    { header: "Transaction type", accessor: "type" },
+    { header: "Reference", accessor: "paymentReference" },
     { header: "Date", accessor: "createdAt" },
-    { header: "Amount", accessor: "amount" },
+    { header: "Total Amount", accessor: "totalAmount" },
+    { header: "Total Items", accessor: "totalItems" },
+    { header: "Status", accessor: "status" },
   ];
+
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
-      const value = info.getValue();
+      const [value, item] = [info.getValue(), info.row.original];
       return col.accessor === "status" ? (
         <StatusChip status={value} />
       ) : col.accessor === "createdAt" ? (
-        formatDate(value).date
-      ) : col.accessor === "amount" ? (
+        formatDate(value).dateTime
+      ) : col.accessor === "totalAmount" ? (
         formatCurrency(value)
+      ) : col.accessor === "totalItems" ? (
+        item.products?.reduce((acc, prod) => acc + prod.quantity, 0)
       ) : (
-        value
+        value || "--"
       );
     },
     enableSorting: false,
@@ -96,13 +108,18 @@ const OverviewPage = () => {
 
           <section className="bg-white shadow rounded-xl pt-6 mt-8">
             <div className="flex items-center justify-between gap-6 px-6 pb-6">
-              <h3 className="font-bold text-base">Payments</h3>
-              <Link to="/payments" className="font-semibold text-sm text-primary">
-                Go to payments
+              <h3 className="font-bold text-base">Recent Orders</h3>
+              <Link to="/payments/orders" className="font-semibold text-sm text-primary">
+                See More
               </Link>
             </div>
 
-            <Table tableData={[]} tableColumns={formattedColumns} showPagination={false} />
+            <Table
+              tableData={orders?.items || []}
+              tableColumns={formattedColumns}
+              showPagination={false}
+              loading={isLoadingOrders}
+            />
           </section>
         </div>
 
@@ -121,34 +138,50 @@ const OverviewPage = () => {
 
           <div className="border p-5 rounded-lg bg-white space-y-5">
             <h4 className="font-semibold text-base">{"Today's Events"}</h4>
-            {/* <ul className="space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <li key={i} className="bg-white border rounded-xl p-4 space-y-4">
-                  <div>
-                    <p className="text-gray-dark text-xs mb-2 truncate flex items-center gap-2">
-                      <span>{icons.clockCounter}</span> 10:00 AM - 10:30AM
-                    </p>
-                    <h4 className="text-sm font-bold truncate">Medical Problems in West Africa</h4>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <Button variant="outlined" className="w-full" label={`Go to Events list`} onClick={() => {}} /> */}
-            <div className="px-6 py-10 flex justify-center">
-              <div className="w-full max-w-[360px] text-center">
-                <span
-                  className={classNames(
-                    "flex items-center justify-center text-primary text-2xl",
-                    "size-14 mx-auto rounded-full bg-onPrimaryContainer"
-                  )}
-                >
-                  {icons.file}
-                </span>
-
-                <h3 className="font-bold text-primary mb-1 text-lg mt-2">No Data Available</h3>
-                <p className=" text-sm text-gray-600 mb-6">There are currently no data to display for this table</p>
+            {isLoadingEvents ? (
+              <div className="flex justify-center px-6 py-14">
+                <Loading height={64} width={64} className="text-primary" />
               </div>
-            </div>
+            ) : todayEvents?.items?.length ? (
+              <>
+                <ul className="space-y-3">
+                  {todayEvents?.items?.map((evt, i) => (
+                    <li
+                      key={i}
+                      className="bg-white border rounded-xl p-4 cursor-pointer"
+                      onClick={() => navigate(`/events/${evt.slug}`)}
+                    >
+                      <p className="text-gray-dark text-xs mb-2 truncate flex items-center gap-2">
+                        <span>{icons.clockCounter}</span> {formatDate(evt.eventDateTime).dateTime}
+                      </p>
+                      <h4 className="text-sm font-bold truncate">{evt.name}</h4>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  variant="outlined"
+                  className="w-full"
+                  label={`Go to Events list`}
+                  onClick={() => navigate("events")}
+                />
+              </>
+            ) : (
+              <div className="px-6 py-10 flex justify-center">
+                <div className="w-full max-w-[360px] text-center">
+                  <span
+                    className={classNames(
+                      "flex items-center justify-center text-primary text-2xl",
+                      "size-14 mx-auto rounded-full bg-onPrimaryContainer"
+                    )}
+                  >
+                    {icons.file}
+                  </span>
+
+                  <h3 className="font-bold text-primary mb-1 text-lg mt-2">No Data Available</h3>
+                  <p className=" text-sm text-gray-600 mb-6">There are currently no data to display for this table</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

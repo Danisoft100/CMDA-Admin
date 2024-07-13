@@ -3,7 +3,7 @@ import { classNames } from "~/utilities/classNames";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import { NAV_LINKS } from "./constants";
+import { NAV_LINKS } from "../../constants/navigation";
 import { useMediaQuery2 } from "~/hooks/useMediaQuery2";
 
 const DashboardLayout = ({ withOutlet = true, children }) => {

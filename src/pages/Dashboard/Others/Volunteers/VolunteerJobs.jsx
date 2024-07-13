@@ -32,9 +32,9 @@ const VolunteerJobs = () => {
   return (
     <div>
       <PageHeader
-        title="Volunteer Jobs"
-        subtitle="Manage all jobs available for volunteership"
-        action={() => navigate("/others/volunteer-jobs/create")}
+        title="Available Jobs"
+        subtitle="Manage all available jobs"
+        action={() => navigate("/others/jobs/create")}
         actionLabel="Add Job New"
       />
 
@@ -53,7 +53,7 @@ const VolunteerJobs = () => {
         </div>
         <div className="grid grid-cols-2 gap-6">
           {allVolunteerJobs?.items?.map((job) => (
-            <Link key={job._id} to={`/others/volunteer-jobs/${job._id}`}>
+            <Link key={job._id} to={`/others/jobs/${job._id}`}>
               <div className="rounded-xl border bg-white px-4 py-4 flex gap-4 items-center">
                 <span className="size-24 bg-onPrimary rounded-xl flex-shrink-0 inline-flex items-center justify-center text-4xl text-primary">
                   {icons.briefcase}

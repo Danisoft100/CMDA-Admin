@@ -3,9 +3,15 @@ import api from "./api";
 const membersApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllMembers: build.query({
-      query: ({ limit, page, searchBy }) => ({
+      query: ({ searchBy, page, limit, role, region }) => ({
         url: "/users",
-        params: { limit, page, ...(searchBy ? { searchBy } : {}) },
+        params: {
+          limit,
+          page,
+          ...(searchBy ? { searchBy } : {}),
+          ...(role ? { role } : {}),
+          ...(region ? { region } : {}),
+        },
       }),
       transformResponse: (response) => response.data,
       providesTags: ["MEMBERS"],
