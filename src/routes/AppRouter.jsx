@@ -27,6 +27,7 @@ import MyProfile from "~/pages/Dashboard/Others/MyProfile";
 import Orders from "~/pages/Dashboard/Payments/Orders";
 import Donations from "~/pages/Dashboard/Payments/Donations";
 import Subscriptions from "~/pages/Dashboard/Payments/Subscriptions";
+import DashboardMessagingPage from "~/pages/Dashboard/Messaging/Messaging";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -70,6 +71,7 @@ export default function AppRouter() {
             { path: "members", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
+            { path: "messaging", element: <DashboardMessagingPage /> },
             { path: "products", element: <Products /> },
             { path: "resources", element: <Resources /> },
             { path: "resources/:slug", element: <SingleResource /> },

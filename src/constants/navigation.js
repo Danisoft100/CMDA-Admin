@@ -24,7 +24,7 @@ export const NAV_LINKS = [
     ],
   },
   { title: "Products", link: "/products", icon: icons.store },
-  // { title: "Messages", link: "/messages", icon: icons.message },
+  { title: "Messaging", link: "/messaging", icon: icons.message },
   {
     title: "Others",
     icon: icons.list,
