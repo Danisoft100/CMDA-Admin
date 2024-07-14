@@ -16,6 +16,23 @@ const membersApi = api.injectEndpoints({
       transformResponse: (response) => response.data,
       providesTags: ["MEMBERS"],
     }),
+    exportMembersList: build.mutation({
+      queryFn: async ({ callback, role, region }, api, extraOptions, baseQuery) => {
+        const result = await baseQuery({
+          url: "/users/export",
+          params: {
+            ...(role ? { role } : {}),
+            ...(region ? { region } : {}),
+          },
+          method: "GET",
+          responseHandler: (response) => response.blob(),
+          cache: "no-cache",
+        });
+
+        callback(result);
+        return { data: null };
+      },
+    }),
     getMembersStats: build.query({
       query: () => "/users/stats",
       transformResponse: (response) => response.data,
@@ -47,6 +64,7 @@ export const {
   //   useUpdateMemberByIdMutation,
   //   useCreateMemberMutation,
   useDeleteMemberByIdMutation,
+  useExportMembersListMutation,
 } = membersApi;
 
 export default membersApi;

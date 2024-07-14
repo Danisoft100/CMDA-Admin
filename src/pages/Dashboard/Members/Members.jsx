@@ -7,8 +7,9 @@ import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
-import { useGetAllMembersQuery, useGetMembersStatsQuery } from "~/redux/api/membersApi";
+import { useExportMembersListMutation, useGetAllMembersQuery, useGetMembersStatsQuery } from "~/redux/api/membersApi";
 import { classNames } from "~/utilities/classNames";
+import { downloadFile } from "~/utilities/fileDownloader";
 import formatDate from "~/utilities/fomartDate";
 
 const Members = () => {
@@ -69,6 +70,16 @@ const Members = () => {
     enableSorting: false,
   }));
 
+  const [exportMembers, { isLoading: isExporting }] = useExportMembersListMutation();
+
+  const handleExport = async () => {
+    const callback = (result) => {
+      const fileName = role || region ? (role || "") + (region ? "_" + region : "") + "_Members.csv" : "Members.csv";
+      downloadFile(result.data, fileName);
+    };
+    exportMembers({ callback, role, region });
+  };
+
   return (
     <div>
       <PageHeader title="Members" subtitle="Manage all students, doctors & global network members" />
@@ -86,6 +97,7 @@ const Members = () => {
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Members</h3>
           <div className="flex justify-end items-end gap-4 mb-4">
+            <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
             <Button
               label="Filter"
               className="ml-auto"

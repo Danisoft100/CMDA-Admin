@@ -1,10 +1,16 @@
 import { useMemo, useState } from "react";
+import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import Table from "~/components/Global/Table/Table";
-import { useGetAllSubscriptionsQuery, useGetSubscriptionStatsQuery } from "~/redux/api/subscriptionsApi";
+import {
+  useExportSubscriptionsMutation,
+  useGetAllSubscriptionsQuery,
+  useGetSubscriptionStatsQuery,
+} from "~/redux/api/subscriptionsApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
+import { downloadFile } from "~/utilities/fileDownloader";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
@@ -77,6 +83,15 @@ const Subscriptions = () => {
     enableSorting: false,
   }));
 
+  const [exportSubscriptions, { isLoading: isExporting }] = useExportSubscriptionsMutation();
+
+  const handleExport = async () => {
+    const callback = (result) => {
+      downloadFile(result.data, "Subscriptions.csv");
+    };
+    exportSubscriptions({ callback });
+  };
+
   return (
     <div>
       <PageHeader title="Subscription" subtitle="Manage all annual subscriptions" />
@@ -91,8 +106,9 @@ const Subscriptions = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
-        <div className="flex items-center justify-between gap-6 px-6 pb-6">
+        <div className="flex items-center gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Subscriptions</h3>
+          <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
           <SearchBar onSearch={setSearchBy} />
         </div>
 

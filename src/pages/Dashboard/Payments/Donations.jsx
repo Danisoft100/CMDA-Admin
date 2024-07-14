@@ -1,9 +1,15 @@
 import { useMemo, useState } from "react";
+import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import Table from "~/components/Global/Table/Table";
-import { useGetAllDonationsQuery, useGetDonationStatsQuery } from "~/redux/api/donationsApi";
+import {
+  useExportDonationsMutation,
+  useGetAllDonationsQuery,
+  useGetDonationStatsQuery,
+} from "~/redux/api/donationsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
+import { downloadFile } from "~/utilities/fileDownloader";
 import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
@@ -60,6 +66,15 @@ const Donations = () => {
     enableSorting: false,
   }));
 
+  const [exportDonations, { isLoading: isExporting }] = useExportDonationsMutation();
+
+  const handleExport = async () => {
+    const callback = (result) => {
+      downloadFile(result.data, "Donations.csv");
+    };
+    exportDonations({ callback });
+  };
+
   return (
     <div>
       <PageHeader title="Donation" subtitle="Manage all donations" />
@@ -74,8 +89,9 @@ const Donations = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
-        <div className="flex items-center justify-between gap-6 px-6 pb-6">
+        <div className="flex items-center gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Donations</h3>
+          <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
           <SearchBar onSearch={setSearchBy} />
         </div>
 
