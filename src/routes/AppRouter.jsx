@@ -28,6 +28,8 @@ import Orders from "~/pages/Dashboard/Payments/Orders";
 import Donations from "~/pages/Dashboard/Payments/Donations";
 import Subscriptions from "~/pages/Dashboard/Payments/Subscriptions";
 import DashboardMessagingPage from "~/pages/Dashboard/Messaging/Messaging";
+import Trainings from "~/pages/Dashboard/Events/Trainings/Trainings";
+import SingleTraining from "~/pages/Dashboard/Events/Trainings/SingleTraining";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -60,6 +62,8 @@ export default function AppRouter() {
             { path: "events", element: <AdminDashboardEventsPage /> },
             { path: "events/create-event", element: <AdminDashboardCreateEvent /> },
             { path: "events/:slug", element: <AdminDashboardStoreSingleEventPage /> },
+            { path: "trainings", element: <Trainings /> },
+            { path: "trainings/:id", element: <SingleTraining /> },
             {
               path: "payments",
               children: [
@@ -69,6 +73,7 @@ export default function AppRouter() {
               ],
             },
             { path: "members", element: <Members /> },
+            { path: "members/transitions", element: <Members /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
             { path: "messaging", element: <DashboardMessagingPage /> },

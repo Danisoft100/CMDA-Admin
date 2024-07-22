@@ -5,13 +5,20 @@ export const NAV_LINKS = [
   {
     title: "Members",
     icon: icons.group,
-    link: "/members",
-    // children: [
-    //   { title: "All Members", link: "/members" },
-    //   { title: "All Chapters", link: "/chapters" },
-    // ],
+    children: [
+      { title: "All Members", link: "/members" },
+      { title: "All Chapters", link: "/members/transitions" },
+    ],
   },
-  { title: "Events", link: "/events", icon: icons.calendar },
+  {
+    title: "Events & Trainings",
+    link: "/events",
+    icon: icons.calendar,
+    children: [
+      { title: "All Events", link: "/events" },
+      { title: "Trainings", link: "/trainings" },
+    ],
+  },
   { title: "Resources", link: "/resources", icon: icons.play },
   {
     title: "Payments",
@@ -29,7 +36,7 @@ export const NAV_LINKS = [
     title: "Others",
     icon: icons.list,
     children: [
-      { title: "Available Jobs", link: "/others/jobs" },
+      { title: "Volunteer Jobs", link: "/others/jobs" },
       { title: "Devotionals", link: "/others/devotionals" },
       { title: "Manage Admins", link: "/others/admins" },
       { title: "My Profile", link: "/others/profile" },

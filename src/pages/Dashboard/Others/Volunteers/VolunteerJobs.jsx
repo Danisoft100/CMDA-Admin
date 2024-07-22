@@ -32,8 +32,8 @@ const VolunteerJobs = () => {
   return (
     <div>
       <PageHeader
-        title="Available Jobs"
-        subtitle="Manage all available jobs"
+        title="Volunteer Jobs"
+        subtitle="Manage all volunteer jobs"
         action={() => navigate("/others/jobs/create")}
         actionLabel="Add Job New"
       />

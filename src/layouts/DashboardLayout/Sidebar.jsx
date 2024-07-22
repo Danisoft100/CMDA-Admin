@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
         className={classNames(
           isOpen ? "translate-x-0 animate-slidein" : "-translate-x-full",
           "shadow-md lg:shadow-none p-5 border-r",
-          "transition-all duration-200 fixed inset-y-0 left-0 w-60 bg-white overflow-y-auto ease-in-out transform z-10 lg:z-[1]"
+          "transition-all duration-200 fixed inset-y-0 left-0 w-64 bg-white overflow-y-auto ease-in-out transform z-10 lg:z-[1]"
         )}
       >
         <Logo className="w-auto h-10 sm:h-12 hidden md:block" />
@@ -46,7 +46,7 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                   <button
                     className={classNames(
                       "flex w-full items-center gap-4 px-4 py-2.5 cursor-pointer text-sm font-semibold rounded-lg transition-all",
-                      "bg-transparent text-black hover:bg-onPrimary"
+                      "bg-transparent text-black hover:bg-onPrimary truncate"
                     )}
                     onClick={() => toggleDropdown(index)}
                   >

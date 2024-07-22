@@ -10,9 +10,9 @@ const FileUploader = ({
   register, // important --> from useForm
   errors, // important --> from useForm
   setValue, // important --> from useForm
-  allowedTypes = ["image/jpeg", "image/png"], // array of upload file types allowed - HTML standard
+  allowedTypes = ["text/csv"], // array of upload file types allowed - CSV in this case
   allowedSize = 2, // size in MB
-  placeholderText = "Supported types: .jpeg, .png", // a text telling the user what file types the uploader accepts
+  placeholderText = "Supported type: .csv", // a text telling the user what file types the uploader accepts
   required,
 }) => {
   const { handleBrowseFiles, handleDragOver, handleDrop, uploadedFile, setUploadedFile, errMsg } = useFileUpload({
@@ -21,7 +21,9 @@ const FileUploader = ({
   });
 
   useEffect(() => {
-    setValue(label, uploadedFile);
+    if (uploadedFile) {
+      setValue(label, uploadedFile);
+    }
   }, [uploadedFile, setValue, label]);
 
   return (
@@ -35,13 +37,13 @@ const FileUploader = ({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {uploadedFile && uploadedFile?.name ? (
+        {uploadedFile && uploadedFile.name ? (
           <>
             <div className="flex justify-center mb-2">
               <span className="text-2xl text-primary">
-                {uploadedFile?.type?.includes("pdf")
+                {uploadedFile.type.includes("pdf")
                   ? icons.pdfAlt
-                  : uploadedFile?.type?.includes("msword") || uploadedFile?.type?.includes("officedocument")
+                  : uploadedFile.type.includes("msword") || uploadedFile.type.includes("officedocument")
                     ? icons.doc
                     : icons.image}
               </span>

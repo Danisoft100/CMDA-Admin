@@ -26,7 +26,7 @@ const SingleVolunteerJob = () => {
 
   return (
     <div>
-      <BackButton label="Back to Available Jobs" to="/others/jobs" />
+      <BackButton label="Back to Volunteer Jobs" to="/others/jobs" />
 
       <section className="bg-white rounded-2xl p-6 shadow mt-8">
         <span

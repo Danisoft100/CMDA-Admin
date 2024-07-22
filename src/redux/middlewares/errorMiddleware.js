@@ -1,6 +1,9 @@
 import { toast } from "react-toastify";
+import { clearTokens } from "../features/auth/tokenSlice";
+import api from "../api/api";
+import { logout } from "../features/auth/authSlice";
 
-const errorMiddleware = () => (next) => (action) => {
+const errorMiddleware = (store) => (next) => (action) => {
   const isRejected = action.type.endsWith("/rejected");
   const isFulfilled = action.type.endsWith("/fulfilled");
 
@@ -15,7 +18,20 @@ const errorMiddleware = () => (next) => (action) => {
     : message || error || "Oops, something went wrong!";
 
   if ((isFulfilled && error) || isRejected) {
-    toast.error(errorMessage);
+    if (errorMessage.includes("expired token")) {
+      toast.error("Session has expired. Login again");
+      setTimeout(() => {
+        store.dispatch(clearTokens());
+        // Store the current URL in localStorage
+        localStorage.setItem("redirectUrl", window.location.pathname + window.location.search);
+        // log user out and redirect to login page
+        store.dispatch(api.util.resetApiState());
+        store.dispatch(logout());
+        window.location.href = "/login";
+      }, 1500);
+    } else {
+      toast.error(errorMessage);
+    }
   }
 
   return next(action);
