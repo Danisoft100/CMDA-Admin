@@ -30,6 +30,7 @@ import Subscriptions from "~/pages/Dashboard/Payments/Subscriptions";
 import DashboardMessagingPage from "~/pages/Dashboard/Messaging/Messaging";
 import Trainings from "~/pages/Dashboard/Events/Trainings/Trainings";
 import SingleTraining from "~/pages/Dashboard/Events/Trainings/SingleTraining";
+import Transitions from "~/pages/Dashboard/Members/Transitions";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -73,7 +74,7 @@ export default function AppRouter() {
               ],
             },
             { path: "members", element: <Members /> },
-            { path: "members/transitions", element: <Members /> },
+            { path: "transitions", element: <Transitions /> },
             { path: "members/:membershipId", element: <SingleMember /> },
             { path: "chapters", element: <Chapters /> },
             { path: "messaging", element: <DashboardMessagingPage /> },

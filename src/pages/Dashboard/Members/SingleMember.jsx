@@ -8,6 +8,7 @@ import ConfirmationModal from "~/components/Global/ConfirmationModal/Confirmatio
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import { useDeleteMemberByIdMutation, useGetMemberByIdQuery } from "~/redux/api/membersApi";
+import { useGetAllTrainingsQuery } from "~/redux/api/trainingsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 
@@ -15,9 +16,14 @@ const SingleMember = () => {
   const { membershipId } = useParams();
   const navigate = useNavigate();
   const { data: member } = useGetMemberByIdQuery(membershipId, { skip: !membershipId });
-  console.log("Member", member);
   const [deleteMember, { isLoading: isDeleting }] = useDeleteMemberByIdMutation();
   const [openDelete, setOpenDelete] = useState(false);
+  const { data: allTrainings, isLoadingTrainings } = useGetAllTrainingsQuery(
+    { membersGroup: member?.role },
+    { skip: !member }
+  );
+
+  console.log("all", allTrainings);
 
   const handleDelete = () => {
     deleteMember(membershipId)
@@ -29,28 +35,17 @@ const SingleMember = () => {
   };
 
   const COLUMNS = [
-    { header: "ID", accessor: "membershipId" },
-    { header: "Full Name", accessor: "fullName" },
-    { header: "Gender", accessor: "gender" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
-    { header: "Region/Chapter", accessor: "region" },
-    { header: "Date Joined", accessor: "createdAt" },
+    { header: "Training Name", accessor: "name" },
+    { header: "Status", accessor: "status" },
   ];
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
       const [value, item] = [info.getValue(), info.row.original];
-      return col.accessor === "status" ? (
-        <StatusChip status={value} />
-      ) : col.accessor === "createdAt" ? (
-        formatDate(value).date
-      ) : col.accessor === "region" ? (
-        item.role === "Student" ? (
-          value?.split(" - ")?.[1]
-        ) : (
-          value || "-"
-        )
+      return col.accessor === "name" ? (
+        <span className="capitalize">{value}</span>
+      ) : col.accessor === "status" ? (
+        <StatusChip status={item.completedUsers.includes(member?._id) ? "completed" : "pending"} />
       ) : (
         value || "--"
       );
@@ -107,7 +102,12 @@ const SingleMember = () => {
           <div className="flex items-center justify-between gap-6 px-6 pb-6">
             <h3 className="font-bold text-base">Training Records</h3>
           </div>
-          <Table tableData={[]} tableColumns={formattedColumns} />
+          <Table
+            tableData={allTrainings || []}
+            tableColumns={formattedColumns}
+            loading={isLoadingTrainings}
+            showPagination={allTrainings?.length > 10}
+          />
         </section>
       </div>
 

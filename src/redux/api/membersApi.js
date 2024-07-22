@@ -50,10 +50,15 @@ const membersApi = api.injectEndpoints({
       query: (id) => ({ url: `/users/${id}`, method: "DELETE" }),
       invalidatesTags: ["MEMBERS", "MEMBERS_STATS"],
     }),
-    // createMember: build.mutation({
-    //   query: (body) => ({ url: `/users`, method: "POST", body }),
-    //   invalidatesTags: ["RESOURCES"],
-    // }),
+    getAllTransitions: build.query({
+      query: () => ({ url: "/users/transition/all" }),
+      transformResponse: (response) => response.data,
+      providesTags: ["TRANSITIONS"],
+    }),
+    updateTransitionStatus: build.mutation({
+      query: ({ id, status }) => ({ url: `/users/transition/${id}/${status}`, method: "POST" }),
+      invalidatesTags: ["TRANSITIONS"],
+    }),
   }),
 });
 
@@ -61,8 +66,8 @@ export const {
   useGetMemberByIdQuery,
   useGetAllMembersQuery,
   useGetMembersStatsQuery,
-  //   useUpdateMemberByIdMutation,
-  //   useCreateMemberMutation,
+  useGetAllTransitionsQuery,
+  useUpdateTransitionStatusMutation,
   useDeleteMemberByIdMutation,
   useExportMembersListMutation,
 } = membersApi;

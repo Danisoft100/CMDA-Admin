@@ -7,7 +7,7 @@ export const NAV_LINKS = [
     icon: icons.group,
     children: [
       { title: "All Members", link: "/members" },
-      { title: "All Chapters", link: "/members/transitions" },
+      { title: "Transitions", link: "/transitions" },
     ],
   },
   {
