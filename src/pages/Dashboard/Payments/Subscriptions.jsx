@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import icons from "~/assets/js/icons";
+import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
 import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
@@ -18,10 +20,15 @@ const Subscriptions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchBy, setSearchBy] = useState("");
+  const [openFilter, setOpenFilter] = useState(false);
+  const [role, setRole] = useState("");
+  const [region, setRegion] = useState("");
   const { data: subscriptions, isLoading } = useGetAllSubscriptionsQuery({
     page: currentPage,
     limit: perPage,
     searchBy,
+    role,
+    region,
   });
   const { data: stats } = useGetSubscriptionStatsQuery();
 
@@ -70,9 +77,9 @@ const Subscriptions = () => {
         formatDate(value).dateTime
       ) : col.accessor === "user.fullName" ? (
         <span>
-          {item.user.fullName}
+          <b className="font-semibold">{item.user.fullName}</b>
           <br />
-          {item.user.email}
+          {item.user.region}
         </span>
       ) : col.accessor === "amount" ? (
         formatCurrency(value)
@@ -106,10 +113,19 @@ const Subscriptions = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
-        <div className="flex items-center gap-6 px-6 pb-6">
+        <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Subscriptions</h3>
-          <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
-          <SearchBar onSearch={setSearchBy} />
+          <div className="flex justify-end items-end gap-4 mb-4">
+            <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
+            <Button
+              label="Filter"
+              className="ml-auto"
+              onClick={() => setOpenFilter(true)}
+              icon={icons.filter}
+              variant="outlined"
+            />
+            <SearchBar onSearch={setSearchBy} />
+          </div>
         </div>
 
         <Table
@@ -125,6 +141,17 @@ const Subscriptions = () => {
           loading={isLoading}
         />
       </section>
+
+      {/*  */}
+      <MembersFilterModal
+        isOpen={openFilter}
+        onClose={() => setOpenFilter(false)}
+        onSubmit={({ role, region }) => {
+          setRole(role);
+          setRegion(region);
+          setOpenFilter(false);
+        }}
+      />
     </div>
   );
 };

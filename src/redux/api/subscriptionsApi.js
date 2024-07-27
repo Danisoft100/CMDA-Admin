@@ -3,9 +3,15 @@ import api from "./api";
 const subscriptionsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllSubscriptions: build.query({
-      query: ({ limit, page, searchBy }) => ({
+      query: ({ limit, page, searchBy, role, region }) => ({
         url: "/subscriptions",
-        params: { limit, page, ...(searchBy ? { searchBy } : {}) },
+        params: {
+          limit,
+          page,
+          ...(searchBy ? { searchBy } : {}),
+          ...(role ? { role } : {}),
+          ...(region ? { region } : {}),
+        },
       }),
       transformResponse: (response) => response.data,
       providesTags: ["SUBS"],

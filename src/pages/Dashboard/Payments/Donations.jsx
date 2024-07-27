@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import icons from "~/assets/js/icons";
+import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
 import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
@@ -8,6 +10,7 @@ import {
   useGetAllDonationsQuery,
   useGetDonationStatsQuery,
 } from "~/redux/api/donationsApi";
+import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import { downloadFile } from "~/utilities/fileDownloader";
 import formatDate from "~/utilities/fomartDate";
@@ -17,7 +20,16 @@ const Donations = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchBy, setSearchBy] = useState("");
-  const { data: donations, isLoading } = useGetAllDonationsQuery({ page: currentPage, limit: perPage, searchBy });
+  const [openFilter, setOpenFilter] = useState(false);
+  const [role, setRole] = useState("");
+  const [region, setRegion] = useState("");
+  const { data: donations, isLoading } = useGetAllDonationsQuery({
+    page: currentPage,
+    limit: perPage,
+    searchBy,
+    region,
+    role,
+  });
   const { data: stats } = useGetDonationStatsQuery();
 
   const donationStats = useMemo(
@@ -34,8 +46,8 @@ const Donations = () => {
     { header: "Reference", accessor: "reference" },
     { header: "Amount", accessor: "amount" },
     { header: "Donor", accessor: "user.fullName" },
-    { header: "Recurring", accessor: "recurring" },
-    { header: "Frequency", accessor: "frequency" },
+    { header: "Role", accessor: "user.role" },
+    { header: "Vision Partner", accessor: "recurring" },
     { header: "Date/Time", accessor: "createdAt" },
   ];
 
@@ -45,17 +57,30 @@ const Donations = () => {
       const [value, item] = [info.getValue(), info.row.original];
       return col.accessor === "recurring" ? (
         value ? (
-          "Yes"
+          <span>Yes / {item.frequency}</span>
         ) : (
           "No"
         )
+      ) : col.accessor === "user.role" ? (
+        <span
+          className={classNames(
+            "capitalize px-4 py-2 rounded text-xs font-medium",
+            item.user.role === "Student"
+              ? "bg-onPrimaryContainer text-primary"
+              : item.user.role === "Doctor"
+                ? "bg-onSecondaryContainer text-secondary"
+                : "bg-onTertiaryContainer text-tertiary"
+          )}
+        >
+          {item.user.role}
+        </span>
       ) : col.accessor === "createdAt" ? (
         formatDate(value).dateTime
       ) : col.accessor === "user.fullName" ? (
         <span>
-          {item.user.fullName}
+          <b className="font-semibold">{item.user.fullName}</b>
           <br />
-          {item.user.email}
+          {item.user.region}
         </span>
       ) : col.accessor === "amount" ? (
         formatCurrency(value)
@@ -89,10 +114,19 @@ const Donations = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
-        <div className="flex items-center gap-6 px-6 pb-6">
+        <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Donations</h3>
-          <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
-          <SearchBar onSearch={setSearchBy} />
+          <div className="flex justify-end items-end gap-4 mb-4">
+            <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
+            <Button
+              label="Filter"
+              className="ml-auto"
+              onClick={() => setOpenFilter(true)}
+              icon={icons.filter}
+              variant="outlined"
+            />
+            <SearchBar onSearch={setSearchBy} />
+          </div>
         </div>
 
         <Table
@@ -108,6 +142,17 @@ const Donations = () => {
           loading={isLoading}
         />
       </section>
+
+      {/*  */}
+      <MembersFilterModal
+        isOpen={openFilter}
+        onClose={() => setOpenFilter(false)}
+        onSubmit={({ role, region }) => {
+          setRole(role);
+          setRegion(region);
+          setOpenFilter(false);
+        }}
+      />
     </div>
   );
 };
