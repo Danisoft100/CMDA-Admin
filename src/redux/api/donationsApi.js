@@ -3,7 +3,7 @@ import api from "./api";
 const donationsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllDonations: build.query({
-      query: ({ limit, page, searchBy, role, region }) => ({
+      query: ({ limit, page, searchBy, role, region, areasOfNeed }) => ({
         url: "/donations",
         params: {
           limit,
@@ -11,6 +11,7 @@ const donationsApi = api.injectEndpoints({
           ...(searchBy ? { searchBy } : {}),
           ...(role ? { role } : {}),
           ...(region ? { region } : {}),
+          ...(areasOfNeed ? { areasOfNeed } : {}),
         },
       }),
       transformResponse: (response) => response.data,

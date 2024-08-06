@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import icons from "~/assets/js/icons";
-import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
+import DonationsFilterModal from "~/components/Dashboard/Payments/DonationFilterModal";
 import Button from "~/components/Global/Button/Button";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
@@ -23,12 +23,14 @@ const Donations = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [role, setRole] = useState("");
   const [region, setRegion] = useState("");
+  const [areasOfNeed, setAreasOfNeed] = useState("");
   const { data: donations, isLoading } = useGetAllDonationsQuery({
     page: currentPage,
     limit: perPage,
     searchBy,
     region,
     role,
+    areasOfNeed,
   });
   const { data: stats } = useGetDonationStatsQuery();
 
@@ -48,6 +50,7 @@ const Donations = () => {
     { header: "Donor", accessor: "user.fullName" },
     { header: "Role", accessor: "user.role" },
     { header: "Vision Partner", accessor: "recurring" },
+    { header: "Areas of Need", accessor: "areasOfNeed" },
     { header: "Date/Time", accessor: "createdAt" },
   ];
 
@@ -144,12 +147,13 @@ const Donations = () => {
       </section>
 
       {/*  */}
-      <MembersFilterModal
+      <DonationsFilterModal
         isOpen={openFilter}
         onClose={() => setOpenFilter(false)}
-        onSubmit={({ role, region }) => {
+        onSubmit={({ role, region, areasOfNeed }) => {
           setRole(role);
           setRegion(region);
+          setAreasOfNeed(areasOfNeed);
           setOpenFilter(false);
         }}
       />
