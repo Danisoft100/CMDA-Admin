@@ -32,7 +32,7 @@ const VolunteerJobs = () => {
   return (
     <div>
       <PageHeader
-        title="Volunteer Jobs"
+        title="Volunteer"
         subtitle="Manage all volunteer jobs"
         action={() => navigate("/others/jobs/create")}
         actionLabel="Add Job New"

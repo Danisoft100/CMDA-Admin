@@ -36,7 +36,7 @@ export const NAV_LINKS = [
     title: "Others",
     icon: icons.list,
     children: [
-      { title: "Volunteer Jobs", link: "/others/jobs" },
+      { title: "Volunteer", link: "/others/jobs" },
       { title: "Devotionals", link: "/others/devotionals" },
       { title: "Manage Admins", link: "/others/admins" },
       { title: "My Profile", link: "/others/profile" },

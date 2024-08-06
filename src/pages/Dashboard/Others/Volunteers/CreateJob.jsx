@@ -69,7 +69,7 @@ const CreateVolunteerJob = () => {
 
   return (
     <div>
-      <BackButton label="Back to Volunteer Jobs" to="/others/jobs" />
+      <BackButton label="Back to Volunteer" to="/others/jobs" />
 
       <section className="bg-white rounded-2xl p-6 shadow mt-8">
         <h3 className="font-bold text-lg mb-6">{id ? "Edit" : "Add New"} Job</h3>
