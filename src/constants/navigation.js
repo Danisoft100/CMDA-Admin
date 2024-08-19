@@ -38,6 +38,7 @@ export const NAV_LINKS = [
     children: [
       { title: "Volunteer", link: "/others/jobs" },
       { title: "Devotionals", link: "/others/devotionals" },
+      { title: "Faith Entry", link: "/others/faith-entry" },
       { title: "Manage Admins", link: "/others/admins" },
       { title: "My Profile", link: "/others/profile" },
     ],
