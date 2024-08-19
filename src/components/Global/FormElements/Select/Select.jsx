@@ -36,8 +36,8 @@ const Select = ({
             id={label}
             value={value ? options.find((option) => option.value === value) : null}
             onChange={(selectedOption) => {
-              onChange(multiple ? selectedOption : selectedOption.value);
-              onSelect(multiple ? selectedOption : selectedOption.value);
+              onChange(multiple ? selectedOption.map((x) => x.value) : selectedOption.value);
+              onSelect(multiple ? selectedOption.map((x) => x.value) : selectedOption.value);
             }}
             onBlur={onBlur}
             placeholder={placeholder}
