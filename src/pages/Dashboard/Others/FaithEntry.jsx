@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import icons from "~/assets/js/icons";
 import Button from "~/components/Global/Button/Button";
+import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
-import { useGetAllFaithEntriesQuery } from "~/redux/api/faithEntryApi";
+import { useDeleteFaithEntryMutation, useGetAllFaithEntriesQuery } from "~/redux/api/faithEntryApi";
 import { classNames } from "~/utilities/classNames";
 import formatDate from "~/utilities/fomartDate";
 
@@ -26,6 +29,20 @@ const DashboardFaithEntryPage = () => {
     }
   }, [faithEntrys]);
 
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [deleteFaithEntry, { isLoading: isDeleting }] = useDeleteFaithEntryMutation();
+
+  const handleDelete = () => {
+    deleteFaithEntry(selected?._id)
+      .unwrap()
+      .then(() => {
+        setFaithEntries([]);
+        toast.success(selected?.category + " DELETED successfully");
+        setOpenDelete(false);
+      });
+  };
+
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -44,18 +61,31 @@ const DashboardFaithEntryPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2  gap-6 mt-6">
         {faithEntries?.map((item, i) => (
           <div key={i} className="bg-white rounded-lg p-4 shadow-sm">
-            <span
-              className={classNames(
-                `px-3 py-1.5 text-xs font-semibold rounded-3xl`,
-                item.category === "Testimony"
-                  ? "bg-secondary/20 text-secondary"
-                  : item.category === "Comment"
-                    ? "bg-primary/20 text-primary"
-                    : "bg-tertiary/20 text-tertiary"
-              )}
-            >
-              {item?.category}
-            </span>
+            <div className="flex justify-between gap-4">
+              <span
+                className={classNames(
+                  `px-3 py-1.5 text-xs font-semibold rounded-3xl`,
+                  item.category === "Testimony"
+                    ? "bg-secondary/20 text-secondary"
+                    : item.category === "Comment"
+                      ? "bg-primary/20 text-primary"
+                      : "bg-tertiary/20 text-tertiary"
+                )}
+              >
+                {item?.category}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSelected(item);
+                  setOpenDelete(true);
+                }}
+                className="text-lg"
+              >
+                {icons.delete}
+              </button>
+            </div>
             <p className="my-4 text-sm font-medium">{item.content}</p>
             <p className="text-gray-600 text-xs">
               Posted by: <span className="text-black font-medium">{item.user ? item.user?.fullName : "Anonymous"}</span>
@@ -76,6 +106,19 @@ const DashboardFaithEntryPage = () => {
           onClick={() => setPage((prev) => prev + 1)}
         />
       </div>
+
+      {/*  */}
+
+      <ConfirmationModal
+        isOpen={openDelete}
+        onClose={() => setOpenDelete(false)}
+        icon={icons.delete}
+        title={"Delete " + selected?.category}
+        subtitle={"Are you sure you want to delete this " + selected?.category?.toLowerCase() + "?"}
+        subAction
+        mainAction={handleDelete}
+        mainActionLoading={isDeleting}
+      />
     </div>
   );
 };
