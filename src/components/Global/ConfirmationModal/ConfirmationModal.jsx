@@ -40,7 +40,12 @@ const ConfirmationModal = ({
           <div className={classNames("flex gap-4", actionsFlex)}>
             {subAction && (
               <div className="flex-1">
-                <Button className="w-full" variant="outlined" loading={subActionLoading} onClick={subAction || onClose}>
+                <Button
+                  className="w-full"
+                  variant="outlined"
+                  loading={subActionLoading}
+                  onClick={typeof subAction === "boolean" ? onClose : subAction}
+                >
                   {subActionText}
                 </Button>
               </div>
