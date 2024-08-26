@@ -34,7 +34,7 @@ const eventsApi = api.injectEndpoints({
       invalidatesTags: ["EVENTS", "EVT_STATS"],
     }),
     getEventStats: build.query({
-      query: () => ({ url: "/events/stats" }),
+      query: (slug) => ({ url: `/events/${slug}/stats` }),
       transformResponse: (response) => response.data,
       providesTags: ["EVT_STATS"],
     }),

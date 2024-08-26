@@ -5,7 +5,7 @@ import icons from "~/assets/js/icons";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
-import { useDeleteEventBySlugMutation, useGetEventBySlugQuery } from "~/redux/api/eventsApi";
+import { useDeleteEventBySlugMutation, useGetEventBySlugQuery, useGetEventStatsQuery } from "~/redux/api/eventsApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
@@ -14,17 +14,18 @@ const SingleEvent = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { data: evt } = useGetEventBySlugQuery(slug, { skip: !slug });
+  const { data: evtStats } = useGetEventStatsQuery(slug, { skip: !slug });
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventBySlugMutation();
   const [openDelete, setOpenDelete] = useState(false);
 
   const eventAnalytics = useMemo(
     () => ({
-      totalRegistered: 0,
-      studentsRegistered: 0,
-      doctorsRegistered: 0,
-      globalNetworkRegistered: 0,
+      totalRegistered: evtStats?.totalRegistered || 0,
+      studentsRegistered: evtStats?.studentsRegistered || 0,
+      doctorsRegistered: evtStats?.doctorsRegistered || 0,
+      globalNetworkRegistered: evtStats?.globalNetworkRegistered || 0,
     }),
-    []
+    [evtStats]
   );
 
   const handleDelete = () => {
