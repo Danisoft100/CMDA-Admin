@@ -52,17 +52,11 @@ const Members = () => {
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
-      const [value, item] = [info.getValue(), info.row.original];
+      const [value] = [info.getValue(), info.row.original];
       return col.accessor === "status" ? (
         <StatusChip status={value} />
       ) : col.accessor === "createdAt" ? (
         formatDate(value).date
-      ) : col.accessor === "region" ? (
-        item.role === "Student" ? (
-          value?.split(" - ")?.[1]
-        ) : (
-          value || "-"
-        )
       ) : (
         value || "--"
       );

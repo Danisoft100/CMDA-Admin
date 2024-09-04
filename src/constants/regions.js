@@ -51,6 +51,7 @@ export const doctorsRegionLists = [
   "Benue",
   "Borno",
   "CMDA Uyo",
+  "Cross River",
   "Delta - DELSUTH, Oghara",
   "Delta FMC, Asaba",
   "Ebonyi",
