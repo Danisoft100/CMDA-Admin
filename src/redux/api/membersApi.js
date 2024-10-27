@@ -41,6 +41,7 @@ const membersApi = api.injectEndpoints({
     getMemberById: build.query({
       query: (id) => ({ url: `/users/${id}` }),
       transformResponse: (response) => response.data,
+      providesTags: ["SINGLE_MEM"],
     }),
     // updateMemberById: build.mutation({
     //   query: (id) => ({ url: `/users/${id}`, method: "PATCH" }),

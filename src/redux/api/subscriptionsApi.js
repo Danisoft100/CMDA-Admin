@@ -38,6 +38,10 @@ const subscriptionsApi = api.injectEndpoints({
       transformResponse: (response) => response.data,
       providesTags: ["SUB_STATS"],
     }),
+    updateMemberSub: build.mutation({
+      query: ({ userId, subDate }) => ({ url: `/subscriptions/activate/${userId}/${subDate}`, method: "POST" }),
+      invalidatesTags: ["SINGLE_MEM"],
+    }),
   }),
 });
 
@@ -46,6 +50,7 @@ export const {
   useGetSubscriptionStatsQuery,
   useGetSingleSubscriptionQuery,
   useExportSubscriptionsMutation,
+  useUpdateMemberSubMutation,
 } = subscriptionsApi;
 
 export default subscriptionsApi;

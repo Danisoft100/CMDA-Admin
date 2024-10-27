@@ -2,12 +2,14 @@ import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
+import UpdateSubModal from "~/components/Dashboard/Payments/UpdateSubModal";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import { useDeleteMemberByIdMutation, useGetMemberByIdQuery } from "~/redux/api/membersApi";
+import { useUpdateMemberSubMutation } from "~/redux/api/subscriptionsApi";
 import { useGetAllTrainingsQuery } from "~/redux/api/trainingsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
@@ -18,12 +20,11 @@ const SingleMember = () => {
   const { data: member } = useGetMemberByIdQuery(membershipId, { skip: !membershipId });
   const [deleteMember, { isLoading: isDeleting }] = useDeleteMemberByIdMutation();
   const [openDelete, setOpenDelete] = useState(false);
+  const [openSub, setOpenSub] = useState(false);
   const { data: allTrainings, isLoadingTrainings } = useGetAllTrainingsQuery(
     { membersGroup: member?.role },
     { skip: !member }
   );
-
-  console.log("all", allTrainings);
 
   const handleDelete = () => {
     deleteMember(membershipId)
@@ -31,6 +32,17 @@ const SingleMember = () => {
       .then(() => {
         navigate("/members");
         toast.success("Members has been DELETED successfully");
+      });
+  };
+
+  const [updateSub, { isLoading: isUpdating }] = useUpdateMemberSubMutation();
+
+  const handleUpdateSub = ({ subDate }) => {
+    updateSub({ subDate, userId: member?._id })
+      .unwrap()
+      .then(() => {
+        toast.success("Subscription UPDATED successfully");
+        setOpenSub(false);
       });
   };
 
@@ -66,8 +78,14 @@ const SingleMember = () => {
       region: member?.region,
       ...(member?.role === "Student"
         ? { admissionYear: member?.admissionYear, yearOfStudy: member?.yearOfStudy }
-        : { specialty: member?.specialty, licenseNumber: member?.licenseNumber }),
+        : {
+            specialty: member?.specialty,
+            licenseNumber: member?.licenseNumber,
+            yearsOfExperience: member?.yearsOfExperience || "N/A",
+          }),
       accountStatus: member?.emailVerified ? "Verified" : "Unverified",
+      subscriptionStatus: member?.subscribed ? "Subscribed" : "Not Subscribed",
+      subscriptionExpiry: member?.subscriptionExpiry ? formatDate(member?.subscriptionExpiry).date : "N/A",
       memberSince: formatDate(member?.createdAt).dateTime,
     }),
     [member]
@@ -75,8 +93,16 @@ const SingleMember = () => {
 
   return (
     <div>
-      <div className="flex justify-between gap-4">
+      <div className="flex gap-4">
         <BackButton label="Back to Members List" to="/members" />
+        <Button
+          variant="outlined"
+          color={member?.subscribed ? "secondary" : "primary"}
+          label={member?.subscribed ? "Already Subscribed" : "Activate Subscription"}
+          className="ml-auto"
+          disabled={member?.subscribed}
+          onClick={() => setOpenSub(true)}
+        />
         <Button variant="outlined" label="Remove" onClick={() => setOpenDelete(true)} />
       </div>
 
@@ -121,6 +147,13 @@ const SingleMember = () => {
         mainActionLoading={isDeleting}
         title="Delete Member"
         subtitle="Are you sure you want to delete this member?"
+      />
+
+      <UpdateSubModal
+        isOpen={openSub}
+        onClose={() => setOpenSub(false)}
+        loading={isUpdating}
+        onSubmit={handleUpdateSub}
       />
     </div>
   );
