@@ -5,10 +5,12 @@ import icons from "~/assets/js/icons";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
+import Table from "~/components/Global/Table/Table";
 import { useDeleteEventBySlugMutation, useGetEventBySlugQuery, useGetEventStatsQuery } from "~/redux/api/eventsApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
+import { formatCurrency } from "~/utilities/formatCurrency";
 
 const SingleEvent = () => {
   const { slug } = useParams();
@@ -37,11 +39,21 @@ const SingleEvent = () => {
       });
   };
 
+  const COLUMNS = [
+    { header: "ID", accessor: "membershipId" },
+    { header: "Full Name", accessor: "fullName" },
+    { header: "Gender", accessor: "gender" },
+    { header: "Email", accessor: "email" },
+    { header: "Role", accessor: "role" },
+    { header: "Region/Chapter", accessor: "region" },
+  ];
+
   return (
     <div>
       <BackButton label="Back to Events List" to="/events" />
 
-      <div className="flex gap-6 mt-6">
+      <div className="flex flex-col md:flex-row gap-6 mt-6">
+        {/* Main Content */}
         <section className="bg-white rounded-2xl p-6 shadow w-full md:w-3/4">
           <span className="capitalize bg-onTertiary text-tertiary px-4 py-2 rounded-lg text-xs font-semibold mb-4 inline-block">
             {evt?.eventType}
@@ -62,8 +74,14 @@ const SingleEvent = () => {
 
           <div className="grid grid-cols-2 gap-6 mt-6">
             <div>
-              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Access Code</h4>
-              <p className="text-base mb-1">{evt?.accessCode || "N/A"}</p>
+              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Payment Plans</h4>
+              {evt?.isPaid
+                ? evt?.paymentPlans.map((x) => (
+                    <p className="text-sm mb-2" key={x.role}>
+                      {x.role + " - " + formatCurrency(x.price)}
+                    </p>
+                  ))
+                : null}
             </div>
             <div>
               <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Event Date &amp; Time</h4>
@@ -112,9 +130,16 @@ const SingleEvent = () => {
             <Button variant="outlined" color="error" label="Delete Event" onClick={() => setOpenDelete(true)} />
             <Button label="Update Event" onClick={() => navigate(`/events/create-event?slug=${slug}`)} />
           </div>
+
+          <hr className="my-4" />
+
+          <div>
+            <h4 className="text-base mb-3 font-medium">Users registered for this event</h4>
+            <Table tableColumns={COLUMNS} tableData={evtStats?.registeredUsers || []} />
+          </div>
         </section>
 
-        <section>
+        <aside className="w-full md:w-1/4 h-full sticky top-6 shadow bg-white p-4 rounded-2xl">
           <h3 className="text-base font-bold mb-2">Event Analytics</h3>
           <div className="space-y-4">
             {Object.entries(eventAnalytics).map(([key, val]) => (
@@ -126,7 +151,7 @@ const SingleEvent = () => {
               </div>
             ))}
           </div>
-        </section>
+        </aside>
       </div>
 
       {/*  */}

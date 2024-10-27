@@ -34,7 +34,10 @@ const CreateEvent = () => {
       membersGroup: evt?.membersGroup,
       eventDateTime: evt?.eventDateTime?.slice(0, 16),
       additionalInformation: evt?.additionalInformation,
-      accessCode: evt?.accessCode,
+      paymentPlans: evt?.paymentPlans?.reduce((acc, { role, price }) => {
+        acc[role] = +price;
+        return acc;
+      }, {}),
     },
   });
 
@@ -46,6 +49,8 @@ const CreateEvent = () => {
 
   const [featuredImage, setFeaturedImage] = useState();
   const [image, setImage] = useState(null);
+
+  const [isPaid, setIsPaid] = useState(!!evt?.isPaid);
 
   const handlePreview = (e) => {
     const file = e.target.files[0];
@@ -60,14 +65,29 @@ const CreateEvent = () => {
   };
 
   const onSubmit = (payload) => {
-    payload = { ...payload, ...(!slug ? { featuredImage } : {}) };
+    payload = {
+      ...payload,
+      ...(!slug ? { featuredImage } : {}),
+      isPaid,
+      paymentPlans: isPaid
+        ? Object.entries(payload.paymentPlans).map(([key, value]) => ({ role: key, price: +value }))
+        : [],
+    };
+
+    console.log("Pay", payload);
 
     const formData = new FormData();
     Object.entries(payload).forEach(([key, val]) => {
       if (Array.isArray(val)) {
-        val.forEach((v) => {
-          formData.append(`${key}[]`, v);
-        });
+        if (key === "paymentPlans") {
+          // Append each object in paymentPlans as a JSON string
+          formData.append("paymentPlans", JSON.stringify(val));
+        } else {
+          // For other arrays, append each value individually with key[]
+          val.forEach((v) => {
+            formData.append(`${key}[]`, v);
+          });
+        }
       } else {
         formData.append(key, val);
       }
@@ -143,7 +163,34 @@ const CreateEvent = () => {
             multiple
           />
 
-          <TextInput label="accessCode" register={register} errors={errors} />
+          <div className="col-span-2 my-4">
+            <div className="flex items-center gap-8 mb-4">
+              <h3 className="font-semibold text-sm">Payment Plans</h3>
+              <Button
+                variant="outlined"
+                label={isPaid ? "Remove Plans" : "Add Plans"}
+                onClick={() => setIsPaid(!isPaid)}
+              />
+            </div>
+
+            {isPaid
+              ? ["Student", "Doctor", "GlobalNetwork"].map((role) => (
+                  <div key={role} className="flex items-center gap-8 mb-3">
+                    <p className="text-sm font-medium flex-shrink-0">Price for {role + "s"}</p>
+                    <TextInput
+                      label={`paymentPlans.${role}`}
+                      type="number"
+                      showTitleLabel={false}
+                      register={register}
+                      errors={errors}
+                      required
+                      placeholder={role}
+                      className="w-1/4"
+                    />
+                  </div>
+                ))
+              : null}
+          </div>
 
           <TextInput
             label="eventDateTime"

@@ -27,7 +27,7 @@ const eventsApi = api.injectEndpoints({
     }),
     deleteEventBySlug: build.mutation({
       query: (slug) => ({ url: `/events/${slug}`, method: "DELETE" }),
-      invalidatesTags: ["EVENTS", "EVT_STATS"],
+      invalidatesTags: ["EVENTS"],
     }),
     createEvent: build.mutation({
       query: (body) => ({ url: `/events`, method: "POST", body }),
