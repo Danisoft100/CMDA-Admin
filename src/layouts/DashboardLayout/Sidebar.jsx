@@ -7,7 +7,7 @@ import { clearTokens } from "~/redux/features/auth/tokenSlice";
 import Logo from "~/components/Global/Logo/Logo";
 import { useState } from "react";
 
-const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
+const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [], unreadMessagesCount }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -90,6 +90,11 @@ const Sidebar = ({ isOpen, onToggleSidebar, navLinks = [] }) => {
                     }
                   >
                     <span className="text-xl">{navItem.icon}</span> {navItem.title}
+                    {navItem.title === "Messaging" && unreadMessagesCount ? (
+                      <span className="ml-auto inline-flex items-center justify-center w-6 h-6 text-[10px] font-bold text-white bg-primary border border-white rounded-full -top-2 -end-2">
+                        {unreadMessagesCount}
+                      </span>
+                    ) : null}
                   </NavLink>
                 </li>
               )

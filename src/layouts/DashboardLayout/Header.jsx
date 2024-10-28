@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import icons from "~/assets/js/icons";
 import Dropdown from "~/components/Global/Dropdown/DropDown";
 import Logo from "~/components/Global/Logo/Logo";
@@ -7,8 +7,9 @@ import { setUser } from "~/redux/features/auth/authSlice";
 import { clearTokens } from "~/redux/features/auth/tokenSlice";
 import { classNames } from "~/utilities/classNames";
 
-const Header = ({ onToggleSidebar }) => {
+const Header = ({ onToggleSidebar, unreadMessagesCount }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
@@ -31,6 +32,19 @@ const Header = ({ onToggleSidebar }) => {
         <Logo className="w-auto h-14" />
 
         <div className="flex-1" />
+        {/* Message Icon */}
+        <button
+          type="button"
+          className="relative inline-flex items-center p-1.5 text-xl font-medium text-center text-primary rounded-lg hover:bg-onPrimary focus:outline-none"
+          onClick={() => navigate("/messaging")}
+        >
+          {icons.message}
+          {unreadMessagesCount ? (
+            <span className="absolute inline-flex items-center justify-center w-6 h-6 text-[10px] font-bold text-white bg-primary border-2 border-white rounded-full -top-2 -end-2">
+              {unreadMessagesCount}
+            </span>
+          ) : null}
+        </button>
         {/* Avatar Dropdown */}
         <Dropdown
           toggleElement={

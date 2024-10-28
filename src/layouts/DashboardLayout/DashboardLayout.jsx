@@ -5,6 +5,7 @@ import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import { NAV_LINKS } from "../../constants/navigation";
 import { useMediaQuery2 } from "~/hooks/useMediaQuery2";
+import { useGetNotificationStatsQuery } from "~/redux/api/notificationApi";
 
 const DashboardLayout = ({ withOutlet = true, children }) => {
   const isSmallScreen = useMediaQuery2("750px");
@@ -18,14 +19,24 @@ const DashboardLayout = ({ withOutlet = true, children }) => {
     !isSmallScreen && setSidebarOpen(true);
   }, [isSmallScreen]);
 
+  const { data: { unreadMessagesCount } = {} } = useGetNotificationStatsQuery(null, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 600000,
+  });
+
   return (
     <div className="bg-background">
       {/* Header */}
-      <Header onToggleSidebar={toggleSidebar} />
+      <Header onToggleSidebar={toggleSidebar} unreadMessagesCount={unreadMessagesCount} />
 
       <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
-        <Sidebar isOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} navLinks={NAV_LINKS} />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onToggleSidebar={toggleSidebar}
+          navLinks={NAV_LINKS}
+          unreadMessagesCount={unreadMessagesCount}
+        />
         {/* Main content */}
         <div
           className={classNames(
