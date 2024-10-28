@@ -9,7 +9,7 @@ import Message from "./Message";
 import { useGetMemberByIdQuery } from "~/redux/api/membersApi";
 import { useSocket } from "~/utilities/socket";
 
-const ChatBox = ({ userId, recipientId }) => {
+const ChatBox = ({ userId, recipientId, refetchContacts }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputHeight, setInputHeight] = useState(48); // Initial height
   const navigate = useNavigate();
@@ -21,6 +21,10 @@ const ChatBox = ({ userId, recipientId }) => {
     isFetching,
   } = useGetChatHistoryQuery(recipientId, { refetchOnMountOrArgChange: true });
   const { data: recipientData, isLoading: loadingRecipientData } = useGetMemberByIdQuery(recipientId);
+
+  useEffect(() => {
+    refetchContacts();
+  }, [allChatsBetweenUsers, refetchContacts]);
 
   const [allMessages, setAllMessages] = useState([]);
 
@@ -69,7 +73,7 @@ const ChatBox = ({ userId, recipientId }) => {
   }, [allMessages]);
 
   return (
-    <div className="w-full lg:w-3/4 flex flex-col rounded-xl">
+    <div className="w-full lg:w-3/5 flex flex-col rounded-xl">
       {/* back button mobile screen */}
       <div className="lg:hidden">
         <div

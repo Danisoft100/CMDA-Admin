@@ -5,6 +5,7 @@ import icons from "~/assets/js/icons";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
+import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import Table from "~/components/Global/Table/Table";
 import { useDeleteEventBySlugMutation, useGetEventBySlugQuery, useGetEventStatsQuery } from "~/redux/api/eventsApi";
 import { classNames } from "~/utilities/classNames";
@@ -15,10 +16,11 @@ import { formatCurrency } from "~/utilities/formatCurrency";
 const SingleEvent = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { data: evt } = useGetEventBySlugQuery(slug, { skip: !slug });
+  const { data: evt, isLoading } = useGetEventBySlugQuery(slug, { skip: !slug });
   const { data: evtStats } = useGetEventStatsQuery(slug, { skip: !slug });
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventBySlugMutation();
   const [openDelete, setOpenDelete] = useState(false);
+  const [searchBy, setSearchBy] = useState("");
 
   const eventAnalytics = useMemo(
     () => ({
@@ -52,9 +54,9 @@ const SingleEvent = () => {
     <div>
       <BackButton label="Back to Events List" to="/events" />
 
-      <div className="flex flex-col md:flex-row gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {/* Main Content */}
-        <section className="bg-white rounded-2xl p-6 shadow w-full md:w-3/4">
+        <section className="bg-white rounded-2xl p-6 shadow w-full md:col-span-2">
           <span className="capitalize bg-onTertiary text-tertiary px-4 py-2 rounded-lg text-xs font-semibold mb-4 inline-block">
             {evt?.eventType}
           </span>
@@ -130,28 +132,39 @@ const SingleEvent = () => {
             <Button variant="outlined" color="error" label="Delete Event" onClick={() => setOpenDelete(true)} />
             <Button label="Update Event" onClick={() => navigate(`/events/create-event?slug=${slug}`)} />
           </div>
-
-          <hr className="my-4" />
-
-          <div>
-            <h4 className="text-base mb-3 font-medium">Users registered for this event</h4>
-            <Table tableColumns={COLUMNS} tableData={evtStats?.registeredUsers || []} />
-          </div>
         </section>
 
-        <aside className="w-full md:w-1/4 h-full sticky top-6 shadow bg-white p-4 rounded-2xl">
-          <h3 className="text-base font-bold mb-2">Event Analytics</h3>
-          <div className="space-y-4">
-            {Object.entries(eventAnalytics).map(([key, val]) => (
-              <div key={key}>
-                <h4 className="text-xs text-gray-600 font-semibold uppercase mb-0.5">
-                  {convertToCapitalizedWords(key)}
-                </h4>
-                <p className="text-base mb-1 font-semibold">{val || 0}</p>
-              </div>
-            ))}
+        <div>
+          <aside className="w-full shadow sticky top-0 bg-white p-4 rounded-2xl">
+            <h3 className="text-base font-bold mb-2">Event Analytics</h3>
+            <div className="space-y-4">
+              {Object.entries(eventAnalytics).map(([key, val]) => (
+                <div key={key}>
+                  <h4 className="text-xs text-gray-600 font-semibold uppercase mb-0.5">
+                    {convertToCapitalizedWords(key)}
+                  </h4>
+                  <p className="text-base mb-1 font-semibold">{val || 0}</p>
+                </div>
+              ))}
+            </div>
+          </aside>
+        </div>
+
+        <section className="md:col-span-3 bg-white shadow rounded-xl pt-6 mt-8 overflow-x-hidden">
+          <div className="flex items-center justify-between gap-6 px-6 pb-6">
+            <h3 className="font-bold text-base">All Registered Members</h3>
+            <SearchBar onSearch={setSearchBy} />
           </div>
-        </aside>
+
+          <Table
+            tableColumns={COLUMNS}
+            tableData={evtStats?.registeredUsers || []}
+            // onRowClick={(item) => navigate(`/members/${item.membershipId}`)}
+            loading={isLoading}
+            searchFilter={searchBy}
+            setSearchFilter={setSearchBy}
+          />
+        </section>
       </div>
 
       {/*  */}

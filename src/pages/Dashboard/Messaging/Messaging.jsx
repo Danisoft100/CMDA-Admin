@@ -7,7 +7,11 @@ import { useGetAllContactsQuery } from "~/redux/api/chatsApi";
 const DashboardMessagingPage = () => {
   const [searchParams] = useSearchParams();
   const recipientId = searchParams.get("id");
-  const { data: allContacts, isLoading: isLoadingContacts, refetch: refetchContacts } = useGetAllContactsQuery(null);
+  const {
+    data: { contacts: allContacts } = { contacts: [] },
+    isLoading: isLoadingContacts,
+    refetch: refetchContacts,
+  } = useGetAllContactsQuery(null, { refetchOnMountOrArgChange: true });
 
   return (
     <div>
@@ -23,9 +27,9 @@ const DashboardMessagingPage = () => {
 
         {/* Chatbox */}
         {recipientId ? (
-          <ChatBox userId={"admin"} recipientId={recipientId} />
+          <ChatBox userId={"admin"} recipientId={recipientId} refetchContacts={refetchContacts} />
         ) : (
-          <div className="w-3/4 flex flex-col justify-center items-center">
+          <div className="w-3/5 flex flex-col justify-center items-center">
             <p className="font-bold text-lg text-center cursor-not-allowed">Select A User to start chatting with</p>
           </div>
         )}
@@ -37,7 +41,7 @@ const DashboardMessagingPage = () => {
         {!recipientId && <ContactList allContacts={allContacts} isLoading={isLoadingContacts} />}
 
         {/* Chatbox */}
-        {recipientId && <ChatBox userId={"admin"} recipientId={recipientId} />}
+        {recipientId && <ChatBox userId={"admin"} recipientId={recipientId} refetchContacts={refetchContacts} />}
       </section>
     </div>
   );

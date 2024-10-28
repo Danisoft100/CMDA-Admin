@@ -7,7 +7,7 @@ const ContactList = ({ isLoading, allContacts }) => {
   const [, setSearchParams] = useSearchParams();
 
   return (
-    <div className="w-full lg:w-1/4 border-r pr-1">
+    <div className="w-full lg:w-2/5 border-r pr-1">
       <SearchBar className="mx-2 mb-4" />
 
       <div className="mt-4 h-[calc(100%-60px)] overflow-y-auto">
@@ -26,6 +26,7 @@ const ContactList = ({ isLoading, allContacts }) => {
                   image={contact.user?.avatarUrl}
                   subText={contact.lastMessage}
                   onClick={() => setSearchParams({ id: contact.user?._id })}
+                  unreadCount={contact.unreadCount}
                 />
               );
             })

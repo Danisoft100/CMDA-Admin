@@ -17,9 +17,6 @@ const SearchBar = ({
       }}
       className={classNames("max-w-md", className)}
     >
-      <label htmlFor="search-input" className="sr-only">
-        Search
-      </label>
       <div className="relative w-full">
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-gray-500">
           <svg
