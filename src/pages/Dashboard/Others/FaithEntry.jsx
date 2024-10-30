@@ -88,9 +88,15 @@ const DashboardFaithEntryPage = () => {
             </div>
             <p className="my-4 text-sm font-medium">{item.content}</p>
             <p className="text-gray-600 text-xs">
-              Posted by: <span className="text-black font-medium">{item.user ? item.user?.fullName : "Anonymous"}</span>
+              Posted by:{" "}
+              <span className="text-black font-medium">
+                {item.user?.fullName || "N/A"} {item.isAnonymous ? "(Anonymous)" : null}
+              </span>
             </p>
-            <p className="text-gray-600 text-xs mt-2">
+            <p className="text-gray-600 text-xs my-2">
+              Poster ID: <span className="text-black font-medium">{item.user?.membershipId || "N/A"}</span>
+            </p>
+            <p className="text-gray-600 text-xs">
               Date: <span className="text-black font-medium">{formatDate(item.createdAt).dateTime}</span>
             </p>
           </div>
