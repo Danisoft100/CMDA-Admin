@@ -32,6 +32,7 @@ import Trainings from "~/pages/Dashboard/Events/Trainings/Trainings";
 import SingleTraining from "~/pages/Dashboard/Events/Trainings/SingleTraining";
 import Transitions from "~/pages/Dashboard/Members/Transitions";
 import DashboardFaithEntryPage from "~/pages/Dashboard/Others/FaithEntry";
+import CreateProductPage from "~/pages/Dashboard/Products/CreateProduct";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -80,6 +81,7 @@ export default function AppRouter() {
             { path: "chapters", element: <Chapters /> },
             { path: "messaging", element: <DashboardMessagingPage /> },
             { path: "products", element: <Products /> },
+            { path: "products/create", element: <CreateProductPage /> },
             { path: "resources", element: <Resources /> },
             { path: "resources/:slug", element: <SingleResource /> },
             {

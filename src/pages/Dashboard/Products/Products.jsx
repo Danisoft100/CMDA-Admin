@@ -1,18 +1,17 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
-import CreateProductModal from "~/components/Dashboard/Products/CreateProductModal";
+// import CreateProductModal from "~/components/Dashboard/Products/CreateProductModal";
 import ViewProductModal from "~/components/Dashboard/Products/ViewProductModal";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import SearchBar from "~/components/Global/SearchBar/SearchBar";
 import Table from "~/components/Global/Table/Table";
 import {
-  useCreateProductMutation,
   useDeleteProductBySlugMutation,
   useGetAllProductsQuery,
   useGetProductStatsQuery,
-  useUpdateProductBySlugMutation,
 } from "~/redux/api/productsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
@@ -20,7 +19,7 @@ import { formatCurrency } from "~/utilities/formatCurrency";
 
 const Products = () => {
   const [selectedProd, setSelectedProd] = useState(null);
-  const [openCreate, setOpenCreate] = useState(false);
+  // const [openCreate, setOpenCreate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,9 +27,8 @@ const Products = () => {
   const [searchBy, setSearchBy] = useState("");
   const { data: products, isLoading } = useGetAllProductsQuery({ page: currentPage, limit: perPage, searchBy });
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductBySlugMutation();
-  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
-  const [editProduct, { isLoading: isUpdating }] = useUpdateProductBySlugMutation();
   const { data: stats } = useGetProductStatsQuery();
+  const navigate = useNavigate();
 
   const productStats = useMemo(
     () => ({
@@ -70,7 +68,11 @@ const Products = () => {
           <button type="button" onClick={() => handleAction(item, "view")} className="text-sm">
             {icons.eye}
           </button>
-          <button type="button" onClick={() => handleAction(item, "edit")} className="text-sm">
+          <button
+            type="button"
+            onClick={() => navigate(`/products/new?edit=${item._id}`, { state: { product: item } })}
+            className="text-sm"
+          >
             {icons.pencil}
           </button>
           <button type="button" onClick={() => handleAction(item, "delete")} className="text-lg">
@@ -88,34 +90,6 @@ const Products = () => {
     setSelectedProd(item);
     if (action === "view") setOpenView(true);
     if (action === "delete") setOpenDelete(true);
-    if (action === "edit") setOpenCreate(true);
-  };
-
-  const handleCreate = (payload) => {
-    const formData = new FormData();
-    Object.entries(payload).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    createProduct(formData)
-      .unwrap()
-      .then(() => {
-        toast.success("Product ADDED successfully");
-        setOpenCreate(false);
-      });
-  };
-
-  const handleUpdate = (payload) => {
-    const formData = new FormData();
-    Object.entries(payload).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    editProduct({ body: formData, slug: selectedProd?.slug })
-      .unwrap()
-      .then(() => {
-        toast.success("Product UPDATED successfully");
-        setOpenCreate(false);
-        setSelectedProd(null);
-      });
   };
 
   const handleDelete = () => {
@@ -132,10 +106,7 @@ const Products = () => {
       <PageHeader
         title="Products"
         subtitle="Manage all products in store"
-        action={() => {
-          setOpenCreate(true);
-          setSelectedProd(null);
-        }}
+        action={() => navigate(`/products/create`)}
         actionLabel="Add Product"
       />
 
@@ -168,7 +139,7 @@ const Products = () => {
         />
       </section>
 
-      <CreateProductModal
+      {/* <CreateProductModal
         isOpen={openCreate}
         onClose={() => {
           setOpenCreate(false);
@@ -177,7 +148,7 @@ const Products = () => {
         product={selectedProd}
         loading={isCreating || isUpdating}
         onSubmit={selectedProd ? handleUpdate : handleCreate}
-      />
+      /> */}
 
       <ViewProductModal
         isOpen={openView}

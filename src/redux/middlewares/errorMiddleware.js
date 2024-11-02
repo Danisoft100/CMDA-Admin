@@ -9,6 +9,7 @@ const errorMiddleware = (store) => (next) => (action) => {
 
   const payload = action.payload || {};
   const { data, error, message } = payload;
+
   const errorMessage = data
     ? Array.isArray(data?.message)
       ? data?.message?.[0]

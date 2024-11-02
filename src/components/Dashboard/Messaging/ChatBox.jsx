@@ -3,13 +3,13 @@ import icons from "~/assets/js/icons";
 import { useNavigate } from "react-router-dom";
 import { classNames } from "~/utilities/classNames";
 import ContactListItem from "./ContactListItem";
-import { useGetChatHistoryQuery } from "~/redux/api/chatsApi";
+import { useGetAllContactsQuery, useGetChatHistoryQuery } from "~/redux/api/chatsApi";
 import Loading from "~/components/Global/Loading/Loading";
 import Message from "./Message";
 import { useGetMemberByIdQuery } from "~/redux/api/membersApi";
 import { useSocket } from "~/utilities/socket";
 
-const ChatBox = ({ userId, recipientId, refetchContacts }) => {
+const ChatBox = ({ userId, recipientId }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputHeight, setInputHeight] = useState(48); // Initial height
   const navigate = useNavigate();
@@ -21,10 +21,8 @@ const ChatBox = ({ userId, recipientId, refetchContacts }) => {
     isFetching,
   } = useGetChatHistoryQuery(recipientId, { refetchOnMountOrArgChange: true });
   const { data: recipientData, isLoading: loadingRecipientData } = useGetMemberByIdQuery(recipientId);
-
-  useEffect(() => {
-    refetchContacts();
-  }, [allChatsBetweenUsers, refetchContacts]);
+  const { data } = useGetAllContactsQuery(null, { refetchOnMountOrArgChange: true });
+  console.log(data?.contacts?.length);
 
   const [allMessages, setAllMessages] = useState([]);
 

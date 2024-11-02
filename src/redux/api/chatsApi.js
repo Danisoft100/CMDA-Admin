@@ -5,12 +5,12 @@ const chatsApi = api.injectEndpoints({
     getAllContacts: build.query({
       query: () => ({ url: "/chats/contacts", cache: "no-cache" }),
       transformResponse: (response) => response.data,
-      providesTags: ["ALL_CONTACTS"],
+      providesTags: ["CONTACTS"],
     }),
     getChatHistory: build.query({
       query: (id) => ({ url: `/chats/history/${id}` }),
       transformResponse: (response) => response.data,
-      invalidatesTags: ["ALL_CONTACTS"],
+      invalidatesTags: ["CONTACTS"],
     }),
   }),
 });

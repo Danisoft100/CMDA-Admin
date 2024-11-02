@@ -20,6 +20,7 @@ const TextInput = ({
   max,
   showTitleLabel = true, // whether to show label or title of input above the component
   readOnly,
+  accept,
 }) => {
   const [showPwd, setShowPwd] = useState(false);
 
@@ -48,6 +49,7 @@ const TextInput = ({
             required: required && typeof required === "boolean" ? "This field is required" : required,
             ...rules,
           })}
+          {...(type === "file" && accept ? { accept } : {})}
           placeholder={placeholder}
           min={min}
           max={max}
