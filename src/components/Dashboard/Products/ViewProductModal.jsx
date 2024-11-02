@@ -4,11 +4,11 @@ import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
 const ViewProductModal = ({ isOpen, onClose, product }) => {
-  const KEYS = ["name", "slug", "description", "price", "stock", "brand", "createdAt"];
+  const KEYS = ["name", "slug", "description", "price", "stock", "brand", "createdAt", "sizes"];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Product Details" showCloseBtn>
-      <div className="space-y-4 max-h-[500px] overflow-y-auto">
+      <div className="space-y-3 max-h-[600px] overflow-y-auto">
         <div className="grid grid-cols-2 gap-3">
           {KEYS.map((key) => (
             <div key={key} className={["description", "name", "slug"].includes(key) ? "col-span-2" : "col-span-1"}>
@@ -20,12 +20,25 @@ const ViewProductModal = ({ isOpen, onClose, product }) => {
                   ? formatCurrency(product?.[key])
                   : key === "createdAt"
                     ? formatDate(product?.[key]).dateTime
-                    : product?.[key]}
+                    : key === "sizes"
+                      ? product?.[key].join(", ") || "N/A"
+                      : product?.[key] || "N/A"}
               </p>
             </div>
           ))}
         </div>
-        <img src={product?.featuredImageUrl} alt="" className="size-40 rounded-xl" />
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <h5 className="text-sm font-medium mb-1">Featured Image</h5>
+            <img src={product?.featuredImageUrl} alt="" className="h-28 w-full rounded-xl" />
+          </div>
+          {product?.additionalImages?.map((x) => (
+            <div key={x}>
+              <h5 className="text-sm font-medium mb-1">{x.name}</h5>
+              <img src={x?.imageUrl} alt="" className="h-28 w-full rounded-xl" />
+            </div>
+          ))}
+        </div>
       </div>
     </Modal>
   );

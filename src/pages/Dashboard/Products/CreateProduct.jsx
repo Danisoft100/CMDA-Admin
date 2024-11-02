@@ -12,6 +12,7 @@ import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import { useCreateProductMutation, useUpdateProductBySlugMutation } from "~/redux/api/productsApi";
 
 const ADDITIONAL_IMAGE_LIMIT = 4;
+const CATEGORIES = ["Journals & Magazines", "Customized wears", "Publications (Books)", "Others"];
 
 const CreateProductPage = () => {
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ const CreateProductPage = () => {
             control={control}
             required
             errors={errors}
-            options={["Book", "CD", "Fashion", "Others"].map((x) => ({ label: x, value: x }))}
+            options={CATEGORIES.map((x) => ({ label: x, value: x }))}
           />
           <TextInput
             title="Available Quantity"

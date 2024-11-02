@@ -33,9 +33,9 @@ const Products = () => {
   const productStats = useMemo(
     () => ({
       total: stats?.totalProducts,
-      "CDs & Audios": stats?.totalCDs,
-      books: stats?.totalBooks,
-      fashions: stats?.totalFashions,
+      "Journals & Magazines": stats?.totalJournals,
+      "Customized Wears": stats?.totalWears,
+      publications: stats?.totalPublications,
       others: stats?.totalOthers,
     }),
     [stats]
@@ -68,13 +68,13 @@ const Products = () => {
           <button type="button" onClick={() => handleAction(item, "view")} className="text-sm">
             {icons.eye}
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={() => navigate(`/products/new?edit=${item._id}`, { state: { product: item } })}
             className="text-sm"
           >
             {icons.pencil}
-          </button>
+          </button> */}
           <button type="button" onClick={() => handleAction(item, "delete")} className="text-lg">
             {icons.delete}
           </button>

@@ -48,10 +48,17 @@ const ViewOrderModal = ({ isOpen, onClose, orderId, onUpdate }) => {
               <table className="table-auto text-xs w-full font-medium">
                 <tbody>
                   {order.products?.map((item, v) => (
-                    <tr key={v}>
+                    <tr key={v} className="border-b last:border-b-0">
                       <td className="px-2 py-1">{item?.quantity}</td>
                       <td className="px-2 py-1">X</td>
-                      <td className="px-2 py-1 font-medium">{item?.product.name}</td>
+                      <td className="px-2 py-1">
+                        <h5 className="truncate text-xs font-semibold">{item?.product.name}</h5>
+                        {item.size || item.color ? (
+                          <p className="text-xs mb-1">
+                            {item?.size ? "Size: " + item.size : ""} {item?.color ? "Color: " + item.color : ""}{" "}
+                          </p>
+                        ) : null}
+                      </td>
                       <td className="px-2 py-1 font-medium">{formatCurrency(item.product.price)}</td>
                     </tr>
                   ))}
