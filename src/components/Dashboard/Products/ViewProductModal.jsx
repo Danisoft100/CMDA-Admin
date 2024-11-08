@@ -33,7 +33,7 @@ const ViewProductModal = ({ isOpen, onClose, product }) => {
             <img src={product?.featuredImageUrl} alt="" className="h-28 w-full rounded-xl" />
           </div>
           {product?.additionalImages?.map((x) => (
-            <div key={x}>
+            <div key={x.name}>
               <h5 className="text-sm font-medium mb-1">{x.name}</h5>
               <img src={x?.imageUrl} alt="" className="h-28 w-full rounded-xl" />
             </div>

@@ -32,17 +32,18 @@ const Donations = () => {
     role,
     areasOfNeed,
   });
-  const { data: stats } = useGetDonationStatsQuery();
+  const { data: stats = { totalDonationAmount: {} } } = useGetDonationStatsQuery();
 
-  const donationStats = useMemo(
-    () => ({
-      totalAmount: stats?.totalDonationAmount,
-      totalCount: stats?.totalDonationCount,
-      todayAmount: stats?.todayDonationAmount,
+  const donationStats = useMemo(() => {
+    const obj = {
+      totalDonations: stats?.totalDonationCount,
       todayCount: stats?.todayDonationCount,
-    }),
-    [stats]
-  );
+    };
+    Object.keys(stats?.totalDonationAmount).forEach((key) => {
+      obj[key + " Donations"] = stats?.totalDonationAmount[key];
+    });
+    return obj;
+  }, [stats]);
 
   const COLUMNS = [
     { header: "Reference", accessor: "reference" },
@@ -109,10 +110,10 @@ const Donations = () => {
       <PageHeader title="Donation" subtitle="Manage all donations" />
 
       <div className="grid sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-        {Object.entries(donationStats).map(([key, value]) => (
+        {Object.entries(donationStats).map(([key, value], i) => (
           <div key={key} className="p-4 bg-white border rounded-xl">
             <h4 className="uppercase text-xs font-medium text-gray mb-3">{convertToCapitalizedWords(key)}</h4>
-            <p className="font-bold text-lg">{(key.includes("Amount") ? formatCurrency(value) : value) || 0}</p>
+            <p className="font-bold text-lg">{(i > 1 ? formatCurrency(value, key.split(" ")[0]) : value) || 0}</p>
           </div>
         ))}
       </div>

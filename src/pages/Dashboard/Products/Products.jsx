@@ -44,7 +44,8 @@ const Products = () => {
   const COLUMNS = [
     { header: "Product Name", accessor: "name" },
     { header: "Category", accessor: "category" },
-    { header: "Price", accessor: "price" },
+    { header: "Price NGN", accessor: "price" },
+    { header: "Price USD", accessor: "priceUSD" },
     { header: "Brand", accessor: "brand" },
     { header: "Qty", accessor: "stock" },
     { header: "Date Added", accessor: "createdAt" },
@@ -63,6 +64,8 @@ const Products = () => {
         formatDate(value).date
       ) : col.accessor === "price" ? (
         formatCurrency(value)
+      ) : col.accessor === "priceUSD" ? (
+        formatCurrency(value, "USD")
       ) : col.accessor === "action" ? (
         <div className="inline-flex items-center gap-3 text-gray-dark">
           <button type="button" onClick={() => handleAction(item, "view")} className="text-sm">
@@ -80,7 +83,7 @@ const Products = () => {
           </button>
         </div>
       ) : (
-        value
+        value || "--"
       );
     },
     enableSorting: false,
