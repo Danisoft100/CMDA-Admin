@@ -99,7 +99,12 @@ const Members = () => {
               icon={icons.filter}
               variant="outlined"
             />
-            <SearchBar onSearch={setSearchBy} />
+            <SearchBar
+              onSearch={(v) => {
+                setSearchBy(v);
+                setCurrentPage(1);
+              }}
+            />
           </div>
         </div>
 
@@ -125,6 +130,7 @@ const Members = () => {
         onSubmit={({ role, region }) => {
           setRole(role);
           setRegion(region);
+          setCurrentPage(1);
           setOpenFilter(false);
         }}
       />

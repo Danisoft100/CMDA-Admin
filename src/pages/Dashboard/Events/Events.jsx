@@ -77,7 +77,12 @@ const Events = () => {
             icon={icons.filter}
             variant="outlined"
           />
-          <SearchBar onSearch={setSearchBy} />
+          <SearchBar
+            onSearch={(v) => {
+              setSearchBy(v);
+              setCurrentPage(1);
+            }}
+          />
         </div>
 
         {isLoadingEvents || isFetching ? (

@@ -68,13 +68,13 @@ const Products = () => {
           <button type="button" onClick={() => handleAction(item, "view")} className="text-sm">
             {icons.eye}
           </button>
-          {/* <button
+          <button
             type="button"
-            onClick={() => navigate(`/products/new?edit=${item._id}`, { state: { product: item } })}
+            onClick={() => navigate(`/products/create?edit=${item.slug}`, { state: { product: item } })}
             className="text-sm"
           >
             {icons.pencil}
-          </button> */}
+          </button>
           <button type="button" onClick={() => handleAction(item, "delete")} className="text-lg">
             {icons.delete}
           </button>
@@ -122,7 +122,12 @@ const Products = () => {
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Products</h3>
-          <SearchBar onSearch={setSearchBy} />
+          <SearchBar
+            onSearch={(v) => {
+              setSearchBy(v);
+              setCurrentPage(1);
+            }}
+          />
         </div>
 
         <Table

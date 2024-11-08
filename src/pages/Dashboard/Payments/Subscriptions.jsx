@@ -44,6 +44,7 @@ const Subscriptions = () => {
 
   const COLUMNS = [
     { header: "Reference", accessor: "reference" },
+    { header: "Source", accessor: "source" },
     { header: "Amount", accessor: "amount" },
     { header: "Subscriber", accessor: "user.fullName" },
     { header: "Role", accessor: "user.role" },
@@ -82,7 +83,7 @@ const Subscriptions = () => {
           {item.user.region}
         </span>
       ) : col.accessor === "amount" ? (
-        formatCurrency(value)
+        formatCurrency(value, item.currency)
       ) : (
         value || "--"
       );
@@ -124,7 +125,12 @@ const Subscriptions = () => {
               icon={icons.filter}
               variant="outlined"
             />
-            <SearchBar onSearch={setSearchBy} />
+            <SearchBar
+              onSearch={(v) => {
+                setSearchBy(v);
+                setCurrentPage(1);
+              }}
+            />
           </div>
         </div>
 
@@ -149,6 +155,7 @@ const Subscriptions = () => {
         onSubmit={({ role, region }) => {
           setRole(role);
           setRegion(region);
+          setCurrentPage(1);
           setOpenFilter(false);
         }}
       />

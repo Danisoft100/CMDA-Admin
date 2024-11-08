@@ -49,7 +49,12 @@ const VolunteerJobs = () => {
 
       <section className="my-8">
         <div className="flex justify-end mb-4">
-          <SearchBar onSearch={setSearchBy} />
+          <SearchBar
+            onSearch={(v) => {
+              setSearchBy(v);
+              setCurrentPage(1);
+            }}
+          />
         </div>
         <div className="grid grid-cols-2 gap-6">
           {allVolunteerJobs?.items?.map((job) => (

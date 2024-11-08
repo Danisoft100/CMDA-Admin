@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
 import BackButton from "~/components/Global/BackButton/BackButton";
@@ -10,13 +10,16 @@ import TextArea from "~/components/Global/FormElements/TextArea/TextArea";
 import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
 import PageHeader from "~/components/Global/PageHeader/PageHeader";
 import { useCreateProductMutation, useUpdateProductBySlugMutation } from "~/redux/api/productsApi";
+import { formatCurrency } from "~/utilities/formatCurrency";
 
 const ADDITIONAL_IMAGE_LIMIT = 4;
 const CATEGORIES = ["Journals & Magazines", "Customized wears", "Publications (Books)", "Others"];
 
 const CreateProductPage = () => {
   const navigate = useNavigate();
-  const product = useLocation().state?.products;
+  const [searchParams] = useSearchParams();
+  const edit = searchParams.get("slug");
+  const product = useLocation().state?.product;
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [editProduct, { isLoading: isUpdating }] = useUpdateProductBySlugMutation();
 
@@ -31,10 +34,11 @@ const CreateProductPage = () => {
 
   useEffect(() => {
     if (product) {
-      ["name", "description", "price", "category", "stock", "brand"].forEach((key) => {
+      ["name", "description", "price", "priceUSD", "category", "stock", "brand"].forEach((key) => {
         setValue(key, product?.[key]);
       });
       setImage(product.featuredImageUrl);
+      setValue("sizes", product?.sizes.join(", "));
     } else {
       reset();
       setImage(null);
@@ -59,22 +63,29 @@ const CreateProductPage = () => {
   };
 
   const onSubmit = (payload) => {
+    console.log("Payload", payload);
     if (!product && !featuredImage) return toast.error("Featured image is required");
     payload = {
       ...payload,
+      price: +payload.price,
+      priceUSD: +payload.priceUSD,
       featuredImage,
-      additionalImages: JSON.stringify(
-        payload.additionalImages
-          .map((item, i) =>
-            i < additionalImages
-              ? { name: colors ? item.name : "Additional " + (i + 1), color: item.color || null }
-              : false
-          )
-          .filter(Boolean)
-      ),
-      additionalImageFiles: payload.additionalImages
-        .map((item, i) => (i < additionalImages ? item.file[0] : null))
-        .filter(Boolean),
+      ...(!product
+        ? {
+            additionalImages: JSON.stringify(
+              payload.additionalImages
+                .map((item, i) =>
+                  i < additionalImages
+                    ? { name: colors ? item.name : "Additional " + (i + 1), color: item.color || null }
+                    : false
+                )
+                .filter(Boolean)
+            ),
+            additionalImageFiles: payload.additionalImages
+              .map((item, i) => (i < additionalImages ? item.file[0] : null))
+              .filter(Boolean),
+          }
+        : {}),
     };
 
     const formData = new FormData();
@@ -88,7 +99,7 @@ const CreateProductPage = () => {
       }
     });
 
-    if (!product) {
+    if (!product && !edit) {
       createProduct(formData)
         .unwrap()
         .then(() => {
@@ -117,7 +128,10 @@ const CreateProductPage = () => {
               Featured Image <span className="text-error">*</span>
             </p>
             <div className="inline-block">
-              <label htmlFor="image" className="text-primary text-sm font-medium underline cursor-pointer">
+              <label
+                htmlFor="image"
+                className="text-primary text-sm font-medium underline cursor-pointer inline-flex flex-col gap-1"
+              >
                 {image ? (
                   <img src={image} alt="" className="size-40 rounded-xl" />
                 ) : (
@@ -125,6 +139,7 @@ const CreateProductPage = () => {
                     {icons.image}
                   </span>
                 )}
+                <span className="text-underline text-sm font-semibold"> Click to change</span>
               </label>
               <input type="file" accept="image/*" hidden id="image" name="image" onChange={handlePreview} />
             </div>
@@ -135,7 +150,26 @@ const CreateProductPage = () => {
           <div className="col-span-2">
             <TextArea label="description" register={register} required errors={errors} rows={3} />
           </div>
-          <TextInput label="price" type="number" register={register} required errors={errors} />
+          <TextInput
+            label="price"
+            title="Price in Naira"
+            placeholder={"e.g. " + formatCurrency(2500)}
+            type="number"
+            register={register}
+            required
+            errors={errors}
+            min={0}
+          />
+          <TextInput
+            label="priceUSD"
+            title="Price in USD"
+            placeholder={"e.g. " + formatCurrency(25, "USD")}
+            type="number"
+            register={register}
+            required
+            min={0}
+            errors={errors}
+          />
           <Select
             label="category"
             control={control}
@@ -167,68 +201,97 @@ const CreateProductPage = () => {
           <div className="col-span-2 my-4 flex flex-col">
             <h5 className="flex items-center gap-6 text-sm font-semibold">
               Additional Images{" "}
-              <button type="button" className="text-primary" onClick={() => setColors(!colors)}>
-                {colors ? "Remove Colors" : "Add Color Variants"}
-              </button>
+              {!product ? (
+                <button type="button" className="text-primary" onClick={() => setColors(!colors)}>
+                  {colors ? "Remove Colors" : "Add Color Variants"}
+                </button>
+              ) : null}
             </h5>
-            {colors && (
-              <div className="grid grid-cols-4 gap-3 mt-2">
-                <h5 className="text-gray-600 font-medium uppercase text-xs">Color Name</h5>
-                <h5 className="text-gray-600 font-medium uppercase text-xs">Select Color</h5>
-                <h5 className="text-gray-600 font-medium uppercase text-xs">{colors ? "Color Image" : "Image File"}</h5>
-              </div>
-            )}
-            {[...Array(additionalImages)].map((_, i) => (
-              <div key={i} className={`grid gap-3 mt-2 ${colors ? "grid-cols-4" : "grid-cols-2"}`}>
-                {colors && (
-                  <>
-                    <div>
-                      <TextInput
-                        label={`additionalImages[${i}].name`}
-                        register={register}
-                        errors={errors}
-                        showTitleLabel={false}
-                      />
-                    </div>
-                    <div>
-                      <TextInput
-                        label={`additionalImages[${i}].color`}
-                        type="color"
-                        register={register}
-                        errors={errors}
-                        showTitleLabel={false}
-                      />
-                    </div>
-                  </>
+            {product ? (
+              <>
+                {product?.additionalImages.length ? (
+                  <div className="grid grid-cols-3 gap-2">
+                    {product?.additionalImages?.map((x) => (
+                      <div key={x}>
+                        <h5 className="text-sm font-medium mb-1">{x.name}</h5>
+                        <img src={x?.imageUrl} alt="" className="h-28 w-full rounded-xl" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <span>N/A</span>
                 )}
-                <div className="col-span-2">
-                  <TextInput
-                    type="file"
-                    label={`additionalImages[${i}].file`}
-                    title={`Image ${i + 1}`}
-                    accept="image/*"
-                    register={register}
-                    errors={errors}
-                    showTitleLabel={!colors}
-                  />
+              </>
+            ) : (
+              <>
+                {" "}
+                {colors && (
+                  <div className="grid grid-cols-4 gap-3 mt-2">
+                    <h5 className="text-gray-600 font-medium uppercase text-xs">Color Name</h5>
+                    <h5 className="text-gray-600 font-medium uppercase text-xs">Select Color</h5>
+                    <h5 className="text-gray-600 font-medium uppercase text-xs">
+                      {colors ? "Color Image" : "Image File"}
+                    </h5>
+                  </div>
+                )}
+                {[...Array(additionalImages)].map((_, i) => (
+                  <div key={i} className={`grid gap-3 mt-2 ${colors ? "grid-cols-4" : "grid-cols-2"}`}>
+                    {colors && (
+                      <>
+                        <div>
+                          <TextInput
+                            label={`additionalImages[${i}].name`}
+                            register={register}
+                            errors={errors}
+                            showTitleLabel={false}
+                          />
+                        </div>
+                        <div>
+                          <TextInput
+                            label={`additionalImages[${i}].color`}
+                            type="color"
+                            register={register}
+                            errors={errors}
+                            showTitleLabel={false}
+                          />
+                        </div>
+                      </>
+                    )}
+                    <div className="col-span-2">
+                      <TextInput
+                        type="file"
+                        label={`additionalImages[${i}].file`}
+                        title={`Image ${i + 1}`}
+                        accept="image/*"
+                        register={register}
+                        errors={errors}
+                        showTitleLabel={!colors}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <div className="flex justify-between mt-3">
+                  {additionalImages < ADDITIONAL_IMAGE_LIMIT && (
+                    <Button
+                      label="Add Another Image"
+                      variant="outlined"
+                      onClick={() => setAdditionalImages((prev) => prev + 1)}
+                    />
+                  )}
+                  {additionalImages > 1 && (
+                    <Button label="Remove" variant="text" onClick={() => setAdditionalImages((prev) => prev - 1)} />
+                  )}
                 </div>
-              </div>
-            ))}
-            <div className="flex justify-between mt-3">
-              {additionalImages < ADDITIONAL_IMAGE_LIMIT && (
-                <Button
-                  label="Add Another Image"
-                  variant="outlined"
-                  onClick={() => setAdditionalImages((prev) => prev + 1)}
-                />
-              )}
-              {additionalImages > 1 && (
-                <Button label="Remove" variant="text" onClick={() => setAdditionalImages((prev) => prev - 1)} />
-              )}
-            </div>
+              </>
+            )}
           </div>
 
-          <Button label="Submit" type="submit" loading={isCreating || isUpdating} className="mt-2 col-start-2" />
+          <Button
+            label={product ? "Update" : "Submit"}
+            type="submit"
+            loading={isCreating || isUpdating}
+            className="mt-2 col-start-2"
+          />
         </form>
       </div>
     </div>
