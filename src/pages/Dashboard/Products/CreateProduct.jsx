@@ -63,7 +63,6 @@ const CreateProductPage = () => {
   };
 
   const onSubmit = (payload) => {
-    console.log("Payload", payload);
     if (!product && !featuredImage) return toast.error("Featured image is required");
     payload = {
       ...payload,

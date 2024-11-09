@@ -32,6 +32,7 @@ const errorMiddleware = (store) => (next) => (action) => {
       }, 1500);
     } else {
       toast.error(errorMessage);
+      if (errorMessage == "Oops, something went wrong!") console.log("OOPS", action);
     }
   }
 

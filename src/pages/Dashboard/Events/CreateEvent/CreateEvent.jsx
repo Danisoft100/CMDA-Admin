@@ -9,6 +9,7 @@ import Select from "~/components/Global/FormElements/Select/Select";
 import TextArea from "~/components/Global/FormElements/TextArea/TextArea";
 import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
 import { useCreateEventMutation, useGetEventBySlugQuery, useUpdateEventBySlugMutation } from "~/redux/api/eventsApi";
+import { formatCurrency } from "~/utilities/formatCurrency";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -73,8 +74,6 @@ const CreateEvent = () => {
         ? Object.entries(payload.paymentPlans).map(([key, value]) => ({ role: key, price: +value }))
         : [],
     };
-
-    console.log("Pay", payload);
 
     const formData = new FormData();
     Object.entries(payload).forEach(([key, val]) => {
@@ -176,7 +175,9 @@ const CreateEvent = () => {
             {isPaid
               ? ["Student", "Doctor", "GlobalNetwork"].map((role) => (
                   <div key={role} className="flex items-center gap-8 mb-3">
-                    <p className="text-sm font-medium flex-shrink-0">Price for {role + "s"}</p>
+                    <p className="text-sm font-medium flex-shrink-0">
+                      Price for {role + "s (" + (role === "GlobalNetwork" ? "USD" : "NGN") + ")"}
+                    </p>
                     <TextInput
                       label={`paymentPlans.${role}`}
                       type="number"
@@ -184,7 +185,12 @@ const CreateEvent = () => {
                       register={register}
                       errors={errors}
                       required
-                      placeholder={role}
+                      placeholder={
+                        "e.g. " +
+                        (role === "GlobalNetwork"
+                          ? formatCurrency(20, "USD")
+                          : formatCurrency(role == "Student" ? 500 : 3500))
+                      }
                       className="w-1/4"
                     />
                   </div>

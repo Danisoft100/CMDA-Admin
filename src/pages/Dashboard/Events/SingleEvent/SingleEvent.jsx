@@ -80,7 +80,7 @@ const SingleEvent = () => {
               {evt?.isPaid
                 ? evt?.paymentPlans.map((x) => (
                     <p className="text-sm mb-2" key={x.role}>
-                      {x.role + " - " + formatCurrency(x.price)}
+                      {x.role + " - " + formatCurrency(x.price, x.role === "GlobalNetwork" ? "USD" : "NGN")}
                     </p>
                   ))
                 : null}
