@@ -24,7 +24,7 @@ const Orders = () => {
 
   const orderStats = useMemo(
     () => ({
-      totalAmount: stats?.totalAmount,
+      // totalAmount: stats?.totalAmount,
       totalOrders: stats?.totalOrders,
       totalPending: stats?.totalPending,
       totalShipped: stats?.totalShipped,
@@ -53,7 +53,7 @@ const Orders = () => {
       ) : col.accessor === "createdAt" ? (
         formatDate(value).dateTime
       ) : col.accessor === "totalAmount" ? (
-        formatCurrency(value)
+        formatCurrency(value, item.currency)
       ) : col.accessor === "totalItems" ? (
         item.products?.reduce((acc, prod) => acc + prod.quantity, 0)
       ) : (
