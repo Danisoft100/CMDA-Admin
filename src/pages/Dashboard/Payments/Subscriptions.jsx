@@ -34,7 +34,7 @@ const Subscriptions = () => {
 
   const subscriptionStats = useMemo(
     () => ({
-      totalSubscribers: stats?.totalSubscribers,
+      estimatedSubscribers: stats?.totalSubscribers,
       activeSubscribers: stats?.activeSubscribers,
       inactiveSubscribers: stats?.inActiveSubscribers,
       todaySubscribers: stats?.todaySubscribers,

@@ -48,7 +48,7 @@ const Donations = () => {
   const COLUMNS = [
     { header: "Reference", accessor: "reference" },
     { header: "Source", accessor: "source" },
-    { header: "Amount", accessor: "amount" },
+    { header: "Total Amount", accessor: "totalAmount" },
     { header: "Donor", accessor: "user.fullName" },
     { header: "Role", accessor: "user.role" },
     { header: "Vision Partner", accessor: "recurring" },
@@ -87,8 +87,14 @@ const Donations = () => {
           <br />
           {item.user.region}
         </span>
-      ) : col.accessor === "amount" ? (
-        formatCurrency(value, item.currency)
+      ) : col.accessor === "totalAmount" ? (
+        formatCurrency(value || item.amount, item.currency)
+      ) : col.accessor === "areasOfNeed" ? (
+        typeof value === "string" ? (
+          value
+        ) : (
+          value?.map((x) => x.name + " - " + formatCurrency(x.amount, item.currency)).join(", ")
+        )
       ) : (
         value || "--"
       );
