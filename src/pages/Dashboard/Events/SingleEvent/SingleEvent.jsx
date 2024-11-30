@@ -75,16 +75,16 @@ const SingleEvent = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-6 mt-6">
-            <div>
-              <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Payment Plans</h4>
-              {evt?.isPaid
-                ? evt?.paymentPlans.map((x) => (
-                    <p className="text-sm mb-2" key={x.role}>
-                      {x.role + " - " + formatCurrency(x.price, x.role === "GlobalNetwork" ? "USD" : "NGN")}
-                    </p>
-                  ))
-                : null}
-            </div>
+            {evt?.isPaid && evt?.paymentPlans?.length ? (
+              <div>
+                <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Payment Plans</h4>
+                {evt?.paymentPlans.map((x) => (
+                  <p className="text-sm mb-2" key={x.role}>
+                    {x.role + " - " + formatCurrency(x.price, x.role === "GlobalNetwork" ? "USD" : "NGN")}
+                  </p>
+                ))}
+              </div>
+            ) : null}
             <div>
               <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Event Date &amp; Time</h4>
               <p className="text-base mb-1">{formatDate(evt?.eventDateTime).dateTime}</p>

@@ -80,7 +80,7 @@ const CreateEvent = () => {
       if (Array.isArray(val)) {
         if (key === "paymentPlans") {
           // Append each object in paymentPlans as a JSON string
-          formData.append("paymentPlans", JSON.stringify(val));
+          formData.append("paymentPlans", val.length ? JSON.stringify(val) : null);
         } else {
           // For other arrays, append each value individually with key[]
           val.forEach((v) => {

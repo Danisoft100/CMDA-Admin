@@ -137,6 +137,7 @@ const Donations = () => {
               variant="outlined"
             />
             <SearchBar
+              placeholder="Search reference..."
               onSearch={(v) => {
                 setSearchBy(v);
                 setCurrentPage(1);

@@ -32,8 +32,9 @@ const errorMiddleware = (store) => (next) => (action) => {
       }, 1500);
       return;
     } else {
-      if (action.meta.arg.endpointName === "getNotificationStats") return;
-      return toast.error(errorMessage);
+      if (action.meta.arg.endpointName !== "getNotificationStats") {
+        toast.error(errorMessage);
+      }
     }
   }
 
