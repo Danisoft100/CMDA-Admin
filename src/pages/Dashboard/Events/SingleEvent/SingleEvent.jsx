@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
+import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
@@ -42,13 +44,84 @@ const SingleEvent = () => {
   };
 
   const COLUMNS = [
-    { header: "ID", accessor: "membershipId" },
-    { header: "Full Name", accessor: "fullName" },
+    { header: "Reference", accessor: "reference" },
+    { header: "Amount", accessor: "amount" },
+    { header: "MemberID", accessor: "membershipId" },
+    { header: "FullName", accessor: "fullName" },
     { header: "Gender", accessor: "gender" },
     { header: "Email", accessor: "email" },
     { header: "Role", accessor: "role" },
     { header: "Region/Chapter", accessor: "region" },
   ];
+  const formattedColumns = COLUMNS.map((col) => ({
+    ...col,
+    // cell: (info) => {
+    //   const [value, item] = [info.getValue(), info.row.original];
+    //   let amount = evt.isPaid ? evt.paymentPlans.find((x) => x.role == item.role).price : 0;
+    //   amount = amount ? formatCurrency(amount, item.role == "GlobalNetwork" ? "USD" : "NGN") : "FREE";
+    //   return col.accessor === "amount" ? amount : col.accessor === "reference" ? value || "N/A" : value || "--";
+    // },
+    enableSorting: true,
+  }));
+
+  const [region, setRegion] = useState("");
+  const [role, setRole] = useState("");
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filteredRegMembers, setFilteredRegMembers] = useState([]);
+
+  useEffect(() => {
+    if (!evtStats?.registeredUsers) return;
+    let filtered = evtStats.registeredUsers;
+    if (role) {
+      filtered = filtered.filter((member) => member.role === role);
+    }
+    if (region) {
+      filtered = filtered.filter((member) => member.region === region);
+    }
+    setFilteredRegMembers(filtered);
+  }, [role, region, evtStats?.registeredUsers]);
+
+  const handleExport = () => {
+    if (!filteredRegMembers.length) {
+      toast.warning("No data available to export.");
+      return;
+    }
+
+    // Define CSV headers
+    const headers = ["Reference", "Amount", "MemberID", "Full Name", "Gender", "Email", "Role", "Region/Chapter"];
+
+    // Format data rows
+    const rows = filteredRegMembers.map((member) => [
+      member.reference || "N/A",
+      evt.isPaid
+        ? formatCurrency(
+            evt.paymentPlans.find((x) => x.role === member.role)?.price || 0,
+            member.role === "GlobalNetwork" ? "USD" : "NGN"
+          )
+        : "FREE",
+      member.membershipId,
+      member.fullName,
+      member.gender,
+      member.email,
+      member.role,
+      member.region || "--",
+    ]);
+
+    // Convert array to CSV string
+    const csvContent = [headers, ...rows].map((e) => e.join(",")).join("\n");
+
+    // Create a Blob and a downloadable link
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    // Create and trigger a download link
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Registered_Members_${slug}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div>
@@ -153,12 +226,16 @@ const SingleEvent = () => {
         <section className="md:col-span-3 bg-white shadow rounded-xl pt-6 mt-8 overflow-x-hidden">
           <div className="flex items-center justify-between gap-6 px-6 pb-6">
             <h3 className="font-bold text-base">All Registered Members</h3>
-            <SearchBar onSearch={setSearchBy} />
+            <div className="space-x-3 flex">
+              <Button label="Filter" large onClick={() => setOpenFilter(true)} icon={icons.filter} variant="outlined" />
+              <Button label="Export" large onClick={handleExport} icon={icons.download} variant="outlined" />
+              <SearchBar onSearch={setSearchBy} />
+            </div>
           </div>
 
           <Table
-            tableColumns={COLUMNS}
-            tableData={evtStats?.registeredUsers || []}
+            tableColumns={formattedColumns}
+            tableData={filteredRegMembers}
             // onRowClick={(item) => navigate(`/members/${item.membershipId}`)}
             loading={isLoading}
             searchFilter={searchBy}
@@ -177,6 +254,15 @@ const SingleEvent = () => {
         icon={icons.calendar}
         title="Delete Event"
         subtitle="Are you sure you want to delete this event?"
+      />
+      <MembersFilterModal
+        isOpen={openFilter}
+        onClose={() => setOpenFilter(false)}
+        onSubmit={({ role, region }) => {
+          setRole(role);
+          setRegion(region);
+          setOpenFilter(false);
+        }}
       />
     </div>
   );

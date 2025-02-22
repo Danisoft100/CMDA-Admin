@@ -143,7 +143,7 @@ const CreateEvent = () => {
           <Select
             label="eventType"
             control={control}
-            options={["Physical", "Virtual"].map((v) => ({ label: v, value: v }))}
+            options={["Physical", "Virtual", "Hybrid"].map((v) => ({ label: v, value: v }))}
           />
 
           <TextInput label="linkOrLocation" register={register} errors={errors} required />

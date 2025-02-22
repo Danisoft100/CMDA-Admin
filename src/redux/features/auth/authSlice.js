@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   isAuthenticated: false,
+  verifyEmail: "",
+  notAllowed: false,
 };
 
 const authSlice = createSlice({
@@ -17,10 +19,16 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
     },
+    setVerifyEmail: (state, action) => {
+      state.verifyEmail = action.payload;
+    },
+    toggleNotAllowed: (state, action) => {
+      state.notAllowed = action.payload;
+    },
   },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, logout, setVerifyEmail, toggleNotAllowed } = authSlice.actions;
 
 export const selectAuth = (state) => state.auth;
 

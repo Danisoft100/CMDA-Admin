@@ -11,13 +11,14 @@ import {
   useGetAllAdminsQuery,
   useUpdateAdminRoleMutation,
 } from "~/redux/api/adminsApi";
+import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
 
 const ManageAdmins = () => {
   const [openCreate, setOpenCreate] = useState();
   const [openDelete, setOpenDelete] = useState(false);
   const [selected, setSelected] = useState(null);
-  const { data: allAdmins, isLoading } = useGetAllAdminsQuery();
+  const { data: allAdmins, isLoading, refetch } = useGetAllAdminsQuery();
   const [createAdmin, { isLoading: isCreating }] = useCreateAdminMutation();
   const [deleteAdmin, { isLoading: isDeleting }] = useDeleteAdminByIdMutation();
   const [updateAdminRole, { isLoading: isUpdating }] = useUpdateAdminRoleMutation();
@@ -35,6 +36,8 @@ const ManageAdmins = () => {
       const [value, item] = [info.getValue(), info.row.original];
       return col.accessor === "createdAt" ? (
         formatDate(value).date
+      ) : col.accessor === "role" ? (
+        convertToCapitalizedWords(value)
       ) : col.accessor === "action" ? (
         <div className="inline-flex gap-2 items-center">
           <button type="button" className="text-lg text-gray-600" onClick={() => handleAction("edit", item)}>
@@ -63,6 +66,7 @@ const ManageAdmins = () => {
       .then(() => {
         toast.success("Admin ADDED successfully");
         setOpenCreate(false);
+        refetch();
       });
   };
 
@@ -72,6 +76,7 @@ const ManageAdmins = () => {
       .then(() => {
         toast.success("Admin Role was updated successfully");
         setOpenCreate(false);
+        refetch();
       });
   };
 
@@ -82,6 +87,7 @@ const ManageAdmins = () => {
         toast.success("Admin DELETED successfully");
         setOpenDelete(false);
         setSelected(null);
+        refetch();
       });
   };
 

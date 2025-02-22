@@ -25,18 +25,18 @@ const CreateAdminModal = ({ isOpen, onClose, admin, onSubmit, loading }) => {
     }
   }, [admin, setValue, reset]);
 
+  const roleOptions = [
+    { label: "Super Admin", value: "SuperAdmin" },
+    { label: "Member Manager", value: "MemberManager" },
+    { label: "Finance Manager", value: "FinanceManager" },
+  ];
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={admin ? "Update Admin Role" : "Add New Admin"} showCloseBtn>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         <TextInput label="fullName" register={register} required errors={errors} readOnly={admin} />
         <TextInput label="email" register={register} required errors={errors} readOnly={!!admin} />
-        <Select
-          label="role"
-          control={control}
-          required
-          errors={errors}
-          options={["SuperAdmin", "Admin", "FinanceAdmin"].map((x) => ({ label: x, value: x }))}
-        />
+        <Select label="role" control={control} required errors={errors} options={roleOptions} />
         <div className="flex justify-end">
           <Button label={admin ? "Save Changes" : "Submit"} type="submit" loading={loading} className="w-1/2 mt-1" />
         </div>

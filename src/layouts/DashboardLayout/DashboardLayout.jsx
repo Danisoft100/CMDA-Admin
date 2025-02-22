@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import { NAV_LINKS } from "../../constants/navigation";
 import { useMediaQuery2 } from "~/hooks/useMediaQuery2";
 import { useGetNotificationStatsQuery } from "~/redux/api/notificationApi";
+import PermissionModal from "~/components/PermissionModal/PermissionModal";
 
 const DashboardLayout = ({ withOutlet = true, children }) => {
   const isSmallScreen = useMediaQuery2("750px");
@@ -47,6 +48,8 @@ const DashboardLayout = ({ withOutlet = true, children }) => {
           <main className="flex-1 overflow-x-hidden overflow-y-auto p-6 mt-20">
             {withOutlet ? <Outlet /> : children}
           </main>
+
+          <PermissionModal />
         </div>
       </div>
     </div>
