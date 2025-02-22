@@ -1,4 +1,4 @@
-import { fromNow } from "~/utilities/timeFromNow";
+import formatDate from "~/utilities/fomartDate";
 
 const Message = ({ content, timestamp, isSender }) => {
   return (
@@ -10,7 +10,7 @@ const Message = ({ content, timestamp, isSender }) => {
           {content}
         </p>
 
-        <p className="text-[9px] text-gray mt-1 text-right">{fromNow(timestamp)}</p>
+        <p className="text-[9px] text-gray mt-1 text-right">{formatDate(timestamp).dateTime}</p>
       </div>
     </div>
   );
