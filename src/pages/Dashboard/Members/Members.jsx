@@ -36,6 +36,8 @@ const Members = () => {
       { label: "Students", bgClass: "bg-primary", value: stats?.totalStudents || 0 },
       { label: "Doctors", bgClass: "bg-secondary", value: stats?.totalDoctors || 0 },
       { label: "Global Network", bgClass: "bg-tertiary", value: stats?.totalGlobalNetworks || 0 },
+      { label: "Members This Month", bgClass: "bg-white", value: stats?.registeredThisMonth || 0 },
+      { label: "Members Today", bgClass: "bg-white", value: stats?.registeredToday || 0 },
     ],
     [stats]
   );
@@ -45,16 +47,26 @@ const Members = () => {
     { header: "Full Name", accessor: "fullName" },
     { header: "Gender", accessor: "gender" },
     { header: "Email", accessor: "email" },
+    { header: "BirthDate", accessor: "dateOfBirth" },
     { header: "Role", accessor: "role" },
     { header: "Region/Chapter", accessor: "region" },
+    { header: "Subscription", accessor: "subscribed" },
     { header: "Date Joined", accessor: "createdAt" },
   ];
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
-      const [value] = [info.getValue(), info.row.original];
+      const [value] = [info.getValue()];
       return col.accessor === "status" ? (
         <StatusChip status={value} />
+      ) : col.accessor === "dateOfBirth" ? (
+        value ? (
+          formatDate(value).date
+        ) : (
+          "N/A"
+        )
+      ) : col.accessor === "subscribed" ? (
+        <StatusChip status={value ? "Active" : "Inactive"} />
       ) : col.accessor === "createdAt" ? (
         formatDate(value).date
       ) : (
@@ -71,7 +83,7 @@ const Members = () => {
       const fileName = role || region ? (role || "") + (region ? "_" + region : "") + "_Members.csv" : "Members.csv";
       downloadFile(result.data, fileName);
     };
-    exportMembers({ callback, role, region });
+    exportMembers({ callback, role, region, searchBy });
   };
 
   return (
@@ -79,8 +91,11 @@ const Members = () => {
       <PageHeader title="Members" subtitle="Manage all students, doctors & global network members" />
 
       <div className="grid grid-cols-4 gap-6 mt-6">
-        {memberStats.map((stat, s) => (
-          <div key={stat.label} className={classNames("p-4 border rounded-xl", stat.bgClass, s && "text-white")}>
+        {memberStats.map((stat) => (
+          <div
+            key={stat.label}
+            className={classNames("p-4 border rounded-xl", stat.bgClass, stat.bgClass !== "bg-white" && "text-white")}
+          >
             <h4 className="uppercase text-xs font-medium opacity-70 mb-3">{stat.label}</h4>
             <p className="font-bold text-lg">{Number(stat.value).toLocaleString()}</p>
           </div>

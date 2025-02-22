@@ -34,6 +34,8 @@ const OverviewPage = () => {
         totalStudents: memberStats?.totalStudents || 0,
         totalDoctors: memberStats?.totalDoctors || 0,
         totalGlobalNetworks: memberStats?.totalGlobalNetworks || 0,
+        thisMonthMembers: memberStats?.registeredThisMonth || 0,
+        todayMembers: memberStats?.registeredToday || 0,
       },
       chapters: {
         chaptersAndRegions: "",
