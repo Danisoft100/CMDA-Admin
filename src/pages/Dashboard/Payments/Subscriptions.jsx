@@ -97,7 +97,7 @@ const Subscriptions = () => {
     const callback = (result) => {
       downloadFile(result.data, "Subscriptions.csv");
     };
-    exportSubscriptions({ callback });
+    exportSubscriptions({ callback, searchBy, role, region });
   };
 
   return (
@@ -126,7 +126,7 @@ const Subscriptions = () => {
               variant="outlined"
             />
             <SearchBar
-              placeholder="Search reference..."
+              placeholder="reference or amount"
               onSearch={(v) => {
                 setSearchBy(v);
                 setCurrentPage(1);

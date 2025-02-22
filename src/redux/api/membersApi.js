@@ -17,12 +17,13 @@ const membersApi = api.injectEndpoints({
       providesTags: ["MEMBERS"],
     }),
     exportMembersList: build.mutation({
-      queryFn: async ({ callback, role, region }, api, extraOptions, baseQuery) => {
+      queryFn: async ({ callback, role, region, searchBy }, api, extraOptions, baseQuery) => {
         const result = await baseQuery({
           url: "/users/export",
           params: {
             ...(role ? { role } : {}),
             ...(region ? { region } : {}),
+            ...(searchBy ? { searchBy } : {}),
           },
           method: "GET",
           responseHandler: (response) => response.blob(),

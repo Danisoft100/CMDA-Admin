@@ -17,10 +17,16 @@ const subscriptionsApi = api.injectEndpoints({
       providesTags: ["SUBS"],
     }),
     exportSubscriptions: build.mutation({
-      queryFn: async ({ callback }, api, extraOptions, baseQuery) => {
+      queryFn: async ({ callback, searchBy, role, region }, api, extraOptions, baseQuery) => {
+        console.log("CALL", { searchBy, role, region });
         const result = await baseQuery({
           url: "/subscriptions/export",
           method: "GET",
+          params: {
+            ...(searchBy ? { searchBy } : {}),
+            ...(role ? { role } : {}),
+            ...(region ? { region } : {}),
+          },
           responseHandler: (response) => response.blob(),
           cache: "no-cache",
         });

@@ -18,10 +18,16 @@ const donationsApi = api.injectEndpoints({
       providesTags: ["DONATIONS"],
     }),
     exportDonations: build.mutation({
-      queryFn: async ({ callback }, api, extraOptions, baseQuery) => {
+      queryFn: async ({ callback, searchBy, role, region, areasOfNeed }, api, extraOptions, baseQuery) => {
         const result = await baseQuery({
           url: "/donations/export",
           method: "GET",
+          params: {
+            ...(searchBy ? { searchBy } : {}),
+            ...(role ? { role } : {}),
+            ...(region ? { region } : {}),
+            ...(areasOfNeed ? { areasOfNeed } : {}),
+          },
           responseHandler: (response) => response.blob(),
           cache: "no-cache",
         });

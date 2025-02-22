@@ -108,7 +108,7 @@ const Donations = () => {
     const callback = (result) => {
       downloadFile(result.data, "Donations.csv");
     };
-    exportDonations({ callback });
+    exportDonations({ callback, searchBy, region, role, areasOfNeed });
   };
 
   return (
@@ -137,7 +137,7 @@ const Donations = () => {
               variant="outlined"
             />
             <SearchBar
-              placeholder="Search reference..."
+              placeholder="reference or amount"
               onSearch={(v) => {
                 setSearchBy(v);
                 setCurrentPage(1);
