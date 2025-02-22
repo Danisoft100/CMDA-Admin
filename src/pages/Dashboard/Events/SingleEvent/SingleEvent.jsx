@@ -44,23 +44,23 @@ const SingleEvent = () => {
   };
 
   const COLUMNS = [
-    { header: "Reference", accessor: "reference" },
+    { header: "Reference", accessor: "paymentReference" },
     { header: "Amount", accessor: "amount" },
-    { header: "MemberID", accessor: "membershipId" },
-    { header: "FullName", accessor: "fullName" },
-    { header: "Gender", accessor: "gender" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
-    { header: "Region/Chapter", accessor: "region" },
+    { header: "MemberID", accessor: "userId.membershipId" },
+    { header: "FullName", accessor: "userId.fullName" },
+    { header: "Gender", accessor: "userId.gender" },
+    { header: "Email", accessor: "userId.email" },
+    { header: "Role", accessor: "userId.role" },
+    { header: "Region/Chapter", accessor: "userId.region" },
   ];
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
-    // cell: (info) => {
-    //   const [value, item] = [info.getValue(), info.row.original];
-    //   let amount = evt.isPaid ? evt.paymentPlans.find((x) => x.role == item.role).price : 0;
-    //   amount = amount ? formatCurrency(amount, item.role == "GlobalNetwork" ? "USD" : "NGN") : "FREE";
-    //   return col.accessor === "amount" ? amount : col.accessor === "reference" ? value || "N/A" : value || "--";
-    // },
+    cell: (info) => {
+      const [value, item] = [info.getValue(), info.row.original];
+      let amount = evt.isPaid ? evt.paymentPlans.find((x) => x.role == item.userId.role).price : 0;
+      amount = amount ? formatCurrency(amount, item.userId.role == "GlobalNetwork" ? "USD" : "NGN") : "FREE";
+      return col.accessor === "amount" ? amount : col.accessor === "paymentReference" ? value || "N/A" : value || "--";
+    },
     enableSorting: true,
   }));
 
@@ -73,10 +73,10 @@ const SingleEvent = () => {
     if (!evtStats?.registeredUsers) return;
     let filtered = evtStats.registeredUsers;
     if (role) {
-      filtered = filtered.filter((member) => member.role === role);
+      filtered = filtered.filter((member) => member.userId.role === role);
     }
     if (region) {
-      filtered = filtered.filter((member) => member.region === region);
+      filtered = filtered.filter((member) => member.userId.region === region);
     }
     setFilteredRegMembers(filtered);
   }, [role, region, evtStats?.registeredUsers]);
@@ -92,19 +92,19 @@ const SingleEvent = () => {
 
     // Format data rows
     const rows = filteredRegMembers.map((member) => [
-      member.reference || "N/A",
+      member.paymentReference || "N/A",
       evt.isPaid
         ? formatCurrency(
-            evt.paymentPlans.find((x) => x.role === member.role)?.price || 0,
-            member.role === "GlobalNetwork" ? "USD" : "NGN"
+            evt.paymentPlans.find((x) => x.role === member.userId.role)?.price || 0,
+            member.userId.role === "GlobalNetwork" ? "USD" : "NGN"
           )
         : "FREE",
-      member.membershipId,
-      member.fullName,
-      member.gender,
-      member.email,
-      member.role,
-      member.region || "--",
+      member.userId.membershipId,
+      member.userId.fullName,
+      member.userId.gender,
+      member.userId.email,
+      member.userId.role,
+      member.userId.region || "--",
     ]);
 
     // Convert array to CSV string
