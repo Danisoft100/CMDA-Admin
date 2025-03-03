@@ -93,7 +93,7 @@ const SingleMember = () => {
 
   return (
     <div>
-      <div className="flex gap-4">
+      <div className="flex gap-2">
         <BackButton label="Back to Members List" to="/members" />
         <Button
           variant="outlined"
@@ -104,6 +104,7 @@ const SingleMember = () => {
           onClick={() => setOpenSub(true)}
         />
         <Button variant="outlined" label="Remove" onClick={() => setOpenDelete(true)} />
+        <Button label="Edit" onClick={() => navigate(`/members/new?edit=${membershipId}`)} />
       </div>
 
       <div className="flex gap-8 mt-8">

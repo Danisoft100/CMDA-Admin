@@ -8,12 +8,12 @@ const authApi = api.injectEndpoints({
     }),
     // FORGOT PASSWORD
     passwordForgot: build.mutation({
-      query: (body) => ({ url: "/admin/initiate-password-reset", method: "POST", body }),
+      query: (body) => ({ url: "/admin/forgot-password", method: "POST", body }),
       transformErrorResponse: (response) => response.data?.message,
     }),
     // RESET PASSWORD
     passwordReset: build.mutation({
-      query: (body) => ({ url: "/admin/password/reset", method: "POST", body }),
+      query: (body) => ({ url: "/admin/reset-password", method: "POST", body }),
       transformErrorResponse: (response) => response.data?.message,
     }),
     getProfile: build.query({

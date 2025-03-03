@@ -6,8 +6,8 @@ export const NAV_LINKS = [
     title: "Members",
     icon: icons.group,
     children: [
-      { title: "All Members", link: "/members" },
-      { title: "Transitions", link: "/transitions" },
+      { title: "All Members", link: "/members", role: "MemberManager" },
+      { title: "Transitions", link: "/transitions", role: "MemberManager" },
     ],
   },
   {
@@ -25,9 +25,9 @@ export const NAV_LINKS = [
     link: "/payments",
     icon: icons.card,
     children: [
-      { title: "Orders", link: "/payments/orders" },
-      { title: "Subscriptions", link: "/payments/subscriptions" },
-      { title: "Donations", link: "/payments/donations" },
+      { title: "Orders", link: "/payments/orders", role: "FinanceManager" },
+      { title: "Subscriptions", link: "/payments/subscriptions", role: "FinanceManager" },
+      { title: "Donations", link: "/payments/donations", role: "FinanceManager" },
     ],
   },
   { title: "Products", link: "/products", icon: icons.store },
@@ -39,7 +39,7 @@ export const NAV_LINKS = [
       { title: "Volunteer", link: "/others/jobs" },
       { title: "Devotionals", link: "/others/devotionals" },
       { title: "Faith Entry", link: "/others/faith-entry" },
-      { title: "Manage Admins", link: "/others/admins" },
+      { title: "Manage Admins", link: "/others/admins", role: "SuperAdmin" },
       { title: "My Profile", link: "/others/profile" },
     ],
   },

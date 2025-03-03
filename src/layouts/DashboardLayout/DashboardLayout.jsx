@@ -3,14 +3,15 @@ import { classNames } from "~/utilities/classNames";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import { NAV_LINKS } from "../../constants/navigation";
 import { useMediaQuery2 } from "~/hooks/useMediaQuery2";
 import { useGetNotificationStatsQuery } from "~/redux/api/notificationApi";
 import PermissionModal from "~/components/PermissionModal/PermissionModal";
+import { useNavigationLink } from "~/hooks/useNavigationLinks";
 
 const DashboardLayout = ({ withOutlet = true, children }) => {
   const isSmallScreen = useMediaQuery2("750px");
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { navLinks } = useNavigationLink();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -34,7 +35,7 @@ const DashboardLayout = ({ withOutlet = true, children }) => {
         <Sidebar
           isOpen={isSidebarOpen}
           onToggleSidebar={toggleSidebar}
-          navLinks={NAV_LINKS}
+          navLinks={navLinks}
           unreadMessagesCount={unreadMessagesCount}
         />
         {/* Main content */}

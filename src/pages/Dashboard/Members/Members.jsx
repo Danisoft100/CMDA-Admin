@@ -103,7 +103,7 @@ const Members = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
-        <div className="flex items-center justify-between gap-6 px-6 pb-6">
+        <div className="flex items-center justify-between gap-6 px-6 mb-3">
           <h3 className="font-bold text-base">All Members</h3>
           <div className="flex justify-end items-end gap-4 mb-4">
             <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
@@ -121,6 +121,16 @@ const Members = () => {
               }}
             />
           </div>
+        </div>
+        <div className="flex justify-between gap-4 px-6 mb-6">
+          <SearchBar
+            onSearch={(v) => {
+              setSearchBy(v);
+              setCurrentPage(1);
+            }}
+          />
+
+          <Button label="New Member" onClick={() => navigate("/members/new")} />
         </div>
 
         <Table

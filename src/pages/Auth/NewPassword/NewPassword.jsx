@@ -21,13 +21,10 @@ const NewPassword = () => {
   const [passwordReset, { isLoading }] = usePasswordResetMutation();
 
   const handleResetPassword = async (payload) => {
-    delete payload.confirmNewPassword;
-    const resetData = { ...payload };
-    passwordReset(resetData)
+    passwordReset(payload)
       .unwrap()
       .then(() => setConfirm(true))
       .catch((error) => toast.error(error));
-    setConfirm(true);
   };
 
   return (
@@ -38,7 +35,6 @@ const NewPassword = () => {
         <div className="max-w-[480px] w-full">
           <div className="mb-4  text-gray-500">
             <TextInput
-              type="tel"
               label="token"
               required={true}
               register={register}
@@ -61,7 +57,7 @@ const NewPassword = () => {
           <div className="mb-4  text-gray-500">
             <TextInput
               type="password"
-              label="confirmNewPassword"
+              label="confirmPassword"
               required={true}
               register={register}
               errors={errors}

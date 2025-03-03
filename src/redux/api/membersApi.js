@@ -44,10 +44,14 @@ const membersApi = api.injectEndpoints({
       transformResponse: (response) => response.data,
       providesTags: ["SINGLE_MEM"],
     }),
-    // updateMemberById: build.mutation({
-    //   query: (id) => ({ url: `/users/${id}`, method: "PATCH" }),
-    //   invalidatesTags: ["RESOURCES"],
-    // }),
+    createMember: build.mutation({
+      query: (body) => ({ url: `/users/create`, method: "POST", body }),
+      invalidatesTags: ["MEMBERS"],
+    }),
+    updateMember: build.mutation({
+      query: ({ id, body }) => ({ url: `/users/${id}`, method: "PATCH", body }),
+      invalidatesTags: ["TRANSITIONS"],
+    }),
     deleteMemberById: build.mutation({
       query: (id) => ({ url: `/users/${id}`, method: "DELETE" }),
       invalidatesTags: ["MEMBERS", "MEMBERS_STATS"],
@@ -72,6 +76,8 @@ export const {
   useUpdateTransitionStatusMutation,
   useDeleteMemberByIdMutation,
   useExportMembersListMutation,
+  useCreateMemberMutation,
+  useUpdateMemberMutation,
 } = membersApi;
 
 export default membersApi;
