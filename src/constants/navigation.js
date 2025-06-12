@@ -16,6 +16,7 @@ export const NAV_LINKS = [
     icon: icons.calendar,
     children: [
       { title: "All Events", link: "/events" },
+      { title: "Conferences", link: "/conferences" },
       { title: "Trainings", link: "/trainings" },
     ],
   },

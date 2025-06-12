@@ -123,13 +123,14 @@ const OverviewPage = () => {
               loading={isLoadingOrders}
             />
           </section>
-        </div>
-
+        </div>{" "}
         <div className="w-1/3 space-y-8">
           <div className="border p-5 rounded-lg bg-white space-y-5">
             <h4 className="font-semibold text-base">{"Most Recent Devotional"}</h4>
-            <p className="text-sm">{devotionals?.[0].keyVerseContent}</p>
-            <p className="text-sm text-gray">- {devotionals?.[0].keyVerse}</p>
+            <p className="text-sm">
+              {devotionals && devotionals[0] ? devotionals[0].keyVerseContent : "No devotional content available"}
+            </p>
+            <p className="text-sm text-gray">{devotionals && devotionals[0] ? `- ${devotionals[0].keyVerse}` : ""}</p>
             <Button
               variant="outlined"
               className="w-full"

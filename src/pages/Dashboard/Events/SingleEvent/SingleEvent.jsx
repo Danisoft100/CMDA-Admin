@@ -150,10 +150,16 @@ const SingleEvent = () => {
           <div className="grid grid-cols-2 gap-6 mt-6">
             {evt?.isPaid && evt?.paymentPlans?.length ? (
               <div>
-                <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Payment Plans</h4>
-                {evt?.paymentPlans.map((x) => (
-                  <p className="text-sm mb-2" key={x.role}>
-                    {x.role + " - " + formatCurrency(x.price, x.role === "GlobalNetwork" ? "USD" : "NGN")}
+                <h4 className="text-sm text-gray-600 font-semibold uppercase mb-1">Payment Plans</h4>{" "}
+                {evt?.paymentPlans.map((x, index) => (
+                  <p
+                    className="text-sm mb-2"
+                    key={`payment-plan-${x.role}-${index}-${x.registrationPeriod || "regular"}`}
+                  >
+                    {x.role}
+                    {x.registrationPeriod ? ` - ${x.registrationPeriod}` : ""}
+                    {" - "}
+                    {formatCurrency(x.price, x.role === "GlobalNetwork" ? "USD" : "NGN")}
                   </p>
                 ))}
               </div>
@@ -165,9 +171,10 @@ const SingleEvent = () => {
             <div className="col-span-2">
               <h4 className="text-sm text-gray-600 font-semibold uppercase mb-2">Members Group</h4>
               <p className="flex flex-wrap gap-4">
-                {evt?.membersGroup?.map((grp) => (
+                {" "}
+                {evt?.membersGroup?.map((grp, index) => (
                   <span
-                    key={grp}
+                    key={`member-group-${grp}-${index}`}
                     className={classNames(
                       "capitalize px-4 py-2 rounded text-xs font-medium",
                       grp === "Student"
@@ -190,8 +197,12 @@ const SingleEvent = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 my-6">
-            {evt?.eventTags?.map((tag) => (
-              <span key={tag} className="capitalize bg-gray-light px-4 py-2 rounded text-xs font-medium">
+            {" "}
+            {evt?.eventTags?.map((tag, index) => (
+              <span
+                key={`event-tag-${tag}-${index}`}
+                className="capitalize bg-gray-light px-4 py-2 rounded text-xs font-medium"
+              >
                 {tag}
               </span>
             ))}

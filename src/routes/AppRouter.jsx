@@ -9,6 +9,7 @@ import ForgotPassword from "~/pages/Auth/ForgotPassword/ForgotPassword";
 import NewPassword from "~/pages/Auth/NewPassword/NewPassword";
 import DashboardHomePage from "~/pages/Dashboard/Overview/Overview";
 import AdminDashboardEventsPage from "~/pages/Dashboard/Events/Events";
+import AdminDashboardConferencesPage from "~/pages/Dashboard/Events/Conferences/Conferences";
 import AdminDashboardStoreSingleEventPage from "~/pages/Dashboard/Events/SingleEvent/SingleEvent";
 import AdminDashboardCreateEvent from "~/pages/Dashboard/Events/CreateEvent/CreateEvent";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -66,6 +67,7 @@ export default function AppRouter() {
             { path: "events", element: <AdminDashboardEventsPage /> },
             { path: "events/create-event", element: <AdminDashboardCreateEvent /> },
             { path: "events/:slug", element: <AdminDashboardStoreSingleEventPage /> },
+            { path: "conferences", element: <AdminDashboardConferencesPage /> },
             { path: "trainings", element: <Trainings /> },
             { path: "trainings/:id", element: <SingleTraining /> },
             {
