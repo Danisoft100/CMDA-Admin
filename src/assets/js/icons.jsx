@@ -14,6 +14,7 @@ import {
   MdShoppingCart,
   MdViewModule,
   MdFilterList,
+  MdRefresh,
 } from "react-icons/md";
 import { FiBell, FiDownloadCloud } from "react-icons/fi";
 import { HiBadgeCheck, HiDotsVertical, HiOfficeBuilding, HiOutlineHome } from "react-icons/hi";
@@ -104,6 +105,8 @@ const icons = {
   lock: <BiLock />,
   card: <FaCreditCard />,
   filter: <MdFilterList />,
+  refresh: <MdRefresh />,
+  reload: <MdRefresh />,
 };
 
 export default icons;

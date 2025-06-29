@@ -45,6 +45,7 @@ export const doctorsRegionLists = [
   "Abia - Umahia",
   "Adamawa",
   "Akwa Ibom",
+  "Anambra (COOUTH)",
   "Anambra (NAUTH)",
   "Bauchi",
   "Bayelsa",

@@ -29,6 +29,12 @@ export const NAV_LINKS = [
       { title: "Orders", link: "/payments/orders", role: "FinanceManager" },
       { title: "Subscriptions", link: "/payments/subscriptions", role: "FinanceManager" },
       { title: "Donations", link: "/payments/donations", role: "FinanceManager" },
+      {
+        title: "Pending Registrations",
+        link: "/payments/pending-registrations",
+        icon: icons.refresh,
+        role: "FinanceManager",
+      },
     ],
   },
   { title: "Products", link: "/products", icon: icons.store },

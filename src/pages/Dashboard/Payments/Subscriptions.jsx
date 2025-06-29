@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
 import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
 import Button from "~/components/Global/Button/Button";
@@ -10,6 +11,7 @@ import {
   useGetAllSubscriptionsQuery,
   useGetSubscriptionStatsQuery,
 } from "~/redux/api/subscriptionsApi";
+import { useRefreshPendingPaymentMutation } from "~/redux/api/pendingPaymentsApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import { downloadFile } from "~/utilities/fileDownloader";
@@ -23,7 +25,11 @@ const Subscriptions = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [role, setRole] = useState("");
   const [region, setRegion] = useState("");
-  const { data: subscriptions, isLoading } = useGetAllSubscriptionsQuery({
+  const {
+    data: subscriptions,
+    isLoading,
+    refetch,
+  } = useGetAllSubscriptionsQuery({
     page: currentPage,
     limit: perPage,
     searchBy,
@@ -31,6 +37,8 @@ const Subscriptions = () => {
     region,
   });
   const { data: stats } = useGetSubscriptionStatsQuery();
+
+  const [refreshPendingPayment, { isLoading: isRefreshingPayments }] = useRefreshPendingPaymentMutation();
 
   const subscriptionStats = useMemo(
     () => ({
@@ -90,7 +98,6 @@ const Subscriptions = () => {
     },
     enableSorting: false,
   }));
-
   const [exportSubscriptions, { isLoading: isExporting }] = useExportSubscriptionsMutation();
 
   const handleExport = async () => {
@@ -99,7 +106,17 @@ const Subscriptions = () => {
     };
     exportSubscriptions({ callback, searchBy, role, region });
   };
+  const handleRefreshPendingPayments = async () => {
+    try {
+      await refreshPendingPayment({ type: "subscriptions", bulkRefresh: true }).unwrap();
+      toast.success("Pending subscription payments refreshed successfully");
+      refetch(); // Refresh the current data
+    } catch (error) {
+      toast.error("Failed to refresh pending payments");
+    }
+  };
 
+  // Ensure all functions are closed before return
   return (
     <div>
       <PageHeader title="Subscription" subtitle="Manage all annual subscriptions" />
@@ -124,13 +141,20 @@ const Subscriptions = () => {
               onClick={() => setOpenFilter(true)}
               icon={icons.filter}
               variant="outlined"
-            />
+            />{" "}
             <SearchBar
               placeholder="reference or amount"
               onSearch={(v) => {
                 setSearchBy(v);
                 setCurrentPage(1);
               }}
+            />
+            <Button
+              label="Refresh Pending Payments"
+              loading={isRefreshingPayments}
+              onClick={handleRefreshPendingPayments}
+              icon={icons.refresh}
+              variant="outlined"
             />
           </div>
         </div>

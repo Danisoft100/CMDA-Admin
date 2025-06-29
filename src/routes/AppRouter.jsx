@@ -28,6 +28,7 @@ import MyProfile from "~/pages/Dashboard/Others/MyProfile";
 import Orders from "~/pages/Dashboard/Payments/Orders";
 import Donations from "~/pages/Dashboard/Payments/Donations";
 import Subscriptions from "~/pages/Dashboard/Payments/Subscriptions";
+import PendingRegistrations from "~/pages/Dashboard/Payments/PendingRegistrations";
 import DashboardMessagingPage from "~/pages/Dashboard/Messaging/Messaging";
 import Trainings from "~/pages/Dashboard/Events/Trainings/Trainings";
 import SingleTraining from "~/pages/Dashboard/Events/Trainings/SingleTraining";
@@ -72,11 +73,12 @@ export default function AppRouter() {
             { path: "trainings/:id", element: <SingleTraining /> },
             {
               path: "payments",
-              element: <ProtectedRoutes restrictedRoles={["MemberManager"]} />,
+              element: <ProtectedRoutes restrictedRoles={["FinanceManager"]} />,
               children: [
                 { path: "orders", element: <Orders /> },
                 { path: "subscriptions", element: <Subscriptions /> },
                 { path: "donations", element: <Donations /> },
+                { path: "pending-registrations", element: <PendingRegistrations /> },
               ],
             },
             {

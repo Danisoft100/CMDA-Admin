@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
 import DonationsFilterModal from "~/components/Dashboard/Payments/DonationFilterModal";
 import Button from "~/components/Global/Button/Button";
@@ -10,6 +11,7 @@ import {
   useGetAllDonationsQuery,
   useGetDonationStatsQuery,
 } from "~/redux/api/donationsApi";
+import { useRefreshPendingPaymentMutation } from "~/redux/api/pendingPaymentsApi";
 import { classNames } from "~/utilities/classNames";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import { downloadFile } from "~/utilities/fileDownloader";
@@ -24,7 +26,11 @@ const Donations = () => {
   const [role, setRole] = useState("");
   const [region, setRegion] = useState("");
   const [areasOfNeed, setAreasOfNeed] = useState("");
-  const { data: donations, isLoading } = useGetAllDonationsQuery({
+  const {
+    data: donations,
+    isLoading,
+    refetch,
+  } = useGetAllDonationsQuery({
     page: currentPage,
     limit: perPage,
     searchBy,
@@ -33,6 +39,8 @@ const Donations = () => {
     areasOfNeed,
   });
   const { data: stats = { totalDonationAmount: {} } } = useGetDonationStatsQuery();
+
+  const [refreshPendingPayment, { isLoading: isRefreshingPayments }] = useRefreshPendingPaymentMutation();
 
   const donationStats = useMemo(() => {
     const obj = {
@@ -101,7 +109,6 @@ const Donations = () => {
     },
     enableSorting: false,
   }));
-
   const [exportDonations, { isLoading: isExporting }] = useExportDonationsMutation();
 
   const handleExport = async () => {
@@ -109,6 +116,16 @@ const Donations = () => {
       downloadFile(result.data, "Donations.csv");
     };
     exportDonations({ callback, searchBy, region, role, areasOfNeed });
+  };
+
+  const handleRefreshPendingPayments = async () => {
+    try {
+      await refreshPendingPayment({ type: "donations", bulkRefresh: true }).unwrap();
+      toast.success("Pending donation payments refreshed successfully");
+      refetch(); // Refresh the current data
+    } catch (error) {
+      toast.error("Failed to refresh pending payments");
+    }
   };
 
   return (
@@ -125,10 +142,18 @@ const Donations = () => {
       </div>
 
       <section className="bg-white shadow rounded-xl pt-6 mt-8">
+        {" "}
         <div className="flex items-center justify-between gap-6 px-6 pb-6">
           <h3 className="font-bold text-base">All Donations</h3>
           <div className="flex justify-end items-end gap-4 mb-4">
             <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
+            <Button
+              label="Refresh Pending Payments"
+              loading={isRefreshingPayments}
+              onClick={handleRefreshPendingPayments}
+              icon={icons.refresh}
+              variant="outlined"
+            />
             <Button
               label="Filter"
               className="ml-auto"
@@ -145,7 +170,6 @@ const Donations = () => {
             />
           </div>
         </div>
-
         <Table
           tableData={donations?.items || []}
           tableColumns={formattedColumns}
@@ -159,6 +183,8 @@ const Donations = () => {
           loading={isLoading}
         />
       </section>
+
+      <Button label="Refresh Pending Payments" onClick={handleRefreshPendingPayments} />
 
       {/*  */}
       <DonationsFilterModal
