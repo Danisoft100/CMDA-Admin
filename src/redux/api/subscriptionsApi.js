@@ -48,6 +48,14 @@ const subscriptionsApi = api.injectEndpoints({
       query: ({ userId, subDate }) => ({ url: `/subscriptions/activate/${userId}/${subDate}`, method: "POST" }),
       invalidatesTags: ["SINGLE_MEM"],
     }),
+    activateLifetimeMembership: build.mutation({
+      query: ({ userId, isNigerian, lifetimeType }) => ({
+        url: `/subscriptions/activate-lifetime/${userId}`,
+        method: "POST",
+        body: { isNigerian, lifetimeType },
+      }),
+      invalidatesTags: ["SINGLE_MEM"],
+    }),
   }),
 });
 
@@ -57,6 +65,7 @@ export const {
   useGetSingleSubscriptionQuery,
   useExportSubscriptionsMutation,
   useUpdateMemberSubMutation,
+  useActivateLifetimeMembershipMutation,
 } = subscriptionsApi;
 
 export default subscriptionsApi;

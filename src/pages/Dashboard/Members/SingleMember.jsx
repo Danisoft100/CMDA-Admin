@@ -3,13 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
 import UpdateSubModal from "~/components/Dashboard/Payments/UpdateSubModal";
+import ActivateLifetimeModal from "~/components/Dashboard/Payments/ActivateLifetimeModal";
 import BackButton from "~/components/Global/BackButton/BackButton";
 import Button from "~/components/Global/Button/Button";
 import ConfirmationModal from "~/components/Global/ConfirmationModal/ConfirmationModal";
 import StatusChip from "~/components/Global/StatusChip/StatusChip";
 import Table from "~/components/Global/Table/Table";
 import { useDeleteMemberByIdMutation, useGetMemberByIdQuery } from "~/redux/api/membersApi";
-import { useUpdateMemberSubMutation } from "~/redux/api/subscriptionsApi";
+import { useUpdateMemberSubMutation, useActivateLifetimeMembershipMutation } from "~/redux/api/subscriptionsApi";
 import { useGetAllTrainingsQuery } from "~/redux/api/trainingsApi";
 import convertToCapitalizedWords from "~/utilities/convertToCapitalizedWords";
 import formatDate from "~/utilities/fomartDate";
@@ -21,6 +22,7 @@ const SingleMember = () => {
   const [deleteMember, { isLoading: isDeleting }] = useDeleteMemberByIdMutation();
   const [openDelete, setOpenDelete] = useState(false);
   const [openSub, setOpenSub] = useState(false);
+  const [openLifetime, setOpenLifetime] = useState(false);
   const { data: allTrainings, isLoadingTrainings } = useGetAllTrainingsQuery(
     { membersGroup: member?.role },
     { skip: !member }
@@ -36,6 +38,7 @@ const SingleMember = () => {
   };
 
   const [updateSub, { isLoading: isUpdating }] = useUpdateMemberSubMutation();
+  const [activateLifetime, { isLoading: isActivatingLifetime }] = useActivateLifetimeMembershipMutation();
 
   const handleUpdateSub = ({ subDate }) => {
     updateSub({ subDate, userId: member?._id })
@@ -43,6 +46,23 @@ const SingleMember = () => {
       .then(() => {
         toast.success("Subscription UPDATED successfully");
         setOpenSub(false);
+      });
+  };
+
+  const handleActivateLifetime = ({ isNigerian, lifetimeType }) => {
+    const isNigerianBool = isNigerian === "true";
+    activateLifetime({
+      userId: member?._id,
+      isNigerian: isNigerianBool,
+      lifetimeType: isNigerianBool ? undefined : lifetimeType,
+    })
+      .unwrap()
+      .then(() => {
+        toast.success("Lifetime membership activated successfully! Email sent to member.");
+        setOpenLifetime(false);
+      })
+      .catch((error) => {
+        toast.error(error?.data?.message || "Failed to activate lifetime membership");
       });
   };
 
@@ -85,6 +105,7 @@ const SingleMember = () => {
           }),
       accountStatus: member?.emailVerified ? "Verified" : "Unverified",
       subscriptionStatus: member?.subscribed ? "Subscribed" : "Not Subscribed",
+      lifetimeMembership: member?.hasLifetimeMembership ? `Yes (${member?.lifetimeMembershipType})` : "No",
       subscriptionExpiry: member?.subscriptionExpiry ? formatDate(member?.subscriptionExpiry).date : "N/A",
       memberSince: formatDate(member?.createdAt).dateTime,
     }),
@@ -102,6 +123,13 @@ const SingleMember = () => {
           className="ml-auto"
           disabled={member?.subscribed}
           onClick={() => setOpenSub(true)}
+        />
+        <Button
+          variant="outlined"
+          color={member?.hasLifetimeMembership ? "secondary" : "primary"}
+          label={member?.hasLifetimeMembership ? "👑 Lifetime Active" : "Activate Lifetime"}
+          disabled={member?.hasLifetimeMembership}
+          onClick={() => setOpenLifetime(true)}
         />
         <Button variant="outlined" label="Remove" onClick={() => setOpenDelete(true)} />
         <Button label="Edit" onClick={() => navigate(`/members/new?edit=${membershipId}`)} />
@@ -155,6 +183,14 @@ const SingleMember = () => {
         onClose={() => setOpenSub(false)}
         loading={isUpdating}
         onSubmit={handleUpdateSub}
+      />
+
+      <ActivateLifetimeModal
+        isOpen={openLifetime}
+        onClose={() => setOpenLifetime(false)}
+        loading={isActivatingLifetime}
+        onSubmit={handleActivateLifetime}
+        member={member}
       />
     </div>
   );
