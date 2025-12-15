@@ -6,7 +6,12 @@ import Button from "~/components/Global/Button/Button";
 import RadioGroup from "~/components/Global/FormElements/RadioGroup/RadioGroup";
 import Select from "~/components/Global/FormElements/Select/Select";
 import TextInput from "~/components/Global/FormElements/TextInput/TextInput";
-import { useCreateMemberMutation, useGetMemberByIdQuery, useUpdateMemberMutation } from "~/redux/api/membersApi";
+import {
+  useCreateMemberMutation,
+  useCreateMemberByAdminMutation,
+  useGetMemberByIdQuery,
+  useUpdateMemberMutation,
+} from "~/redux/api/membersApi";
 import { EMAIL_PATTERN } from "~/utilities/regExpValidations";
 import {
   admissionYearOptions,
@@ -47,12 +52,15 @@ const AddMember = () => {
       licenseNumber: member?.licenseNumber,
       specialty: member?.specialty,
       yearsOfExperience: member?.yearsOfExperience,
+      memberCategory: member?.memberCategory || "",
     },
   });
 
   const role = watch("role");
+  const memberCategory = watch("memberCategory");
 
   const [createMember, { isLoading }] = useCreateMemberMutation();
+  const [createMemberByAdmin, { isLoading: isCreatingByAdmin }] = useCreateMemberByAdminMutation();
   const [updateMember, { isLoading: isUpdating }] = useUpdateMemberMutation();
   const navigate = useNavigate();
 
@@ -65,11 +73,15 @@ const AddMember = () => {
           navigate(-1);
         });
     } else {
-      createMember(payload)
+      // Use simplified admin creation endpoint
+      createMemberByAdmin(payload)
         .unwrap()
         .then(() => {
-          toast.success("Member account CREATED");
+          toast.success("Member account CREATED! Credentials have been sent to their email.");
           navigate(-1);
+        })
+        .catch((error) => {
+          toast.error(error?.data?.message || "Failed to create member");
         });
     }
   };
@@ -190,7 +202,34 @@ const AddMember = () => {
           />
         </div>
 
-        {role === "Student" ? (
+        {!edit && (
+          <div className="col-span-2">
+            <Select
+              label="memberCategory"
+              control={control}
+              options={[
+                { label: "Nigeria - Student", value: "Nigeria Student" },
+                { label: "Nigeria - Doctor (0-5 years experience)", value: "Nigeria Doctor (0-5 years)" },
+                { label: "Nigeria - Doctor (5+ years experience)", value: "Nigeria Doctor (5+ years)" },
+                { label: "Global - Americas", value: "Global Americas" },
+                { label: "Global - Europe", value: "Global Europe" },
+                { label: "Global - Asia", value: "Global Asia" },
+                { label: "Global - Africa (Outside Nigeria)", value: "Global Africa" },
+                { label: "Global - Oceania", value: "Global Oceania" },
+                { label: "Global - Middle East", value: "Global Middle East" },
+              ]}
+              errors={errors}
+              required="Please select a member category"
+              title="Member Category"
+              placeholder="Select category for subscription and access"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              This determines the member's subscription tier and access level
+            </p>
+          </div>
+        )}
+
+        {edit && role === "Student" ? (
           <>
             <div className="w-full">
               <Select
@@ -216,7 +255,7 @@ const AddMember = () => {
               />
             </div>
           </>
-        ) : (
+        ) : edit ? (
           <>
             <div>
               <TextInput
@@ -251,15 +290,23 @@ const AddMember = () => {
               />
             </div>
           </>
-        )}
+        ) : null}
 
         <div className="col-span-2">
+          {!edit && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> A temporary password will be automatically generated and sent to the member's
+                email address. They will be required to change it upon first login.
+              </p>
+            </div>
+          )}
           <Button
             type="submit"
             label={edit ? "Edit Member" : "Create Member"}
             className="w-full flex"
             large
-            loading={isLoading || isUpdating}
+            loading={isLoading || isUpdating || isCreatingByAdmin}
           />
         </div>
       </form>

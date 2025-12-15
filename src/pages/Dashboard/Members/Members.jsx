@@ -106,6 +106,12 @@ const Members = () => {
         <div className="flex items-center justify-between gap-6 px-6 mb-3">
           <h3 className="font-bold text-base">All Members</h3>
           <div className="flex justify-end items-end gap-4 mb-4">
+            <Button
+              label="Onboarding Analytics"
+              onClick={() => navigate("/members/analytics")}
+              icon={icons.analytics}
+              variant="outlined"
+            />
             <Button label="Export" loading={isExporting} className="ml-auto" onClick={handleExport} />
             <Button
               label="Filter"

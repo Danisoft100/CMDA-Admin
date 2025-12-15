@@ -48,6 +48,19 @@ const membersApi = api.injectEndpoints({
       query: (body) => ({ url: `/users/create`, method: "POST", body }),
       invalidatesTags: ["MEMBERS"],
     }),
+    createMemberByAdmin: build.mutation({
+      query: (body) => ({ url: `/admin/members/create`, method: "POST", body }),
+      invalidatesTags: ["MEMBERS", "MEMBERS_STATS", "MEMBER_ANALYTICS"],
+    }),
+    getMemberAnalytics: build.query({
+      query: () => ({ url: "/admin/members/analytics" }),
+      transformResponse: (response) => response.data,
+      providesTags: ["MEMBER_ANALYTICS"],
+    }),
+    sendPasswordReminders: build.mutation({
+      query: () => ({ url: "/admin/members/send-reminders", method: "POST" }),
+      invalidatesTags: ["MEMBER_ANALYTICS"],
+    }),
     updateMember: build.mutation({
       query: ({ id, body }) => ({ url: `/users/${id}`, method: "PATCH", body }),
       invalidatesTags: ["TRANSITIONS"],
@@ -72,11 +85,14 @@ export const {
   useGetMemberByIdQuery,
   useGetAllMembersQuery,
   useGetMembersStatsQuery,
+  useGetMemberAnalyticsQuery,
+  useSendPasswordRemindersMutation,
   useGetAllTransitionsQuery,
   useUpdateTransitionStatusMutation,
   useDeleteMemberByIdMutation,
   useExportMembersListMutation,
   useCreateMemberMutation,
+  useCreateMemberByAdminMutation,
   useUpdateMemberMutation,
 } = membersApi;
 

@@ -36,6 +36,7 @@ import Transitions from "~/pages/Dashboard/Members/Transitions";
 import DashboardFaithEntryPage from "~/pages/Dashboard/Others/FaithEntry";
 import CreateProductPage from "~/pages/Dashboard/Products/CreateProduct";
 import AddMember from "~/pages/Dashboard/Members/AddMember";
+import MemberOnboardingAnalytics from "~/pages/Dashboard/Members/MemberOnboardingAnalytics";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -87,6 +88,7 @@ export default function AppRouter() {
                 { path: "members", element: <Members /> },
                 { path: "members/:membershipId", element: <SingleMember /> },
                 { path: "members/new", element: <AddMember /> },
+                { path: "members/analytics", element: <MemberOnboardingAnalytics /> },
                 { path: "transitions", element: <Transitions /> },
                 { path: "chapters", element: <Chapters /> },
               ],
