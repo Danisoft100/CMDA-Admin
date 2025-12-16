@@ -40,6 +40,11 @@ export const NAV_LINKS = [
   { title: "Products", link: "/products", icon: icons.store },
   { title: "Messaging", link: "/messaging", icon: icons.message },
   {
+    title: "Settings",
+    icon: icons.settings,
+    children: [{ title: "System Backup", link: "/settings/system", icon: "database", role: "SuperAdmin" }],
+  },
+  {
     title: "Others",
     icon: icons.list,
     children: [

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import icons from "~/assets/js/icons";
 import MembersFilterModal from "~/components/Dashboard/Members/MembersFilterModal";
@@ -19,6 +20,7 @@ import formatDate from "~/utilities/fomartDate";
 import { formatCurrency } from "~/utilities/formatCurrency";
 
 const Subscriptions = () => {
+  const accessToken = useSelector((state) => state.token.accessToken);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchBy, setSearchBy] = useState("");
@@ -50,6 +52,63 @@ const Subscriptions = () => {
     [stats]
   );
 
+  const [loadingReceipt, setLoadingReceipt] = useState(null);
+
+  const handleDownloadReceipt = async (subscriptionId, downloadOnly = false) => {
+    try {
+      setLoadingReceipt(subscriptionId);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/subscriptions/${subscriptionId}/receipt`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Receipt error:", response.status, errorText);
+        throw new Error(`Failed to download receipt: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      // Verify we got an image
+      if (blob.size === 0) {
+        throw new Error("Empty image received");
+      }
+
+      // Create an image blob
+      const imageBlob = new Blob([blob], { type: "image/png" });
+      const url = window.URL.createObjectURL(imageBlob);
+
+      if (downloadOnly) {
+        // Trigger download
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `CMDA-Receipt-${subscriptionId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Receipt downloaded successfully");
+      } else {
+        // Open in new tab for viewing
+        const newWindow = window.open(url, "_blank");
+        if (!newWindow) {
+          throw new Error("Pop-up blocked. Please allow pop-ups for this site.");
+        }
+      }
+
+      // Cleanup after delay
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 10000);
+    } catch (error) {
+      console.error("Error downloading receipt:", error);
+      toast.error(error.message || "Failed to download receipt. Please try again.");
+    } finally {
+      setLoadingReceipt(null);
+    }
+  };
+
   const COLUMNS = [
     { header: "Reference", accessor: "reference" },
     { header: "Source", accessor: "source" },
@@ -57,13 +116,31 @@ const Subscriptions = () => {
     { header: "Subscriber", accessor: "user.fullName" },
     { header: "Role", accessor: "user.role" },
     { header: "Date/Time", accessor: "createdAt" },
+    { header: "Receipt", accessor: "_id" },
   ];
 
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
       const [value, item] = [info.getValue(), info.row.original];
-      return col.accessor === "recurring" ? (
+      return col.accessor === "_id" ? (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleDownloadReceipt(value)}
+            disabled={loadingReceipt === value}
+            className="text-primary hover:text-primary-dark underline text-sm font-medium disabled:opacity-50"
+          >
+            {loadingReceipt === value ? "Loading..." : "View Receipt"}
+          </button>
+          <button
+            onClick={() => handleDownloadReceipt(value, true)}
+            disabled={loadingReceipt === value}
+            className="text-secondary hover:text-secondary-dark underline text-sm font-medium disabled:opacity-50"
+          >
+            Download
+          </button>
+        </div>
+      ) : col.accessor === "recurring" ? (
         value ? (
           "Yes"
         ) : (

@@ -45,6 +45,14 @@ const CreateEvent = () => {
       lateRegistrationEndDate: evt?.conferenceConfig?.lateRegistrationEndDate?.slice(0, 16),
       paystackSplitCode: evt?.conferenceConfig?.paystackSplitCode,
       usePayPalForGlobal: evt?.conferenceConfig?.usePayPalForGlobal || false,
+      requiresSubscription: evt?.requiresSubscription !== false,
+      // Virtual meeting info
+      virtualMeetingPlatform: evt?.virtualMeetingInfo?.platform,
+      virtualMeetingLink: evt?.virtualMeetingInfo?.meetingLink,
+      virtualMeetingId: evt?.virtualMeetingInfo?.meetingId,
+      virtualMeetingPasscode: evt?.virtualMeetingInfo?.passcode,
+      virtualMeetingDialIn: evt?.virtualMeetingInfo?.dialInNumbers,
+      virtualMeetingInstructions: evt?.virtualMeetingInfo?.additionalInstructions,
     },
   });
 
@@ -225,6 +233,22 @@ const CreateEvent = () => {
                 </label>
               </div>
             </div>
+            {/* Subscription Requirement Toggle */}
+            <div className="col-span-2">
+              <div className="flex items-center gap-4 mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    {...register("requiresSubscription")}
+                    className="form-checkbox h-4 w-4 text-primary"
+                  />
+                  <span className="font-medium">Require Active Subscription</span>
+                </label>
+                <span className="text-xs text-gray-600 ml-auto">
+                  If checked, users must have an active subscription to register for this event
+                </span>
+              </div>
+            </div>
             {/* Conference-specific fields */}
             {isConference && (
               <>
@@ -342,6 +366,72 @@ const CreateEvent = () => {
               errors={errors}
               required
             />
+
+            {/* Virtual Meeting Info Section */}
+            {(watch("eventType") === "Virtual" || watch("eventType") === "Hybrid") && (
+              <>
+                <div className="col-span-2 mt-4 mb-2">
+                  <h4 className="font-semibold text-base text-gray-700 border-b pb-2">Virtual Meeting Details</h4>
+                  <p className="text-xs text-gray-500 mt-1">Provide structured meeting information for easy access</p>
+                </div>
+                <Select
+                  label="virtualMeetingPlatform"
+                  title="Meeting Platform"
+                  control={control}
+                  options={[
+                    { label: "Zoom", value: "Zoom" },
+                    { label: "Google Meet", value: "Google Meet" },
+                    { label: "Microsoft Teams", value: "Microsoft Teams" },
+                    { label: "Webex", value: "Webex" },
+                    { label: "Other", value: "Other" },
+                  ]}
+                  required={false}
+                />
+                <TextInput
+                  label="virtualMeetingLink"
+                  title="Meeting Link"
+                  register={register}
+                  errors={errors}
+                  placeholder="https://zoom.us/j/123456789"
+                  required={false}
+                />
+                <TextInput
+                  label="virtualMeetingId"
+                  title="Meeting ID"
+                  register={register}
+                  errors={errors}
+                  placeholder="123 456 789"
+                  required={false}
+                />
+                <TextInput
+                  label="virtualMeetingPasscode"
+                  title="Passcode/Password"
+                  register={register}
+                  errors={errors}
+                  placeholder="pass123"
+                  required={false}
+                />
+                <TextInput
+                  label="virtualMeetingDialIn"
+                  title="Dial-In Numbers (Optional)"
+                  register={register}
+                  errors={errors}
+                  placeholder="+1 234 567 8900"
+                  required={false}
+                  divClassName="col-span-2"
+                />
+                <TextArea
+                  label="virtualMeetingInstructions"
+                  title="Additional Instructions (Optional)"
+                  register={register}
+                  errors={errors}
+                  placeholder="Please join 5 minutes early for audio check"
+                  rows={2}
+                  required={false}
+                  divClassName="col-span-2"
+                />
+              </>
+            )}
             <TextArea
               label="additionalInformation"
               errors={errors}

@@ -37,6 +37,7 @@ import DashboardFaithEntryPage from "~/pages/Dashboard/Others/FaithEntry";
 import CreateProductPage from "~/pages/Dashboard/Products/CreateProduct";
 import AddMember from "~/pages/Dashboard/Members/AddMember";
 import MemberOnboardingAnalytics from "~/pages/Dashboard/Members/MemberOnboardingAnalytics";
+import SystemSettings from "~/pages/Dashboard/Settings/SystemSettings";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -98,6 +99,11 @@ export default function AppRouter() {
             { path: "products/create", element: <CreateProductPage /> },
             { path: "resources", element: <Resources /> },
             { path: "resources/:slug", element: <SingleResource /> },
+            {
+              path: "settings",
+              element: <ProtectedRoutes restrictedRoles={["MemberManager", "FinanceManager"]} />,
+              children: [{ path: "system", element: <SystemSettings /> }],
+            },
             {
               path: "others",
               children: [

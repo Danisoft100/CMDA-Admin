@@ -15,6 +15,7 @@ import {
   MdViewModule,
   MdFilterList,
   MdRefresh,
+  MdStorage,
 } from "react-icons/md";
 import { FiBell, FiDownloadCloud } from "react-icons/fi";
 import { HiBadgeCheck, HiDotsVertical, HiOfficeBuilding, HiOutlineHome } from "react-icons/hi";
@@ -107,6 +108,7 @@ const icons = {
   filter: <MdFilterList />,
   refresh: <MdRefresh />,
   reload: <MdRefresh />,
+  database: <MdStorage />,
 };
 
 export default icons;

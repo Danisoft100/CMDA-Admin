@@ -53,6 +53,54 @@ const Donations = () => {
     return obj;
   }, [stats]);
 
+  const [loadingReceipt, setLoadingReceipt] = useState(null);
+
+  const handleDownloadReceipt = async (donationId, downloadOnly = false) => {
+    try {
+      setLoadingReceipt(donationId);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/donations/${donationId}/receipt`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Receipt error:", response.status, errorText);
+        throw new Error(`Failed to download receipt: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      if (blob.size === 0) throw new Error("Empty image received");
+
+      // Create an image blob
+      const imageBlob = new Blob([blob], { type: "image/png" });
+      const url = window.URL.createObjectURL(imageBlob);
+
+      if (downloadOnly) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `CMDA-Donation-Receipt-${donationId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Receipt downloaded successfully");
+      } else {
+        const newWindow = window.open(url, "_blank");
+        if (!newWindow) {
+          throw new Error("Pop-up blocked. Please allow pop-ups for this site.");
+        }
+      }
+
+      setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+      console.error("Error downloading receipt:", error);
+      toast.error(error.message || "Failed to download receipt. Please try again.");
+    } finally {
+      setLoadingReceipt(null);
+    }
+  };
+
   const COLUMNS = [
     { header: "Reference", accessor: "reference" },
     { header: "Source", accessor: "source" },
@@ -62,13 +110,21 @@ const Donations = () => {
     { header: "Vision Partner", accessor: "recurring" },
     { header: "Areas of Need", accessor: "areasOfNeed" },
     { header: "Date/Time", accessor: "createdAt" },
+    { header: "Receipt", accessor: "_id" },
   ];
 
   const formattedColumns = COLUMNS.map((col) => ({
     ...col,
     cell: (info) => {
       const [value, item] = [info.getValue(), info.row.original];
-      return col.accessor === "recurring" ? (
+      return col.accessor === "_id" ? (
+        <button
+          onClick={() => handleDownloadReceipt(value)}
+          className="text-primary hover:text-primary-dark underline text-sm font-medium"
+        >
+          Download PDF
+        </button>
+      ) : col.accessor === "recurring" ? (
         value ? (
           <span>Yes / {item.frequency}</span>
         ) : (
