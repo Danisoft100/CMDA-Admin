@@ -31,7 +31,7 @@ const ActivateLifetimeModal = ({ isOpen, onClose, onSubmit, loading, member }) =
           required
           errors={errors}
           options={[
-            { label: "Nigerian Lifetime (₦250,000 - 25 years)", value: "true" },
+            { label: "Nigerian Lifetime (₦250,000)", value: "true" },
             { label: "Global Network Lifetime", value: "false" },
           ]}
         />
