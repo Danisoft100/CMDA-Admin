@@ -38,6 +38,7 @@ import CreateProductPage from "~/pages/Dashboard/Products/CreateProduct";
 import AddMember from "~/pages/Dashboard/Members/AddMember";
 import MemberOnboardingAnalytics from "~/pages/Dashboard/Members/MemberOnboardingAnalytics";
 import SystemSettings from "~/pages/Dashboard/Settings/SystemSettings";
+import Notifications from "~/pages/Dashboard/Notifications/Notifications";
 
 export default function AppRouter() {
   const isAuthenticated = true;
@@ -95,6 +96,7 @@ export default function AppRouter() {
               ],
             },
             { path: "messaging", element: <DashboardMessagingPage /> },
+            { path: "notifications", element: <Notifications /> },
             { path: "products", element: <Products /> },
             { path: "products/create", element: <CreateProductPage /> },
             { path: "resources", element: <Resources /> },
